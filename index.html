@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suivi Prospection Freelance — Bleze T.</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1" integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --bg:#f0f2f5; --card:#fff; --header:#0f172a; --accent:#2563eb; --accent-l:#dbeafe;
+      --text:#1e293b; --text2:#64748b; --text3:#94a3b8; --border:#e2e8f0;
+      --green:#16a34a; --green-l:#dcfce7; --amber:#d97706; --amber-l:#fef3c7;
+      --red:#dc2626; --red-l:#fee2e2; --gray-l:#f1f5f9;
+      --r:10px; --sh:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;}
+
+    /* ── GATE ── */
+    #gate{position:fixed;inset:0;background:#0f172a;display:flex;align-items:center;justify-content:center;z-index:999;transition:opacity .3s;}
+    #gate-box{background:#1e293b;border-radius:18px;padding:44px 52px;width:100%;max-width:420px;text-align:center;}
+    .gate-lock{font-size:40px;margin-bottom:16px;display:block;}
+    #gate-box h1{color:#f1f5f9;font-size:20px;font-weight:600;margin-bottom:6px;}
+    #gate-box p{color:#94a3b8;font-size:13px;margin-bottom:28px;line-height:1.6;}
+    .gate-view{display:none;}
+    .gate-view.active{display:block;}
+    .gate-field{margin-bottom:13px;text-align:left;}
+    .gate-field label{display:block;font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px;}
+    .gate-field input{width:100%;padding:11px 14px;border-radius:9px;border:1px solid #334155;background:#0f172a;color:#f1f5f9;font-size:14px;outline:none;transition:border .2s;}
+    .gate-field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.2);}
+    .gate-btn{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s;}
+    .gate-btn:hover{background:#1d4ed8;}
+    .gate-btn:disabled{background:#334155;cursor:not-allowed;}
+    .gate-link{color:#60a5fa;font-size:12px;cursor:pointer;text-decoration:none;display:block;margin-top:14px;}
+    .gate-link:hover{color:#93c5fd;}
+    .gate-error{color:#f87171;font-size:12px;min-height:18px;margin-top:10px;}
+    .gate-warn{background:#1c1917;border:1px solid #44403c;border-radius:8px;padding:11px 14px;font-size:12px;color:#a8a29e;margin-top:16px;text-align:left;line-height:1.6;}
+    .gate-warn strong{color:#fcd34d;}
+    .gate-security{margin-top:20px;font-size:11px;color:#475569;display:flex;align-items:center;justify-content:center;gap:6px;}
+    .spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+
+    /* ── APP ── */
+    #app{display:none;max-width:1300px;margin:0 auto;padding:20px 16px 40px;}
+    .header{background:var(--header);color:#fff;border-radius:var(--r);padding:18px 24px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+    .header-left h1{font-size:18px;font-weight:600;}
+    .header-left p{color:#94a3b8;font-size:12px;margin-top:2px;}
+    .header-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+    .btn{padding:8px 14px;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;border:none;}
+    .btn-ghost{background:rgba(255,255,255,.08);color:#cbd5e1;}
+    .btn-ghost:hover{background:rgba(255,255,255,.16);}
+    .btn-primary{background:var(--accent);color:#fff;}
+    .btn-primary:hover{background:#1d4ed8;}
+    .btn-lock{background:rgba(251,191,36,.12);color:#fcd34d;}
+    .btn-lock:hover{background:rgba(251,191,36,.22);}
+    .btn-sm{padding:6px 12px;font-size:12px;}
+    .week-nav{display:flex;align-items:center;gap:6px;}
+    .week-nav button{background:rgba(255,255,255,.08);border:none;color:#cbd5e1;border-radius:5px;padding:4px 9px;cursor:pointer;font-size:14px;}
+    .week-nav button:hover{background:rgba(255,255,255,.18);}
+    .week-nav span{font-size:12px;color:#94a3b8;min-width:150px;text-align:center;}
+
+    /* KPIs */
+    .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px;}
+    .kpi-card{background:var(--card);border-radius:var(--r);padding:18px 20px;box-shadow:var(--sh);}
+    .kpi-label{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);margin-bottom:6px;}
+    .kpi-value{font-size:30px;font-weight:700;color:var(--text);}
+    .kpi-sub{font-size:11px;color:var(--text3);margin-top:3px;}
+    .kpi-green .kpi-value{color:var(--green);}
+    .kpi-amber .kpi-value{color:var(--amber);}
+    .kpi-blue .kpi-value{color:var(--accent);}
+
+    /* Layout */
+    .grid-2{display:grid;grid-template-columns:1fr 330px;gap:14px;margin-bottom:14px;}
+    .card{background:var(--card);border-radius:var(--r);padding:20px 22px;box-shadow:var(--sh);}
+    .card-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
+
+    /* Form overlay */
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:100;}
+    .overlay.open{display:flex;}
+    .form-box{background:var(--card);border-radius:14px;padding:28px 32px;width:100%;max-width:560px;max-height:92vh;overflow-y:auto;}
+    .form-box h2{font-size:16px;margin-bottom:18px;}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+    .form-group label{display:block;font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px;}
+    .form-group input,.form-group select,.form-group textarea{width:100%;padding:9px 11px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:13px;font-family:inherit;}
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.1);}
+    .form-group textarea{height:70px;resize:none;}
+    .form-full{margin-bottom:12px;}
+    .form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;}
+    .btn-cancel{padding:9px 18px;border-radius:7px;border:none;background:var(--gray-l);color:var(--text2);font-size:13px;cursor:pointer;}
+    .btn-save{padding:9px 22px;border-radius:7px;border:none;background:var(--accent);color:#fff;font-size:13px;font-weight:600;cursor:pointer;}
+    .btn-save:hover{background:#1d4ed8;}
+
+    /* Filters / table */
+    .filters-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px;}
+    .chip{padding:5px 13px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--text2);font-size:12px;cursor:pointer;font-weight:500;}
+    .chip:hover{border-color:var(--accent);color:var(--accent);}
+    .chip.active{background:var(--accent-l);color:var(--accent);border-color:var(--accent);}
+    .filter-select{padding:5px 10px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:12px;}
+    .table-wrap{overflow-x:auto;}
+    table{width:100%;border-collapse:collapse;font-size:13px;min-width:680px;}
+    thead th{text-align:left;padding:9px 12px;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--text2);border-bottom:1px solid var(--border);font-weight:600;cursor:pointer;user-select:none;white-space:nowrap;}
+    thead th:hover{color:var(--text);}
+    tbody td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+    tbody tr:last-child td{border-bottom:none;}
+    tbody tr:hover{background:var(--gray-l);}
+    .icon-btn{background:none;border:none;cursor:pointer;padding:4px 6px;border-radius:5px;font-size:14px;color:var(--text2);}
+    .icon-btn:hover{background:var(--border);color:var(--text);}
+    .icon-btn.del:hover{background:var(--red-l);color:var(--red);}
+    .td-actions{display:flex;gap:4px;}
+
+    /* Badges */
+    .badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:11px;font-weight:600;white-space:nowrap;}
+    .b-waiting{background:#e0f2fe;color:#0369a1;}
+    .b-relance{background:var(--amber-l);color:#92400e;}
+    .b-entretien{background:var(--green-l);color:#166534;}
+    .b-accepte{background:#d1fae5;color:#065f46;}
+    .b-refuse{background:var(--red-l);color:#991b1b;}
+    .b-sanssuite{background:var(--gray-l);color:var(--text2);}
+    .plat{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11px;}
+
+    /* Sidebar */
+    .progress-wrap{background:var(--gray-l);border-radius:4px;height:8px;overflow:hidden;margin:6px 0;}
+    .progress-bar{height:100%;border-radius:4px;background:var(--accent);transition:width .4s;}
+    .plat-row{display:flex;align-items:center;gap:10px;}
+    .plat-name{font-size:12px;color:var(--text2);width:90px;flex-shrink:0;}
+    .plat-prog{flex:1;background:var(--gray-l);border-radius:3px;height:6px;overflow:hidden;}
+    .plat-prog-bar{height:100%;border-radius:3px;}
+    .plat-count{font-size:12px;font-weight:600;color:var(--text);min-width:22px;text-align:right;}
+    .empty{text-align:center;padding:36px 20px;color:var(--text3);}
+    canvas{max-height:200px;}
+
+    /* Footer */
+    .sec-footer{text-align:center;margin-top:28px;font-size:11px;color:var(--text3);}
+
+    /* Responsive */
+    @media(max-width:900px){.grid-2{grid-template-columns:1fr;}}
+    @media(max-width:600px){.kpi-row{grid-template-columns:1fr 1fr;}.form-grid{grid-template-columns:1fr;}.gate-box{padding:32px 24px;}}
+    @media print{#gate{display:none!important;}#app{display:block!important;}.header-actions{display:none;}.card{box-shadow:none;border:1px solid var(--border);}}
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     GATE (setup / unlock / change pwd)
+     ══════════════════════════════════ -->
+<div id="gate">
+  <div id="gate-box">
+    <span class="gate-lock">🔐</span>
+
+    <!-- VIEW: Setup (first visit) -->
+    <div class="gate-view" id="view-setup">
+      <h1>Créer votre espace sécurisé</h1>
+      <p>Choisissez un mot de passe fort. Il servira à dériver la clé de chiffrement de vos données via PBKDF2.</p>
+      <div class="gate-field"><label>Mot de passe</label><input type="password" id="setup-pwd" placeholder="Minimum 8 caractères"></div>
+      <div class="gate-field"><label>Confirmer</label><input type="password" id="setup-pwd2" placeholder="Retapez votre mot de passe"></div>
+      <button class="gate-btn" id="setup-btn" onclick="doSetup()">Créer mon espace</button>
+      <div class="gate-error" id="setup-err"></div>
+      <div class="gate-warn"><strong>⚠️ Important :</strong> si vous perdez ce mot de passe, vos données seront <strong>irrécupérables</strong>. Conservez-le précieusement.</div>
+    </div>
+
+    <!-- VIEW: Unlock (returning) -->
+    <div class="gate-view" id="view-unlock">
+      <h1>Déverrouiller</h1>
+      <p>Entrez votre mot de passe pour déchiffrer vos données.</p>
+      <div class="gate-field"><label>Mot de passe</label><input type="password" id="unlock-pwd" placeholder="••••••••"></div>
+      <button class="gate-btn" id="unlock-btn" onclick="doUnlock()">Déverrouiller</button>
+      <div class="gate-error" id="unlock-err"></div>
+      <span class="gate-link" onclick="showView('view-changepwd')">Changer de mot de passe</span>
+    </div>
+
+    <!-- VIEW: Change password -->
+    <div class="gate-view" id="view-changepwd">
+      <h1>Changer de mot de passe</h1>
+      <p>Vos données seront re-chiffrées automatiquement avec le nouveau mot de passe.</p>
+      <div class="gate-field"><label>Ancien mot de passe</label><input type="password" id="chg-old" placeholder="••••••••"></div>
+      <div class="gate-field"><label>Nouveau mot de passe</label><input type="password" id="chg-new" placeholder="Minimum 8 caractères"></div>
+      <div class="gate-field"><label>Confirmer le nouveau</label><input type="password" id="chg-new2" placeholder="Retapez le nouveau"></div>
+      <button class="gate-btn" id="chg-btn" onclick="doChangePassword()">Changer et re-chiffrer</button>
+      <div class="gate-error" id="chg-err"></div>
+      <span class="gate-link" onclick="showView('view-unlock')">← Retour à la connexion</span>
+    </div>
+
+    <div class="gate-security">
+      <span>🛡</span>
+      <span>AES-256-GCM · PBKDF2 · 200 000 itérations · Web Crypto API</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     MAIN APP
+     ══════════════════════════════════ -->
+<div id="app">
+  <div class="header">
+    <div class="header-left">
+      <h1>Suivi Prospection Freelance — Bleze T.</h1>
+      <p id="header-date"></p>
+    </div>
+    <div class="header-actions">
+      <div class="week-nav">
+        <button onclick="shiftWeek(-1)">&#8249;</button>
+        <span id="week-nav-label"></span>
+        <button onclick="shiftWeek(1)">&#8250;</button>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="exportCSV()">⬇ Export CSV</button>
+      <button class="btn btn-primary btn-sm" onclick="openForm()">+ Ajouter</button>
+      <button class="btn btn-lock btn-sm" onclick="lockApp()" title="Verrouiller et chiffrer">🔒 Verrouiller</button>
+    </div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-label">Total candidatures</div>
+      <div class="kpi-value" id="kpi-total">0</div>
+      <div class="kpi-sub">toutes semaines</div>
+    </div>
+    <div class="kpi-card kpi-amber">
+      <div class="kpi-label">À relancer</div>
+      <div class="kpi-value" id="kpi-relance">0</div>
+      <div class="kpi-sub">action requise</div>
+    </div>
+    <div class="kpi-card kpi-green">
+      <div class="kpi-label">Entretiens</div>
+      <div class="kpi-value" id="kpi-entretien">0</div>
+      <div class="kpi-sub">en cours</div>
+    </div>
+    <div class="kpi-card kpi-blue">
+      <div class="kpi-label">Taux de réponse</div>
+      <div class="kpi-value" id="kpi-rate">—</div>
+      <div class="kpi-sub">réponses / envois</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- LEFT: chart + table -->
+    <div>
+      <div class="card" style="margin-bottom:14px;">
+        <div class="card-title">Candidatures par semaine <span style="font-size:11px;color:var(--text3);font-weight:400;">8 dernières semaines</span></div>
+        <canvas id="chartWeekly" role="img" aria-label="Histogramme des candidatures par semaine"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">Missions <span id="table-count" style="font-size:11px;color:var(--text3);font-weight:400;"></span></div>
+        <div class="filters-bar">
+          <span class="chip active" onclick="setFilter('all',this)">Toutes</span>
+          <span class="chip" onclick="setFilter('waiting',this)">En attente</span>
+          <span class="chip" onclick="setFilter('relance',this)">À relancer</span>
+          <span class="chip" onclick="setFilter('entretien',this)">Entretien</span>
+          <span class="chip" onclick="setFilter('accepte',this)">Accepté</span>
+          <span class="chip" onclick="setFilter('refuse',this)">Refusé</span>
+          <select class="filter-select" id="filter-plat" onchange="render()">
+            <option value="all">Toutes plateformes</option>
+            <option>LinkedIn</option><option>Malt</option><option>Comet</option>
+            <option>Cherry Pick</option><option>Pylote</option><option>Freework</option>
+          </select>
+          <input type="text" class="filter-select" id="filter-search" placeholder="🔍 Rechercher…" oninput="render()" style="width:155px;">
+        </div>
+        <div class="table-wrap">
+          <div class="empty" id="empty-msg" style="display:none;">Aucune mission pour ces filtres.</div>
+          <table id="mission-table" style="display:none;">
+            <thead><tr>
+              <th onclick="sortBy('platform')">Plateforme</th>
+              <th onclick="sortBy('company')">Entreprise</th>
+              <th onclick="sortBy('role')">Mission</th>
+              <th onclick="sortBy('date')">Date</th>
+              <th onclick="sortBy('status')">Statut</th>
+              <th>Prochaine action</th>
+              <th></th>
+            </tr></thead>
+            <tbody id="mission-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: sidebar -->
+    <div>
+      <div class="card" style="margin-bottom:14px;">
+        <div class="card-title">Objectif semaine</div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:12px;" id="obj-week"></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;">
+          <span style="color:var(--text2);">Candidatures</span>
+          <span style="font-weight:700;" id="obj-count">0 / 5</span>
+        </div>
+        <div class="progress-wrap"><div class="progress-bar" id="obj-bar" style="width:0%"></div></div>
+        <div style="font-size:11px;color:var(--text3);margin-top:6px;">Cible : 5 candidatures / semaine</div>
+        <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
+          <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;">Relances à faire</div>
+          <div id="relance-list" style="font-size:12px;color:var(--text3);">Aucune relance.</div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:14px;">
+        <div class="card-title">Par plateforme</div>
+        <div id="plat-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Répartition statuts</div>
+        <div style="position:relative;height:170px;">
+          <canvas id="chartStatus" role="img" aria-label="Répartition par statut"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-footer">🔐 Données chiffrées localement · AES-256-GCM · PBKDF2 200 000 itérations · Clé jamais stockée</div>
+</div>
+
+<!-- ── MISSION FORM ── -->
+<div class="overlay" id="form-overlay" onclick="handleOverlayClick(event)">
+  <div class="form-box" onclick="event.stopPropagation()">
+    <h2 id="form-title">Ajouter une mission</h2>
+    <div class="form-grid">
+      <div class="form-group"><label>Plateforme</label>
+        <select id="f-platform"><option>LinkedIn</option><option>Malt</option><option>Comet</option><option>Cherry Pick</option><option>Pylote</option><option>Freework</option></select>
+      </div>
+      <div class="form-group"><label>Entreprise / Client</label><input type="text" id="f-company" placeholder="ex: Capgemini"></div>
+      <div class="form-group"><label>Intitulé de la mission</label><input type="text" id="f-role" placeholder="ex: Analyste Power BI"></div>
+      <div class="form-group"><label>Date de candidature</label><input type="date" id="f-date"></div>
+      <div class="form-group"><label>Statut</label>
+        <select id="f-status">
+          <option value="waiting">En attente</option><option value="relance">À relancer</option>
+          <option value="entretien">Entretien</option><option value="accepte">Accepté</option>
+          <option value="refuse">Refusé</option><option value="sanssuite">Sans suite</option>
+        </select>
+      </div>
+      <div class="form-group"><label>TJM indicatif (€/j)</label><input type="number" id="f-tjm" placeholder="ex: 450" min="0"></div>
+    </div>
+    <div class="form-full form-group"><label>Prochaine action</label><input type="text" id="f-next" placeholder="ex: Relancer le 30/05 — contact: Marie Dupont"></div>
+    <div class="form-full form-group"><label>Notes</label><textarea id="f-notes" placeholder="Contexte, lien offre, contact, remarques…"></textarea></div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeForm()">Annuler</button>
+      <button class="btn-save" onclick="saveMission()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+// ═══════════════════════════════════════════════════════════
+//  STORAGE KEYS
+// ═══════════════════════════════════════════════════════════
+const K_SALT   = 'btp_salt_v2';
+const K_VERIFY = 'btp_verify_v2';
+const K_DATA   = 'btp_data_v2';
+
+// ═══════════════════════════════════════════════════════════
+//  CRYPTO HELPERS  (Web Crypto API — AES-256-GCM + PBKDF2)
+// ═══════════════════════════════════════════════════════════
+let cryptoKey = null; // In-memory only — never stored
+
+function b64(buf)  { return btoa(String.fromCharCode(...new Uint8Array(buf))); }
+function unb64(s)  { return Uint8Array.from(atob(s), c => c.charCodeAt(0)); }
+
+async function deriveKey(password, salt) {
+  const km = await crypto.subtle.importKey(
+    'raw', new TextEncoder().encode(password),
+    { name: 'PBKDF2' }, false, ['deriveKey']
+  );
+  return crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt, iterations: 200000, hash: 'SHA-256' },
+    km, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']
+  );
+}
+
+async function aesEncrypt(key, plain) {
+  const iv     = crypto.getRandomValues(new Uint8Array(12));
+  const cipher = await crypto.subtle.encrypt(
+    { name: 'AES-GCM', iv }, key, new TextEncoder().encode(plain)
+  );
+  return { iv: b64(iv), c: b64(cipher) };
+}
+
+async function aesDecrypt(key, stored) {
+  const plain = await crypto.subtle.decrypt(
+    { name: 'AES-GCM', iv: unb64(stored.iv) }, key, unb64(stored.c)
+  );
+  return new TextDecoder().decode(plain);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  AUTH FLOWS
+// ═══════════════════════════════════════════════════════════
+function isFirstVisit() {
+  return !localStorage.getItem(K_SALT);
+}
+
+function setLoading(btnId, isLoading, label = 'Chargement…') {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  btn.disabled = isLoading;
+  btn.innerHTML = isLoading
+    ? `<span class="spin"></span> ${label}`
+    : btn.dataset.label || btn.textContent;
+  if (!isLoading && !btn.dataset.label) btn.dataset.label = btn.textContent;
+}
+
+async function doSetup() {
+  const pwd  = document.getElementById('setup-pwd').value;
+  const pwd2 = document.getElementById('setup-pwd2').value;
+  const err  = document.getElementById('setup-err');
+  err.textContent = '';
+  if (pwd.length < 8) { err.textContent = 'Mot de passe trop court (8 caractères minimum).'; return; }
+  if (pwd !== pwd2)   { err.textContent = 'Les deux mots de passe ne correspondent pas.'; return; }
+  setLoading('setup-btn', true, 'Dérivation de la clé…');
+  try {
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    cryptoKey  = await deriveKey(pwd, salt);
+    localStorage.setItem(K_SALT,   b64(salt));
+    localStorage.setItem(K_VERIFY, JSON.stringify(await aesEncrypt(cryptoKey, 'VALID')));
+    missions = [];
+    await persistData();
+    unlockApp();
+  } catch(e) {
+    err.textContent = 'Erreur inattendue : ' + e.message;
+  } finally {
+    setLoading('setup-btn', false);
+  }
+}
+
+async function doUnlock() {
+  const pwd = document.getElementById('unlock-pwd').value;
+  const err = document.getElementById('unlock-err');
+  err.textContent = '';
+  if (!pwd) { err.textContent = 'Veuillez saisir votre mot de passe.'; return; }
+  setLoading('unlock-btn', true, 'Vérification…');
+  try {
+    const salt = unb64(localStorage.getItem(K_SALT));
+    const key  = await deriveKey(pwd, salt);
+    const verifyStored = JSON.parse(localStorage.getItem(K_VERIFY));
+    let result;
+    try {
+      result = await aesDecrypt(key, verifyStored);
+    } catch(_) {
+      err.textContent = 'Mot de passe incorrect.';
+      return;
+    }
+    if (result !== 'VALID') { err.textContent = 'Données corrompues.'; return; }
+    cryptoKey = key;
+    const raw = localStorage.getItem(K_DATA);
+    if (raw) {
+      try {
+        missions = JSON.parse(await aesDecrypt(cryptoKey, JSON.parse(raw)));
+      } catch(_) { missions = []; }
+    } else { missions = []; }
+    document.getElementById('unlock-pwd').value = '';
+    unlockApp();
+  } catch(e) {
+    err.textContent = 'Erreur : ' + e.message;
+  } finally {
+    setLoading('unlock-btn', false);
+  }
+}
+
+async function doChangePassword() {
+  const oldPwd  = document.getElementById('chg-old').value;
+  const newPwd  = document.getElementById('chg-new').value;
+  const newPwd2 = document.getElementById('chg-new2').value;
+  const err     = document.getElementById('chg-err');
+  err.textContent = '';
+  if (!oldPwd)            { err.textContent = 'Saisissez votre ancien mot de passe.'; return; }
+  if (newPwd.length < 8)  { err.textContent = 'Nouveau mot de passe trop court (8 car. min).'; return; }
+  if (newPwd !== newPwd2) { err.textContent = 'Les nouveaux mots de passe ne correspondent pas.'; return; }
+  setLoading('chg-btn', true, 'Re-chiffrement en cours…');
+  try {
+    // Vérifier l'ancien mot de passe
+    const oldSalt = unb64(localStorage.getItem(K_SALT));
+    const oldKey  = await deriveKey(oldPwd, oldSalt);
+    try {
+      const v = await aesDecrypt(oldKey, JSON.parse(localStorage.getItem(K_VERIFY)));
+      if (v !== 'VALID') throw new Error();
+    } catch(_) {
+      err.textContent = 'Ancien mot de passe incorrect.';
+      return;
+    }
+    // Déchiffrer les données existantes
+    let existingMissions = [];
+    const raw = localStorage.getItem(K_DATA);
+    if (raw) {
+      try { existingMissions = JSON.parse(await aesDecrypt(oldKey, JSON.parse(raw))); } catch(_) {}
+    }
+    // Générer nouveau sel + nouvelle clé
+    const newSalt = crypto.getRandomValues(new Uint8Array(16));
+    const newKey  = await deriveKey(newPwd, newSalt);
+    cryptoKey = newKey;
+    missions  = existingMissions;
+    localStorage.setItem(K_SALT,   b64(newSalt));
+    localStorage.setItem(K_VERIFY, JSON.stringify(await aesEncrypt(newKey, 'VALID')));
+    await persistData();
+    // Succès → retour à l'écran de déverrouillage
+    ['chg-old','chg-new','chg-new2'].forEach(id => document.getElementById(id).value = '');
+    err.style.color = '#4ade80';
+    err.textContent = '✓ Mot de passe changé. Vos données ont été re-chiffrées.';
+    setTimeout(() => {
+      err.textContent = '';
+      err.style.color = '';
+      showView('view-unlock');
+    }, 2000);
+  } catch(e) {
+    err.textContent = 'Erreur : ' + e.message;
+  } finally {
+    setLoading('chg-btn', false);
+  }
+}
+
+function lockApp() {
+  cryptoKey = null;
+  missions  = [];
+  chartWeekly && chartWeekly.destroy();
+  chartStatus && chartStatus.destroy();
+  chartWeekly = null;
+  chartStatus = null;
+  document.getElementById('app').style.display  = 'none';
+  document.getElementById('gate').style.display = 'flex';
+  document.getElementById('unlock-pwd').value = '';
+  showView('view-unlock');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  GATE UTILS
+// ═══════════════════════════════════════════════════════════
+function showView(id) {
+  document.querySelectorAll('.gate-view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function unlockApp() {
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('app').style.display  = 'block';
+  initApp();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  DATA (async persist / load)
+// ═══════════════════════════════════════════════════════════
+async function persistData() {
+  if (!cryptoKey) return;
+  const enc = await aesEncrypt(cryptoKey, JSON.stringify(missions));
+  localStorage.setItem(K_DATA, JSON.stringify(enc));
+}
+
+// ═══════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════
+let missions = [];
+let editingId = null;
+let sortCol = 'date', sortDir = 'desc';
+let filterStatus = 'all';
+let weekOffset = 0;
+let chartWeekly = null, chartStatus = null;
+
+const STATUSES = {
+  waiting:   { label: 'En attente', cls: 'b-waiting' },
+  relance:   { label: 'À relancer', cls: 'b-relance' },
+  entretien: { label: 'Entretien',  cls: 'b-entretien' },
+  accepte:   { label: 'Accepté',    cls: 'b-accepte' },
+  refuse:    { label: 'Refusé',     cls: 'b-refuse' },
+  sanssuite: { label: 'Sans suite', cls: 'b-sanssuite' }
+};
+
+const PLAT_COLORS = {
+  LinkedIn:'#0077B5', Malt:'#FC5656', Comet:'#6C5CE7',
+  'Cherry Pick':'#E17055', Pylote:'#00B894', Freework:'#FDCB6E'
+};
+
+const STATUS_COLORS = ['#0369a1','#d97706','#16a34a','#065f46','#dc2626','#94a3b8'];
+
+// ═══════════════════════════════════════════════════════════
+//  WEEK HELPERS
+// ═══════════════════════════════════════════════════════════
+function getWeekBounds(off = 0) {
+  const now = new Date(), day = now.getDay() || 7;
+  const mon = new Date(now); mon.setDate(now.getDate() - day + 1 + off * 7); mon.setHours(0,0,0,0);
+  const sun = new Date(mon); sun.setDate(mon.getDate() + 6); sun.setHours(23,59,59,999);
+  return { mon, sun };
+}
+function isoD(d) { return d.toISOString().split('T')[0]; }
+function fmtD(d) { return d.toLocaleDateString('fr-FR', { day:'numeric', month:'short' }); }
+function weekLabel(off = 0) {
+  const { mon, sun } = getWeekBounds(off);
+  const sfx = off === 0 ? ' (cette semaine)' : off === -1 ? ' (semaine passée)' : '';
+  return `${fmtD(mon)} – ${fmtD(sun)}${sfx}`;
+}
+function shiftWeek(d) { weekOffset += d; render(); }
+
+// ═══════════════════════════════════════════════════════════
+//  FORM
+// ═══════════════════════════════════════════════════════════
+function openForm(id = null) {
+  editingId = id;
+  document.getElementById('form-title').textContent = id ? 'Modifier la mission' : 'Ajouter une mission';
+  const m = id ? missions.find(x => x.id === id) : null;
+  document.getElementById('f-platform').value = m?.platform ?? 'LinkedIn';
+  document.getElementById('f-company').value  = m?.company  ?? '';
+  document.getElementById('f-role').value     = m?.role     ?? '';
+  document.getElementById('f-date').value     = m?.date     ?? isoD(new Date());
+  document.getElementById('f-status').value   = m?.status   ?? 'waiting';
+  document.getElementById('f-tjm').value      = m?.tjm      ?? '';
+  document.getElementById('f-next').value     = m?.next     ?? '';
+  document.getElementById('f-notes').value    = m?.notes    ?? '';
+  document.getElementById('form-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('f-company').focus(), 80);
+}
+
+function closeForm() {
+  document.getElementById('form-overlay').classList.remove('open');
+  editingId = null;
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('form-overlay')) closeForm();
+}
+
+async function saveMission() {
+  const company = document.getElementById('f-company').value.trim();
+  const role    = document.getElementById('f-role').value.trim();
+  if (!company || !role) { alert('Renseignez au moins l\'entreprise et l\'intitulé.'); return; }
+  const d = {
+    platform: document.getElementById('f-platform').value,
+    company, role,
+    date:   document.getElementById('f-date').value,
+    status: document.getElementById('f-status').value,
+    tjm:    document.getElementById('f-tjm').value ? parseInt(document.getElementById('f-tjm').value) : null,
+    next:   document.getElementById('f-next').value.trim(),
+    notes:  document.getElementById('f-notes').value.trim()
+  };
+  if (editingId) {
+    const i = missions.findIndex(x => x.id === editingId);
+    if (i !== -1) missions[i] = { ...missions[i], ...d };
+  } else {
+    missions.push({ id: Date.now(), ...d });
+  }
+  closeForm();
+  render();
+  await persistData();
+}
+
+async function deleteMission(id) {
+  if (!confirm('Supprimer cette mission ?')) return;
+  missions = missions.filter(m => m.id !== id);
+  render();
+  await persistData();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  FILTERS / SORT
+// ═══════════════════════════════════════════════════════════
+function setFilter(s, el) {
+  filterStatus = s;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+function sortBy(col) {
+  sortDir = sortCol === col ? (sortDir === 'asc' ? 'desc' : 'asc') : 'desc';
+  sortCol = col;
+  render();
+}
+
+function getFiltered() {
+  const plat   = document.getElementById('filter-plat')?.value || 'all';
+  const search = (document.getElementById('filter-search')?.value || '').toLowerCase();
+  return missions.filter(m => {
+    if (filterStatus !== 'all' && m.status !== filterStatus) return false;
+    if (plat !== 'all' && m.platform !== plat) return false;
+    if (search && !m.company.toLowerCase().includes(search) && !m.role.toLowerCase().includes(search)) return false;
+    return true;
+  }).sort((a, b) => {
+    const av = a[sortCol] || '', bv = b[sortCol] || '';
+    const cmp = av < bv ? -1 : av > bv ? 1 : 0;
+    return sortDir === 'asc' ? cmp : -cmp;
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+//  CHARTS
+// ═══════════════════════════════════════════════════════════
+function initCharts() {
+  const ctx1 = document.getElementById('chartWeekly').getContext('2d');
+  chartWeekly = new Chart(ctx1, {
+    type: 'bar',
+    data: { labels: [], datasets: [{ label: 'Candidatures', data: [], backgroundColor: '#2563eb', borderRadius: 5 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false } },
+        y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 }, grid: { color: '#f1f5f9' } }
+      }
+    }
+  });
+  const ctx2 = document.getElementById('chartStatus').getContext('2d');
+  chartStatus = new Chart(ctx2, {
+    type: 'doughnut',
+    data: { labels: [], datasets: [{ data: [], backgroundColor: STATUS_COLORS, borderWidth: 2, borderColor: '#fff' }] },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '60%',
+      plugins: { legend: { position: 'right', labels: { font: { size: 11 }, padding: 10, boxWidth: 10 } } }
+    }
+  });
+}
+
+function updateCharts() {
+  // Weekly bar
+  const weeks = [];
+  for (let w = -7; w <= 0; w++) {
+    const { mon, sun } = getWeekBounds(w);
+    const count = missions.filter(m => m.date >= isoD(mon) && m.date <= isoD(sun)).length;
+    weeks.push({ label: fmtD(mon), count });
+  }
+  chartWeekly.data.labels = weeks.map(w => w.label);
+  chartWeekly.data.datasets[0].data = weeks.map(w => w.count);
+  chartWeekly.update('none');
+  // Status donut
+  const sc = {};
+  missions.forEach(m => { sc[m.status] = (sc[m.status] || 0) + 1; });
+  const keys = Object.keys(sc).filter(k => sc[k] > 0);
+  chartStatus.data.labels   = keys.map(k => STATUSES[k]?.label || k);
+  chartStatus.data.datasets[0].data            = keys.map(k => sc[k]);
+  chartStatus.data.datasets[0].backgroundColor = keys.map((_,i) => STATUS_COLORS[i % STATUS_COLORS.length]);
+  chartStatus.update('none');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════════════════════
+function esc(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function render() {
+  const filtered = getFiltered();
+  const total    = missions.length;
+  const relCnt   = missions.filter(m => m.status === 'relance').length;
+  const entCnt   = missions.filter(m => m.status === 'entretien').length;
+  const resp     = missions.filter(m => ['entretien','accepte','refuse'].includes(m.status)).length;
+
+  document.getElementById('kpi-total').textContent     = total;
+  document.getElementById('kpi-relance').textContent   = relCnt;
+  document.getElementById('kpi-entretien').textContent = entCnt;
+  document.getElementById('kpi-rate').textContent      = total > 0 ? Math.round((resp/total)*100) + '%' : '—';
+  document.getElementById('header-date').textContent   = new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('week-nav-label').textContent = weekLabel(weekOffset);
+
+  // Objective
+  const { mon, sun } = getWeekBounds(weekOffset);
+  const wCnt = missions.filter(m => m.date >= isoD(mon) && m.date <= isoD(sun)).length;
+  document.getElementById('obj-week').textContent     = weekLabel(weekOffset);
+  document.getElementById('obj-count').textContent    = wCnt + ' / 5';
+  document.getElementById('obj-bar').style.width      = Math.min(100, Math.round(wCnt/5*100)) + '%';
+
+  // Relance list
+  const rels = missions.filter(m => m.status === 'relance');
+  document.getElementById('relance-list').innerHTML = rels.length === 0
+    ? '<span style="color:var(--text3);">Aucune relance à planifier. ✓</span>'
+    : rels.slice(0,5).map(m =>
+        `<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);">
+          <span>${esc(m.company)}</span>
+          <span style="color:var(--amber);font-size:11px;">${esc(m.platform)}</span>
+        </div>`
+      ).join('') + (rels.length > 5 ? `<div style="color:var(--text3);margin-top:4px;">+ ${rels.length-5} autres</div>` : '');
+
+  // Platform stats
+  const pc = {};
+  missions.forEach(m => { pc[m.platform] = (pc[m.platform] || 0) + 1; });
+  const maxP = Math.max(1, ...Object.values(pc));
+  const platDiv = document.getElementById('plat-list');
+  const sorted = Object.keys(pc).sort((a,b) => pc[b] - pc[a]);
+  platDiv.innerHTML = sorted.length === 0
+    ? '<span style="color:var(--text3);font-size:12px;">Aucune donnée</span>'
+    : sorted.map(p => {
+        const col = PLAT_COLORS[p] || '#64748b';
+        return `<div class="plat-row">
+          <span class="plat-name">${p}</span>
+          <div class="plat-prog"><div class="plat-prog-bar" style="width:${Math.round(pc[p]/maxP*100)}%;background:${col};"></div></div>
+          <span class="plat-count">${pc[p]}</span>
+        </div>`;
+      }).join('');
+
+  // Table
+  document.getElementById('table-count').textContent = filtered.length + ' mission' + (filtered.length > 1 ? 's' : '');
+  const tbody = document.getElementById('mission-tbody');
+  tbody.innerHTML = '';
+  document.getElementById('empty-msg').style.display   = filtered.length === 0 ? 'block' : 'none';
+  document.getElementById('mission-table').style.display = filtered.length === 0 ? 'none' : 'table';
+  filtered.forEach(m => {
+    const s = STATUSES[m.status] || { label: m.status, cls: '' };
+    const dateStr = m.date ? new Date(m.date + 'T12:00:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'2-digit'}) : '—';
+    const col = PLAT_COLORS[m.platform] || '#64748b';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><span class="plat" style="background:${col}22;color:${col}">${esc(m.platform)}</span></td>
+      <td style="font-weight:500;">${esc(m.company)}</td>
+      <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${esc(m.role)}">${esc(m.role)}</td>
+      <td style="color:var(--text2);white-space:nowrap;">${dateStr}</td>
+      <td><span class="badge ${s.cls}">${s.label}</span></td>
+      <td style="color:var(--text2);font-size:12px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${esc(m.next)}">${esc(m.next||'—')}</td>
+      <td><div class="td-actions">
+        <button class="icon-btn" onclick="openForm(${m.id})" title="Modifier">✏️</button>
+        <button class="icon-btn del" onclick="deleteMission(${m.id})" title="Supprimer">🗑</button>
+      </div></td>`;
+    tbody.appendChild(tr);
+  });
+
+  if (chartWeekly && chartStatus) updateCharts();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  EXPORT CSV
+// ═══════════════════════════════════════════════════════════
+function exportCSV() {
+  const headers = ['Plateforme','Entreprise','Mission','Date','Statut','TJM (€/j)','Prochaine action','Notes'];
+  const rows = missions.map(m =>
+    [m.platform,m.company,m.role,m.date,STATUSES[m.status]?.label||m.status,m.tjm||'',m.next||'',m.notes||'']
+    .map(v => '"' + String(v).replace(/"/g,'""') + '"').join(',')
+  );
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'prospection_' + isoD(new Date()) + '.csv';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════
+function initApp() {
+  initCharts();
+  render();
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    if (document.getElementById('view-setup').classList.contains('active'))    doSetup();
+    else if (document.getElementById('view-unlock').classList.contains('active')) doUnlock();
+    else if (document.getElementById('view-changepwd').classList.contains('active')) doChangePassword();
+  }
+});
+
+// Boot
+window.addEventListener('DOMContentLoaded', () => {
+  if (isFirstVisit()) {
+    showView('view-setup');
+  } else {
+    showView('view-unlock');
+    setTimeout(() => document.getElementById('unlock-pwd').focus(), 100);
+  }
+});
+</script>
+</body>
+</html>
