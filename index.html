@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Suivi Prospection Freelance — Bleze T.</title>
+  <title>Suivi Freelance — Bleze T.</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1" integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ" crossorigin="anonymous"></script>
   <style>
     :root {
       --bg:#f0f2f5; --card:#fff; --header:#0f172a; --accent:#2563eb; --accent-l:#dbeafe;
       --text:#1e293b; --text2:#64748b; --text3:#94a3b8; --border:#e2e8f0;
       --green:#16a34a; --green-l:#dcfce7; --amber:#d97706; --amber-l:#fef3c7;
-      --red:#dc2626; --red-l:#fee2e2; --gray-l:#f1f5f9;
+      --red:#dc2626; --red-l:#fee2e2; --gray-l:#f1f5f9; --purple:#7c3aed; --purple-l:#ede9fe;
+      --teal:#0d9488; --teal-l:#ccfbf1;
       --r:10px; --sh:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
     }
     *{box-sizing:border-box;margin:0;padding:0;}
@@ -41,8 +42,8 @@
     @keyframes spin{to{transform:rotate(360deg);}}
 
     /* ── APP ── */
-    #app{display:none;max-width:1300px;margin:0 auto;padding:20px 16px 40px;}
-    .header{background:var(--header);color:#fff;border-radius:var(--r);padding:18px 24px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+    #app{display:none;max-width:1340px;margin:0 auto;padding:20px 16px 40px;}
+    .header{background:var(--header);color:#fff;border-radius:var(--r);padding:18px 24px;margin-bottom:0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-bottom-left-radius:0;border-bottom-right-radius:0;}
     .header-left h1{font-size:18px;font-weight:600;}
     .header-left p{color:#94a3b8;font-size:12px;margin-top:2px;}
     .header-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
@@ -59,6 +60,12 @@
     .week-nav button:hover{background:rgba(255,255,255,.18);}
     .week-nav span{font-size:12px;color:#94a3b8;min-width:150px;text-align:center;}
 
+    /* ── TABS ── */
+    .tab-nav{background:#1e293b;border-radius:0;padding:0 24px;display:flex;gap:0;margin-bottom:18px;border-bottom-left-radius:var(--r);border-bottom-right-radius:var(--r);}
+    .tab-btn{background:none;border:none;color:#94a3b8;font-size:13px;font-weight:500;padding:12px 18px;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;white-space:nowrap;}
+    .tab-btn:hover{color:#cbd5e1;}
+    .tab-btn.active{color:#fff;border-bottom-color:var(--accent);}
+
     /* KPIs */
     .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px;}
     .kpi-card{background:var(--card);border-radius:var(--r);padding:18px 20px;box-shadow:var(--sh);}
@@ -68,9 +75,12 @@
     .kpi-green .kpi-value{color:var(--green);}
     .kpi-amber .kpi-value{color:var(--amber);}
     .kpi-blue .kpi-value{color:var(--accent);}
+    .kpi-purple .kpi-value{color:var(--purple);}
+    .kpi-teal .kpi-value{color:var(--teal);}
 
     /* Layout */
     .grid-2{display:grid;grid-template-columns:1fr 330px;gap:14px;margin-bottom:14px;}
+    .grid-prosp{display:grid;grid-template-columns:1fr 300px;gap:14px;margin-bottom:14px;}
     .card{background:var(--card);border-radius:var(--r);padding:20px 22px;box-shadow:var(--sh);}
     .card-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
 
@@ -84,6 +94,7 @@
     .form-group input,.form-group select,.form-group textarea{width:100%;padding:9px 11px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:13px;font-family:inherit;}
     .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.1);}
     .form-group textarea{height:70px;resize:none;}
+    .form-group textarea.tall{height:110px;}
     .form-full{margin-bottom:12px;}
     .form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;}
     .btn-cancel{padding:9px 18px;border-radius:7px;border:none;background:var(--gray-l);color:var(--text2);font-size:13px;cursor:pointer;}
@@ -108,7 +119,7 @@
     .icon-btn.del:hover{background:var(--red-l);color:var(--red);}
     .td-actions{display:flex;gap:4px;}
 
-    /* Badges */
+    /* Badges — candidatures */
     .badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:11px;font-weight:600;white-space:nowrap;}
     .b-waiting{background:#e0f2fe;color:#0369a1;}
     .b-relance{background:var(--amber-l);color:#92400e;}
@@ -116,6 +127,16 @@
     .b-accepte{background:#d1fae5;color:#065f46;}
     .b-refuse{background:var(--red-l);color:#991b1b;}
     .b-sanssuite{background:var(--gray-l);color:var(--text2);}
+
+    /* Badges — prospection */
+    .bp-cold{background:#f1f5f9;color:#475569;}
+    .bp-sent{background:#dbeafe;color:#1d4ed8;}
+    .bp-relance{background:var(--amber-l);color:#92400e;}
+    .bp-reponse{background:var(--teal-l);color:#0f766e;}
+    .bp-rdv{background:var(--purple-l);color:#6d28d9;}
+    .bp-gagne{background:var(--green-l);color:#166534;}
+    .bp-archive{background:var(--gray-l);color:var(--text3);}
+
     .plat{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11px;}
 
     /* Sidebar */
@@ -129,11 +150,31 @@
     .empty{text-align:center;padding:36px 20px;color:var(--text3);}
     canvas{max-height:200px;}
 
+    /* Prospection specific */
+    .lusha-meter{background:var(--gray-l);border-radius:6px;padding:12px 14px;margin-bottom:14px;}
+    .lusha-label{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+    .lusha-bar-wrap{background:#e2e8f0;border-radius:4px;height:10px;overflow:hidden;}
+    .lusha-bar{height:100%;border-radius:4px;background:var(--teal);transition:width .4s;}
+    .lusha-info{display:flex;justify-content:space-between;margin-top:5px;font-size:11px;color:var(--text3);}
+
+    .prompt-box{background:#0f172a;border-radius:8px;padding:14px 16px;font-size:11.5px;color:#94a3b8;line-height:1.7;font-family:'Courier New',monospace;white-space:pre-wrap;word-break:break-word;max-height:220px;overflow-y:auto;}
+    .copy-btn{padding:6px 14px;border-radius:7px;border:none;background:var(--accent);color:#fff;font-size:12px;font-weight:500;cursor:pointer;}
+    .copy-btn:hover{background:#1d4ed8;}
+    .copy-btn.copied{background:var(--green);}
+
+    .stat-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;}
+    .stat-row:last-child{border-bottom:none;}
+    .stat-label{color:var(--text2);}
+    .stat-value{font-weight:600;color:var(--text);}
+
+    .copy-cell{cursor:pointer;color:var(--accent);font-size:12px;}
+    .copy-cell:hover{text-decoration:underline;}
+
     /* Footer */
     .sec-footer{text-align:center;margin-top:28px;font-size:11px;color:var(--text3);}
 
     /* Responsive */
-    @media(max-width:900px){.grid-2{grid-template-columns:1fr;}}
+    @media(max-width:900px){.grid-2{grid-template-columns:1fr;}.grid-prosp{grid-template-columns:1fr;}}
     @media(max-width:600px){.kpi-row{grid-template-columns:1fr 1fr;}.form-grid{grid-template-columns:1fr;}.gate-box{padding:32px 24px;}}
     @media print{#gate{display:none!important;}#app{display:block!important;}.header-actions{display:none;}.card{box-shadow:none;border:1px solid var(--border);}}
   </style>
@@ -191,120 +232,248 @@
      MAIN APP
      ══════════════════════════════════ -->
 <div id="app">
+
+  <!-- ── HEADER ── -->
   <div class="header">
     <div class="header-left">
-      <h1>Suivi Prospection Freelance — Bleze T.</h1>
+      <h1>Suivi Freelance — Bleze T.</h1>
       <p id="header-date"></p>
     </div>
     <div class="header-actions">
-      <div class="week-nav">
+      <div class="week-nav" id="week-nav-wrap">
         <button onclick="shiftWeek(-1)">&#8249;</button>
         <span id="week-nav-label"></span>
         <button onclick="shiftWeek(1)">&#8250;</button>
       </div>
-      <button class="btn btn-ghost btn-sm" onclick="exportCSV()">⬇ Export CSV</button>
-      <button class="btn btn-primary btn-sm" onclick="openForm()">+ Ajouter</button>
+      <button class="btn btn-ghost btn-sm" id="btn-export-csv" onclick="exportCSV()">⬇ Export CSV</button>
+      <button class="btn btn-primary btn-sm" id="btn-add" onclick="handleAdd()">+ Ajouter</button>
       <button class="btn btn-lock btn-sm" onclick="lockApp()" title="Verrouiller et chiffrer">🔒 Verrouiller</button>
     </div>
   </div>
 
-  <div class="kpi-row">
-    <div class="kpi-card">
-      <div class="kpi-label">Total candidatures</div>
-      <div class="kpi-value" id="kpi-total">0</div>
-      <div class="kpi-sub">toutes semaines</div>
-    </div>
-    <div class="kpi-card kpi-amber">
-      <div class="kpi-label">À relancer</div>
-      <div class="kpi-value" id="kpi-relance">0</div>
-      <div class="kpi-sub">action requise</div>
-    </div>
-    <div class="kpi-card kpi-green">
-      <div class="kpi-label">Entretiens</div>
-      <div class="kpi-value" id="kpi-entretien">0</div>
-      <div class="kpi-sub">en cours</div>
-    </div>
-    <div class="kpi-card kpi-blue">
-      <div class="kpi-label">Taux de réponse</div>
-      <div class="kpi-value" id="kpi-rate">—</div>
-      <div class="kpi-sub">réponses / envois</div>
-    </div>
+  <!-- ── TABS ── -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="showTab('candidatures',this)">📋 Candidatures plateformes</button>
+    <button class="tab-btn" onclick="showTab('prospection',this)">🎯 Prospection LinkedIn</button>
   </div>
 
-  <div class="grid-2">
-    <!-- LEFT: chart + table -->
-    <div>
-      <div class="card" style="margin-bottom:14px;">
-        <div class="card-title">Candidatures par semaine <span style="font-size:11px;color:var(--text3);font-weight:400;">8 dernières semaines</span></div>
-        <canvas id="chartWeekly" role="img" aria-label="Histogramme des candidatures par semaine"></canvas>
+  <!-- ══════════════════════════════════════════════════
+       TAB 1 — CANDIDATURES (existing)
+       ══════════════════════════════════════════════════ -->
+  <div id="section-candidatures">
+
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-label">Total candidatures</div>
+        <div class="kpi-value" id="kpi-total">0</div>
+        <div class="kpi-sub">toutes semaines</div>
       </div>
-      <div class="card">
-        <div class="card-title">Missions <span id="table-count" style="font-size:11px;color:var(--text3);font-weight:400;"></span></div>
-        <div class="filters-bar">
-          <span class="chip active" onclick="setFilter('all',this)">Toutes</span>
-          <span class="chip" onclick="setFilter('waiting',this)">En attente</span>
-          <span class="chip" onclick="setFilter('relance',this)">À relancer</span>
-          <span class="chip" onclick="setFilter('entretien',this)">Entretien</span>
-          <span class="chip" onclick="setFilter('accepte',this)">Accepté</span>
-          <span class="chip" onclick="setFilter('refuse',this)">Refusé</span>
-          <select class="filter-select" id="filter-plat" onchange="render()">
-            <option value="all">Toutes plateformes</option>
-            <option>LinkedIn</option><option>Malt</option><option>Comet</option>
-            <option>Cherry Pick</option><option>Pylote</option><option>Freework</option>
-          </select>
-          <input type="text" class="filter-select" id="filter-search" placeholder="🔍 Rechercher…" oninput="render()" style="width:155px;">
-        </div>
-        <div class="table-wrap">
-          <div class="empty" id="empty-msg" style="display:none;">Aucune mission pour ces filtres.</div>
-          <table id="mission-table" style="display:none;">
-            <thead><tr>
-              <th onclick="sortBy('platform')">Plateforme</th>
-              <th onclick="sortBy('company')">Entreprise</th>
-              <th onclick="sortBy('role')">Mission</th>
-              <th onclick="sortBy('date')">Date</th>
-              <th onclick="sortBy('status')">Statut</th>
-              <th>Prochaine action</th>
-              <th></th>
-            </tr></thead>
-            <tbody id="mission-tbody"></tbody>
-          </table>
-        </div>
+      <div class="kpi-card kpi-amber">
+        <div class="kpi-label">À relancer</div>
+        <div class="kpi-value" id="kpi-relance">0</div>
+        <div class="kpi-sub">action requise</div>
+      </div>
+      <div class="kpi-card kpi-green">
+        <div class="kpi-label">Entretiens</div>
+        <div class="kpi-value" id="kpi-entretien">0</div>
+        <div class="kpi-sub">en cours</div>
+      </div>
+      <div class="kpi-card kpi-blue">
+        <div class="kpi-label">Taux de réponse</div>
+        <div class="kpi-value" id="kpi-rate">—</div>
+        <div class="kpi-sub">réponses / envois</div>
       </div>
     </div>
 
-    <!-- RIGHT: sidebar -->
-    <div>
-      <div class="card" style="margin-bottom:14px;">
-        <div class="card-title">Objectif semaine</div>
-        <div style="font-size:12px;color:var(--text2);margin-bottom:12px;" id="obj-week"></div>
-        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;">
-          <span style="color:var(--text2);">Candidatures</span>
-          <span style="font-weight:700;" id="obj-count">0 / 5</span>
+    <div class="grid-2">
+      <!-- LEFT: chart + table -->
+      <div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-title">Candidatures par semaine <span style="font-size:11px;color:var(--text3);font-weight:400;">8 dernières semaines</span></div>
+          <canvas id="chartWeekly" role="img" aria-label="Histogramme des candidatures par semaine"></canvas>
         </div>
-        <div class="progress-wrap"><div class="progress-bar" id="obj-bar" style="width:0%"></div></div>
-        <div style="font-size:11px;color:var(--text3);margin-top:6px;">Cible : 5 candidatures / semaine</div>
-        <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
-          <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;">Relances à faire</div>
-          <div id="relance-list" style="font-size:12px;color:var(--text3);">Aucune relance.</div>
+        <div class="card">
+          <div class="card-title">Missions <span id="table-count" style="font-size:11px;color:var(--text3);font-weight:400;"></span></div>
+          <div class="filters-bar">
+            <span class="chip active" onclick="setFilter('all',this)">Toutes</span>
+            <span class="chip" onclick="setFilter('waiting',this)">En attente</span>
+            <span class="chip" onclick="setFilter('relance',this)">À relancer</span>
+            <span class="chip" onclick="setFilter('entretien',this)">Entretien</span>
+            <span class="chip" onclick="setFilter('accepte',this)">Accepté</span>
+            <span class="chip" onclick="setFilter('refuse',this)">Refusé</span>
+            <select class="filter-select" id="filter-plat" onchange="render()">
+              <option value="all">Toutes plateformes</option>
+              <option>LinkedIn</option><option>Malt</option><option>Comet</option>
+              <option>Cherry Pick</option><option>Pylote</option><option>Freework</option>
+            </select>
+            <input type="text" class="filter-select" id="filter-search" placeholder="🔍 Rechercher…" oninput="render()" style="width:155px;">
+          </div>
+          <div class="table-wrap">
+            <div class="empty" id="empty-msg" style="display:none;">Aucune mission pour ces filtres.</div>
+            <table id="mission-table" style="display:none;">
+              <thead><tr>
+                <th onclick="sortBy('platform')">Plateforme</th>
+                <th onclick="sortBy('company')">Entreprise</th>
+                <th onclick="sortBy('role')">Mission</th>
+                <th onclick="sortBy('date')">Date</th>
+                <th onclick="sortBy('status')">Statut</th>
+                <th>Prochaine action</th>
+                <th></th>
+              </tr></thead>
+              <tbody id="mission-tbody"></tbody>
+            </table>
+          </div>
         </div>
       </div>
-      <div class="card" style="margin-bottom:14px;">
-        <div class="card-title">Par plateforme</div>
-        <div id="plat-list" style="display:flex;flex-direction:column;gap:8px;"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">Répartition statuts</div>
-        <div style="position:relative;height:170px;">
-          <canvas id="chartStatus" role="img" aria-label="Répartition par statut"></canvas>
+
+      <!-- RIGHT: sidebar -->
+      <div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-title">Objectif semaine</div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:12px;" id="obj-week"></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;">
+            <span style="color:var(--text2);">Candidatures</span>
+            <span style="font-weight:700;" id="obj-count">0 / 5</span>
+          </div>
+          <div class="progress-wrap"><div class="progress-bar" id="obj-bar" style="width:0%"></div></div>
+          <div style="font-size:11px;color:var(--text3);margin-top:6px;">Cible : 5 candidatures / semaine</div>
+          <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
+            <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:8px;">Relances à faire</div>
+            <div id="relance-list" style="font-size:12px;color:var(--text3);">Aucune relance.</div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-title">Par plateforme</div>
+          <div id="plat-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Répartition statuts</div>
+          <div style="position:relative;height:170px;">
+            <canvas id="chartStatus" role="img" aria-label="Répartition par statut"></canvas>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+
+  </div><!-- /section-candidatures -->
+
+  <!-- ══════════════════════════════════════════════════
+       TAB 2 — PROSPECTION LINKEDIN
+       ══════════════════════════════════════════════════ -->
+  <div id="section-prospection" style="display:none;">
+
+    <!-- KPIs prospection -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-label">Prospects identifiés</div>
+        <div class="kpi-value" id="pkpi-total">0</div>
+        <div class="kpi-sub">dans le pipeline</div>
+      </div>
+      <div class="kpi-card kpi-blue">
+        <div class="kpi-label">Messages envoyés</div>
+        <div class="kpi-value" id="pkpi-sent">0</div>
+        <div class="kpi-sub">ce mois</div>
+      </div>
+      <div class="kpi-card kpi-teal">
+        <div class="kpi-label">Réponses reçues</div>
+        <div class="kpi-value" id="pkpi-reponse">0</div>
+        <div class="kpi-sub">dont RDV</div>
+      </div>
+      <div class="kpi-card kpi-purple">
+        <div class="kpi-label">Taux de réponse</div>
+        <div class="kpi-value" id="pkpi-rate">—</div>
+        <div class="kpi-sub">réponses / envoyés</div>
+      </div>
+      <div class="kpi-card kpi-green">
+        <div class="kpi-label">RDV planifiés</div>
+        <div class="kpi-value" id="pkpi-rdv">0</div>
+        <div class="kpi-sub">opportunités actives</div>
+      </div>
+    </div>
+
+    <div class="grid-prosp">
+      <!-- LEFT: table prospects -->
+      <div>
+        <div class="card">
+          <div class="card-title">
+            Prospects
+            <span id="ptable-count" style="font-size:11px;color:var(--text3);font-weight:400;"></span>
+          </div>
+          <div class="filters-bar">
+            <span class="chip active" id="pchip-all" onclick="setPFilter('all',this)">Tous</span>
+            <span class="chip" onclick="setPFilter('cold',this)">À contacter</span>
+            <span class="chip" onclick="setPFilter('sent',this)">Envoyé</span>
+            <span class="chip" onclick="setPFilter('relance',this)">Relance</span>
+            <span class="chip" onclick="setPFilter('reponse',this)">Réponse</span>
+            <span class="chip" onclick="setPFilter('rdv',this)">RDV</span>
+            <span class="chip" onclick="setPFilter('gagne',this)">Gagné</span>
+            <input type="text" class="filter-select" id="pfilter-search" placeholder="🔍 Nom, entreprise…" oninput="renderProsp()" style="width:160px;">
+          </div>
+          <div class="table-wrap">
+            <div class="empty" id="pempty-msg" style="display:none;">Aucun prospect pour ces filtres.</div>
+            <table id="prosp-table" style="display:none;">
+              <thead><tr>
+                <th onclick="pSortBy('name')">Nom</th>
+                <th onclick="pSortBy('company')">Entreprise</th>
+                <th>LinkedIn</th>
+                <th>Email (Apollo)</th>
+                <th onclick="pSortBy('date')">Date contact</th>
+                <th onclick="pSortBy('status')">Statut</th>
+                <th>Prochaine action</th>
+                <th></th>
+              </tr></thead>
+              <tbody id="prosp-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: sidebar prospection -->
+      <div>
+
+        <!-- Lusha credits -->
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-title">Crédits Apollo <span style="font-size:11px;font-weight:400;color:var(--text3);">50 / mois</span></div>
+          <div class="lusha-meter">
+            <div class="lusha-label">
+              <span>Emails extraits ce mois</span>
+              <span id="lusha-count" style="font-weight:700;color:var(--teal);">0</span>
+            </div>
+            <div class="lusha-bar-wrap"><div class="lusha-bar" id="lusha-bar" style="width:0%"></div></div>
+            <div class="lusha-info">
+              <span>0 utilisés</span>
+              <span id="lusha-remain" style="color:var(--teal);font-weight:600;">50 restants</span>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--text3);line-height:1.6;">
+            💡 Qualifiez d'abord le prospect sur LinkedIn avant de griller un crédit Apollo.
+          </div>
+        </div>
+
+        <!-- Stats entonnoir -->
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-title">Entonnoir de conversion</div>
+          <div id="prosp-funnel"></div>
+        </div>
+
+        <!-- Prompt Claude in Chrome -->
+        <div class="card">
+          <div class="card-title">
+            Prompt Claude in Chrome
+            <button class="copy-btn" id="copy-prompt-btn" onclick="copyPrompt()">📋 Copier</button>
+          </div>
+          <p style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.5;">Ouvrez Claude in Chrome sur le profil LinkedIn du prospect, collez ce prompt :</p>
+          <div class="prompt-box" id="prompt-display"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /section-prospection -->
 
   <div class="sec-footer">🔐 Données chiffrées localement · AES-256-GCM · PBKDF2 200 000 itérations · Clé jamais stockée</div>
 </div>
 
-<!-- ── MISSION FORM ── -->
+<!-- ── MISSION FORM (Tab 1) ── -->
 <div class="overlay" id="form-overlay" onclick="handleOverlayClick(event)">
   <div class="form-box" onclick="event.stopPropagation()">
     <h2 id="form-title">Ajouter une mission</h2>
@@ -333,6 +502,43 @@
   </div>
 </div>
 
+<!-- ── PROSPECT FORM (Tab 2) ── -->
+<div class="overlay" id="prosp-overlay" onclick="handleProspOverlayClick(event)">
+  <div class="form-box" onclick="event.stopPropagation()">
+    <h2 id="pform-title">Ajouter un prospect</h2>
+    <div class="form-grid">
+      <div class="form-group"><label>Prénom Nom</label><input type="text" id="pf-name" placeholder="ex: Marie Dupont"></div>
+      <div class="form-group"><label>Poste</label><input type="text" id="pf-role" placeholder="ex: DAF"></div>
+      <div class="form-group"><label>Entreprise</label><input type="text" id="pf-company" placeholder="ex: Airbus"></div>
+      <div class="form-group"><label>Secteur</label><input type="text" id="pf-sector" placeholder="ex: Aéronautique"></div>
+      <div class="form-group"><label>Date de contact</label><input type="date" id="pf-date"></div>
+      <div class="form-group"><label>Statut</label>
+        <select id="pf-status">
+          <option value="cold">À contacter</option>
+          <option value="sent">Message envoyé</option>
+          <option value="relance">Relance J+7</option>
+          <option value="reponse">Réponse reçue</option>
+          <option value="rdv">RDV planifié</option>
+          <option value="gagne">Gagné</option>
+          <option value="archive">Archivé</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-full form-group"><label>URL profil LinkedIn</label><input type="url" id="pf-linkedin" placeholder="https://linkedin.com/in/..."></div>
+    <div class="form-grid">
+      <div class="form-group"><label>Email (Apollo)</label><input type="email" id="pf-email" placeholder="marie.dupont@airbus.com"></div>
+      <div class="form-group"><label>Téléphone (Apollo)</label><input type="tel" id="pf-phone" placeholder="+33 6 ..."></div>
+    </div>
+    <div class="form-full form-group"><label>Message envoyé (copie)</label><textarea class="tall" id="pf-message" placeholder="Colle ici le message personnalisé par Claude in Chrome…"></textarea></div>
+    <div class="form-full form-group"><label>Prochaine action</label><input type="text" id="pf-next" placeholder="ex: Relancer le 03/06 si pas de réponse"></div>
+    <div class="form-full form-group"><label>Notes</label><textarea id="pf-notes" placeholder="Contexte, observations sur le profil…"></textarea></div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeProspForm()">Annuler</button>
+      <button class="btn-save" onclick="saveProsp()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
 <script>
 'use strict';
 // ═══════════════════════════════════════════════════════════
@@ -341,11 +547,12 @@
 const K_SALT   = 'btp_salt_v2';
 const K_VERIFY = 'btp_verify_v2';
 const K_DATA   = 'btp_data_v2';
+const K_PROSP  = 'btp_prosp_v2';
 
 // ═══════════════════════════════════════════════════════════
 //  CRYPTO HELPERS  (Web Crypto API — AES-256-GCM + PBKDF2)
 // ═══════════════════════════════════════════════════════════
-let cryptoKey = null; // In-memory only — never stored
+let cryptoKey = null;
 
 function b64(buf)  { return btoa(String.fromCharCode(...new Uint8Array(buf))); }
 function unb64(s)  { return Uint8Array.from(atob(s), c => c.charCodeAt(0)); }
@@ -406,7 +613,8 @@ async function doSetup() {
     cryptoKey  = await deriveKey(pwd, salt);
     localStorage.setItem(K_SALT,   b64(salt));
     localStorage.setItem(K_VERIFY, JSON.stringify(await aesEncrypt(cryptoKey, 'VALID')));
-    missions = [];
+    missions  = [];
+    prospects = [];
     await persistData();
     unlockApp();
   } catch(e) {
@@ -435,12 +643,16 @@ async function doUnlock() {
     }
     if (result !== 'VALID') { err.textContent = 'Données corrompues.'; return; }
     cryptoKey = key;
+    // Load missions
     const raw = localStorage.getItem(K_DATA);
     if (raw) {
-      try {
-        missions = JSON.parse(await aesDecrypt(cryptoKey, JSON.parse(raw)));
-      } catch(_) { missions = []; }
+      try { missions = JSON.parse(await aesDecrypt(cryptoKey, JSON.parse(raw))); } catch(_) { missions = []; }
     } else { missions = []; }
+    // Load prospects
+    const rawP = localStorage.getItem(K_PROSP);
+    if (rawP) {
+      try { prospects = JSON.parse(await aesDecrypt(cryptoKey, JSON.parse(rawP))); } catch(_) { prospects = []; }
+    } else { prospects = []; }
     document.getElementById('unlock-pwd').value = '';
     unlockApp();
   } catch(e) {
@@ -461,39 +673,29 @@ async function doChangePassword() {
   if (newPwd !== newPwd2) { err.textContent = 'Les nouveaux mots de passe ne correspondent pas.'; return; }
   setLoading('chg-btn', true, 'Re-chiffrement en cours…');
   try {
-    // Vérifier l'ancien mot de passe
     const oldSalt = unb64(localStorage.getItem(K_SALT));
     const oldKey  = await deriveKey(oldPwd, oldSalt);
     try {
       const v = await aesDecrypt(oldKey, JSON.parse(localStorage.getItem(K_VERIFY)));
       if (v !== 'VALID') throw new Error();
-    } catch(_) {
-      err.textContent = 'Ancien mot de passe incorrect.';
-      return;
-    }
-    // Déchiffrer les données existantes
-    let existingMissions = [];
-    const raw = localStorage.getItem(K_DATA);
-    if (raw) {
-      try { existingMissions = JSON.parse(await aesDecrypt(oldKey, JSON.parse(raw))); } catch(_) {}
-    }
-    // Générer nouveau sel + nouvelle clé
+    } catch(_) { err.textContent = 'Ancien mot de passe incorrect.'; return; }
+    let existingMissions = [], existingProspects = [];
+    const raw  = localStorage.getItem(K_DATA);
+    const rawP = localStorage.getItem(K_PROSP);
+    if (raw)  try { existingMissions  = JSON.parse(await aesDecrypt(oldKey, JSON.parse(raw)));  } catch(_) {}
+    if (rawP) try { existingProspects = JSON.parse(await aesDecrypt(oldKey, JSON.parse(rawP))); } catch(_) {}
     const newSalt = crypto.getRandomValues(new Uint8Array(16));
     const newKey  = await deriveKey(newPwd, newSalt);
     cryptoKey = newKey;
     missions  = existingMissions;
+    prospects = existingProspects;
     localStorage.setItem(K_SALT,   b64(newSalt));
     localStorage.setItem(K_VERIFY, JSON.stringify(await aesEncrypt(newKey, 'VALID')));
     await persistData();
-    // Succès → retour à l'écran de déverrouillage
     ['chg-old','chg-new','chg-new2'].forEach(id => document.getElementById(id).value = '');
-    err.style.color = '#4ade80';
-    err.textContent = '✓ Mot de passe changé. Vos données ont été re-chiffrées.';
-    setTimeout(() => {
-      err.textContent = '';
-      err.style.color = '';
-      showView('view-unlock');
-    }, 2000);
+    err.style.color   = '#4ade80';
+    err.textContent   = '✓ Mot de passe changé. Vos données ont été re-chiffrées.';
+    setTimeout(() => { err.textContent = ''; err.style.color = ''; showView('view-unlock'); }, 2000);
   } catch(e) {
     err.textContent = 'Erreur : ' + e.message;
   } finally {
@@ -504,6 +706,7 @@ async function doChangePassword() {
 function lockApp() {
   cryptoKey = null;
   missions  = [];
+  prospects = [];
   chartWeekly && chartWeekly.destroy();
   chartStatus && chartStatus.destroy();
   chartWeekly = null;
@@ -529,23 +732,30 @@ function unlockApp() {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  DATA (async persist / load)
+//  DATA PERSIST
 // ═══════════════════════════════════════════════════════════
 async function persistData() {
   if (!cryptoKey) return;
-  const enc = await aesEncrypt(cryptoKey, JSON.stringify(missions));
-  localStorage.setItem(K_DATA, JSON.stringify(enc));
+  const encM = await aesEncrypt(cryptoKey, JSON.stringify(missions));
+  const encP = await aesEncrypt(cryptoKey, JSON.stringify(prospects));
+  localStorage.setItem(K_DATA,  JSON.stringify(encM));
+  localStorage.setItem(K_PROSP, JSON.stringify(encP));
 }
 
 // ═══════════════════════════════════════════════════════════
 //  STATE
 // ═══════════════════════════════════════════════════════════
-let missions = [];
-let editingId = null;
-let sortCol = 'date', sortDir = 'desc';
-let filterStatus = 'all';
+let missions  = [];
+let prospects = [];
+let editingId   = null;
+let pEditingId  = null;
+let sortCol  = 'date', sortDir = 'desc';
+let pSortCol = 'date', pSortDir = 'desc';
+let filterStatus  = 'all';
+let pFilterStatus = 'all';
 let weekOffset = 0;
 let chartWeekly = null, chartStatus = null;
+let activeTab = 'candidatures';
 
 const STATUSES = {
   waiting:   { label: 'En attente', cls: 'b-waiting' },
@@ -556,12 +766,73 @@ const STATUSES = {
   sanssuite: { label: 'Sans suite', cls: 'b-sanssuite' }
 };
 
+const PROSP_STATUSES = {
+  cold:    { label: 'À contacter',    cls: 'bp-cold' },
+  sent:    { label: 'Message envoyé', cls: 'bp-sent' },
+  relance: { label: 'Relance J+7',    cls: 'bp-relance' },
+  reponse: { label: 'Réponse reçue',  cls: 'bp-reponse' },
+  rdv:     { label: 'RDV planifié',   cls: 'bp-rdv' },
+  gagne:   { label: 'Gagné ✓',        cls: 'bp-gagne' },
+  archive: { label: 'Archivé',        cls: 'bp-archive' }
+};
+
 const PLAT_COLORS = {
   LinkedIn:'#0077B5', Malt:'#FC5656', Comet:'#6C5CE7',
   'Cherry Pick':'#E17055', Pylote:'#00B894', Freework:'#FDCB6E'
 };
 
 const STATUS_COLORS = ['#0369a1','#d97706','#16a34a','#065f46','#dc2626','#94a3b8'];
+
+const CLAUDE_PROMPT = `Tu es un assistant de prospection B2B pour Bleze TCHALLA,
+Business Data Analyst freelance (Power BI, SQL, ITIL 4, 8 ans).
+Grands comptes : ATR, TotalEnergies, GK Kevlar.
+
+Analyse le profil LinkedIn visible sur cette page et rédige
+un message de prospection personnalisé :
+
+ANGLE : transformation
+"Je transforme les processus de reporting chronophages en
+dashboards autonomes — pour que vos équipes décident en
+minutes, pas en jours."
+
+STRUCTURE (300 mots max) :
+1. Accroche sur quelque chose de spécifique au profil
+   (poste, secteur, entreprise, post récent, défi visible)
+2. Problème probable : reporting manuel, Excel chronophage,
+   données pas fraîches le matin, clôtures tardives
+3. Preuve concrète (choisir le plus pertinent) :
+   • ATR : données disponibles à 8h le lendemain
+   • TotalEnergies : 2h30 → 15 min par rapport
+   • GK Kevlar : clôtures mensuelles fiables, dans les délais
+4. Call to action : "20 min d'échange ?"
+
+TON : professionnel, direct, humain — pas de jargon marketing
+FORMAT : LinkedIn DM (pas d'objet email)`;
+
+// ═══════════════════════════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════════════════════════
+function showTab(tab, btn) {
+  activeTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const isCand = tab === 'candidatures';
+  document.getElementById('section-candidatures').style.display = isCand ? '' : 'none';
+  document.getElementById('section-prospection').style.display  = isCand ? 'none' : '';
+
+  // Adapt header controls
+  document.getElementById('week-nav-wrap').style.display   = isCand ? '' : 'none';
+  document.getElementById('btn-export-csv').textContent    = isCand ? '⬇ Export CSV' : '⬇ Export CSV';
+  document.getElementById('btn-add').textContent           = isCand ? '+ Ajouter' : '+ Prospect';
+
+  if (!isCand) renderProsp();
+}
+
+function handleAdd() {
+  if (activeTab === 'candidatures') openForm();
+  else openProspForm();
+}
 
 // ═══════════════════════════════════════════════════════════
 //  WEEK HELPERS
@@ -582,7 +853,7 @@ function weekLabel(off = 0) {
 function shiftWeek(d) { weekOffset += d; render(); }
 
 // ═══════════════════════════════════════════════════════════
-//  FORM
+//  MISSION FORM (tab 1)
 // ═══════════════════════════════════════════════════════════
 function openForm(id = null) {
   editingId = id;
@@ -641,11 +912,85 @@ async function deleteMission(id) {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  FILTERS / SORT
+//  PROSPECT FORM (tab 2)
+// ═══════════════════════════════════════════════════════════
+function openProspForm(id = null) {
+  pEditingId = id;
+  document.getElementById('pform-title').textContent = id ? 'Modifier le prospect' : 'Ajouter un prospect';
+  const p = id ? prospects.find(x => x.id === id) : null;
+  document.getElementById('pf-name').value    = p?.name    ?? '';
+  document.getElementById('pf-role').value    = p?.role    ?? '';
+  document.getElementById('pf-company').value = p?.company ?? '';
+  document.getElementById('pf-sector').value  = p?.sector  ?? '';
+  document.getElementById('pf-date').value    = p?.date    ?? isoD(new Date());
+  document.getElementById('pf-status').value  = p?.status  ?? 'cold';
+  document.getElementById('pf-linkedin').value = p?.linkedin ?? '';
+  document.getElementById('pf-email').value   = p?.email   ?? '';
+  document.getElementById('pf-phone').value   = p?.phone   ?? '';
+  document.getElementById('pf-message').value = p?.message ?? '';
+  document.getElementById('pf-next').value    = p?.next    ?? '';
+  document.getElementById('pf-notes').value   = p?.notes   ?? '';
+  document.getElementById('prosp-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('pf-name').focus(), 80);
+}
+
+function closeProspForm() {
+  document.getElementById('prosp-overlay').classList.remove('open');
+  pEditingId = null;
+}
+
+function handleProspOverlayClick(e) {
+  if (e.target === document.getElementById('prosp-overlay')) closeProspForm();
+}
+
+async function saveProsp() {
+  const name    = document.getElementById('pf-name').value.trim();
+  const company = document.getElementById('pf-company').value.trim();
+  if (!name) { alert('Renseignez au moins le nom du prospect.'); return; }
+  const d = {
+    name, company,
+    role:     document.getElementById('pf-role').value.trim(),
+    sector:   document.getElementById('pf-sector').value.trim(),
+    date:     document.getElementById('pf-date').value,
+    status:   document.getElementById('pf-status').value,
+    linkedin: document.getElementById('pf-linkedin').value.trim(),
+    email:    document.getElementById('pf-email').value.trim(),
+    phone:    document.getElementById('pf-phone').value.trim(),
+    message:  document.getElementById('pf-message').value.trim(),
+    next:     document.getElementById('pf-next').value.trim(),
+    notes:    document.getElementById('pf-notes').value.trim()
+  };
+  if (pEditingId) {
+    const i = prospects.findIndex(x => x.id === pEditingId);
+    if (i !== -1) prospects[i] = { ...prospects[i], ...d };
+  } else {
+    prospects.push({ id: Date.now(), ...d });
+  }
+  closeProspForm();
+  renderProsp();
+  await persistData();
+}
+
+async function deleteProsp(id) {
+  if (!confirm('Supprimer ce prospect ?')) return;
+  prospects = prospects.filter(p => p.id !== id);
+  renderProsp();
+  await persistData();
+}
+
+async function copyEmail(email) {
+  try {
+    await navigator.clipboard.writeText(email);
+    // brief visual feedback handled inline
+  } catch(_) {}
+}
+
+// ═══════════════════════════════════════════════════════════
+//  FILTERS / SORT — CANDIDATURES
 // ═══════════════════════════════════════════════════════════
 function setFilter(s, el) {
   filterStatus = s;
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('#section-candidatures .chip').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
   render();
 }
@@ -668,6 +1013,35 @@ function getFiltered() {
     const av = a[sortCol] || '', bv = b[sortCol] || '';
     const cmp = av < bv ? -1 : av > bv ? 1 : 0;
     return sortDir === 'asc' ? cmp : -cmp;
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+//  FILTERS / SORT — PROSPECTS
+// ═══════════════════════════════════════════════════════════
+function setPFilter(s, el) {
+  pFilterStatus = s;
+  document.querySelectorAll('#section-prospection .chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderProsp();
+}
+
+function pSortBy(col) {
+  pSortDir = pSortCol === col ? (pSortDir === 'asc' ? 'desc' : 'asc') : 'desc';
+  pSortCol = col;
+  renderProsp();
+}
+
+function getPFiltered() {
+  const search = (document.getElementById('pfilter-search')?.value || '').toLowerCase();
+  return prospects.filter(p => {
+    if (pFilterStatus !== 'all' && p.status !== pFilterStatus) return false;
+    if (search && !p.name.toLowerCase().includes(search) && !(p.company||'').toLowerCase().includes(search)) return false;
+    return true;
+  }).sort((a, b) => {
+    const av = a[pSortCol] || '', bv = b[pSortCol] || '';
+    const cmp = av < bv ? -1 : av > bv ? 1 : 0;
+    return pSortDir === 'asc' ? cmp : -cmp;
   });
 }
 
@@ -700,7 +1074,6 @@ function initCharts() {
 }
 
 function updateCharts() {
-  // Weekly bar
   const weeks = [];
   for (let w = -7; w <= 0; w++) {
     const { mon, sun } = getWeekBounds(w);
@@ -710,7 +1083,6 @@ function updateCharts() {
   chartWeekly.data.labels = weeks.map(w => w.label);
   chartWeekly.data.datasets[0].data = weeks.map(w => w.count);
   chartWeekly.update('none');
-  // Status donut
   const sc = {};
   missions.forEach(m => { sc[m.status] = (sc[m.status] || 0) + 1; });
   const keys = Object.keys(sc).filter(k => sc[k] > 0);
@@ -721,7 +1093,7 @@ function updateCharts() {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  RENDER
+//  RENDER — CANDIDATURES
 // ═══════════════════════════════════════════════════════════
 function esc(s) {
   return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -741,14 +1113,12 @@ function render() {
   document.getElementById('header-date').textContent   = new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   document.getElementById('week-nav-label').textContent = weekLabel(weekOffset);
 
-  // Objective
   const { mon, sun } = getWeekBounds(weekOffset);
   const wCnt = missions.filter(m => m.date >= isoD(mon) && m.date <= isoD(sun)).length;
-  document.getElementById('obj-week').textContent     = weekLabel(weekOffset);
-  document.getElementById('obj-count').textContent    = wCnt + ' / 5';
-  document.getElementById('obj-bar').style.width      = Math.min(100, Math.round(wCnt/5*100)) + '%';
+  document.getElementById('obj-week').textContent   = weekLabel(weekOffset);
+  document.getElementById('obj-count').textContent  = wCnt + ' / 5';
+  document.getElementById('obj-bar').style.width    = Math.min(100, Math.round(wCnt/5*100)) + '%';
 
-  // Relance list
   const rels = missions.filter(m => m.status === 'relance');
   document.getElementById('relance-list').innerHTML = rels.length === 0
     ? '<span style="color:var(--text3);">Aucune relance à planifier. ✓</span>'
@@ -759,7 +1129,6 @@ function render() {
         </div>`
       ).join('') + (rels.length > 5 ? `<div style="color:var(--text3);margin-top:4px;">+ ${rels.length-5} autres</div>` : '');
 
-  // Platform stats
   const pc = {};
   missions.forEach(m => { pc[m.platform] = (pc[m.platform] || 0) + 1; });
   const maxP = Math.max(1, ...Object.values(pc));
@@ -776,11 +1145,10 @@ function render() {
         </div>`;
       }).join('');
 
-  // Table
   document.getElementById('table-count').textContent = filtered.length + ' mission' + (filtered.length > 1 ? 's' : '');
   const tbody = document.getElementById('mission-tbody');
   tbody.innerHTML = '';
-  document.getElementById('empty-msg').style.display   = filtered.length === 0 ? 'block' : 'none';
+  document.getElementById('empty-msg').style.display     = filtered.length === 0 ? 'block' : 'none';
   document.getElementById('mission-table').style.display = filtered.length === 0 ? 'none' : 'table';
   filtered.forEach(m => {
     const s = STATUSES[m.status] || { label: m.status, cls: '' };
@@ -805,19 +1173,137 @@ function render() {
 }
 
 // ═══════════════════════════════════════════════════════════
+//  RENDER — PROSPECTION
+// ═══════════════════════════════════════════════════════════
+function renderProsp() {
+  const filtered = getPFiltered();
+  const total    = prospects.length;
+  const sent     = prospects.filter(p => ['sent','relance','reponse','rdv','gagne'].includes(p.status)).length;
+  const reponse  = prospects.filter(p => ['reponse','rdv','gagne'].includes(p.status)).length;
+  const rdv      = prospects.filter(p => p.status === 'rdv').length;
+
+  document.getElementById('pkpi-total').textContent   = total;
+  document.getElementById('pkpi-sent').textContent    = sent;
+  document.getElementById('pkpi-reponse').textContent = reponse;
+  document.getElementById('pkpi-rate').textContent    = sent > 0 ? Math.round((reponse/sent)*100) + '%' : '—';
+  document.getElementById('pkpi-rdv').textContent     = rdv;
+
+  // Lusha meter (prospects with email = crédit utilisé)
+  const lushaCnt = prospects.filter(p => p.email).length;
+  const lushaMax = 50;
+  document.getElementById('lusha-count').textContent = lushaCnt;
+  document.getElementById('lusha-bar').style.width   = Math.min(100, Math.round(lushaCnt/lushaMax*100)) + '%';
+  document.getElementById('lusha-remain').textContent = Math.max(0, lushaMax - lushaCnt) + ' restants (Apollo)';
+  const lushaInfo = document.querySelector('.lusha-info span:first-child');
+  if (lushaInfo) lushaInfo.textContent = lushaCnt + ' utilisé' + (lushaCnt > 1 ? 's' : '');
+  if (lushaCnt >= lushaMax * 0.8) document.getElementById('lusha-bar').style.background = 'var(--amber)';
+  if (lushaCnt >= lushaMax)       document.getElementById('lusha-bar').style.background = 'var(--red)';
+
+  // Funnel
+  const funnelOrder = ['cold','sent','relance','reponse','rdv','gagne'];
+  const funnelColors = { cold:'#94a3b8', sent:'#2563eb', relance:'#d97706', reponse:'#0d9488', rdv:'#7c3aed', gagne:'#16a34a' };
+  const funnelCounts = {};
+  funnelOrder.forEach(s => { funnelCounts[s] = prospects.filter(p => p.status === s).length; });
+  document.getElementById('prosp-funnel').innerHTML = funnelOrder.map(s => {
+    const cnt = funnelCounts[s];
+    const pct = total > 0 ? Math.round(cnt/total*100) : 0;
+    const col = funnelColors[s];
+    const lbl = PROSP_STATUSES[s].label;
+    return `<div class="stat-row">
+      <span class="stat-label">${lbl}</span>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:70px;background:var(--gray-l);border-radius:3px;height:6px;overflow:hidden;">
+          <div style="width:${pct}%;height:100%;border-radius:3px;background:${col};"></div>
+        </div>
+        <span class="stat-value" style="color:${col};min-width:20px;">${cnt}</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Prompt
+  document.getElementById('prompt-display').textContent = CLAUDE_PROMPT;
+
+  // Table
+  document.getElementById('ptable-count').textContent   = filtered.length + ' prospect' + (filtered.length > 1 ? 's' : '');
+  const tbody = document.getElementById('prosp-tbody');
+  tbody.innerHTML = '';
+  document.getElementById('pempty-msg').style.display    = filtered.length === 0 ? 'block' : 'none';
+  document.getElementById('prosp-table').style.display   = filtered.length === 0 ? 'none' : 'table';
+
+  filtered.forEach(p => {
+    const s = PROSP_STATUSES[p.status] || { label: p.status, cls: 'bp-cold' };
+    const dateStr = p.date ? new Date(p.date + 'T12:00:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'2-digit'}) : '—';
+    const linkedinCell = p.linkedin
+      ? `<a href="${esc(p.linkedin)}" target="_blank" rel="noopener" style="color:var(--accent);font-size:12px;text-decoration:none;">🔗 Profil</a>`
+      : '<span style="color:var(--text3);font-size:12px;">—</span>';
+    const emailCell = p.email
+      ? `<span class="copy-cell" onclick="copyEmail('${esc(p.email)}')" title="Copier l'email">${esc(p.email)}</span>`
+      : '<span style="color:var(--text3);font-size:12px;">—</span>';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <div style="font-weight:500;">${esc(p.name)}</div>
+        <div style="font-size:11px;color:var(--text2);">${esc(p.role||'')}</div>
+      </td>
+      <td>
+        <div style="font-weight:500;">${esc(p.company||'—')}</div>
+        <div style="font-size:11px;color:var(--text3);">${esc(p.sector||'')}</div>
+      </td>
+      <td>${linkedinCell}</td>
+      <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${emailCell}</td>
+      <td style="color:var(--text2);white-space:nowrap;">${dateStr}</td>
+      <td><span class="badge ${s.cls}">${s.label}</span></td>
+      <td style="color:var(--text2);font-size:12px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${esc(p.next)}">${esc(p.next||'—')}</td>
+      <td><div class="td-actions">
+        <button class="icon-btn" onclick="openProspForm(${p.id})" title="Modifier">✏️</button>
+        <button class="icon-btn del" onclick="deleteProsp(${p.id})" title="Supprimer">🗑</button>
+      </div></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+//  PROMPT COPY
+// ═══════════════════════════════════════════════════════════
+async function copyPrompt() {
+  try {
+    await navigator.clipboard.writeText(CLAUDE_PROMPT);
+    const btn = document.getElementById('copy-prompt-btn');
+    btn.textContent = '✓ Copié !';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 Copier'; btn.classList.remove('copied'); }, 2000);
+  } catch(_) {
+    alert('Copiez manuellement le texte ci-dessus.');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
 //  EXPORT CSV
 // ═══════════════════════════════════════════════════════════
 function exportCSV() {
-  const headers = ['Plateforme','Entreprise','Mission','Date','Statut','TJM (€/j)','Prochaine action','Notes'];
-  const rows = missions.map(m =>
-    [m.platform,m.company,m.role,m.date,STATUSES[m.status]?.label||m.status,m.tjm||'',m.next||'',m.notes||'']
-    .map(v => '"' + String(v).replace(/"/g,'""') + '"').join(',')
-  );
-  const csv = [headers.join(','), ...rows].join('\n');
+  if (activeTab === 'candidatures') {
+    const headers = ['Plateforme','Entreprise','Mission','Date','Statut','TJM (€/j)','Prochaine action','Notes'];
+    const rows = missions.map(m =>
+      [m.platform,m.company,m.role,m.date,STATUSES[m.status]?.label||m.status,m.tjm||'',m.next||'',m.notes||'']
+      .map(v => '"' + String(v).replace(/"/g,'""') + '"').join(',')
+    );
+    download([headers.join(','), ...rows].join('\n'), 'candidatures_' + isoD(new Date()) + '.csv');
+  } else {
+    const headers = ['Nom','Poste','Entreprise','Secteur','LinkedIn','Email','Téléphone','Date contact','Statut','Message','Prochaine action','Notes'];
+    const rows = prospects.map(p =>
+      [p.name,p.role||'',p.company||'',p.sector||'',p.linkedin||'',p.email||'',p.phone||'',p.date,
+       PROSP_STATUSES[p.status]?.label||p.status,p.message||'',p.next||'',p.notes||'']
+      .map(v => '"' + String(v).replace(/"/g,'""') + '"').join(',')
+    );
+    download([headers.join(','), ...rows].join('\n'), 'prospects_' + isoD(new Date()) + '.csv');
+  }
+}
+
+function download(csv, filename) {
   const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'prospection_' + isoD(new Date()) + '.csv';
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = filename;
   a.click(); URL.revokeObjectURL(url);
 }
 
@@ -832,9 +1318,13 @@ function initApp() {
 // Keyboard shortcuts
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter') {
-    if (document.getElementById('view-setup').classList.contains('active'))    doSetup();
-    else if (document.getElementById('view-unlock').classList.contains('active')) doUnlock();
+    if (document.getElementById('view-setup').classList.contains('active'))      doSetup();
+    else if (document.getElementById('view-unlock').classList.contains('active'))    doUnlock();
     else if (document.getElementById('view-changepwd').classList.contains('active')) doChangePassword();
+  }
+  if (e.key === 'Escape') {
+    closeForm();
+    closeProspForm();
   }
 });
 
