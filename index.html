@@ -419,6 +419,7 @@
                 <th>Email (Apollo)</th>
                 <th onclick="pSortBy('date')">Date contact</th>
                 <th onclick="pSortBy('status')">Statut</th>
+                <th onclick="pSortBy('canal')">Canal</th>
                 <th>Prochaine action</th>
                 <th></th>
               </tr></thead>
@@ -527,9 +528,26 @@
     <div class="form-full form-group"><label>URL profil LinkedIn</label><input type="url" id="pf-linkedin" placeholder="https://linkedin.com/in/..."></div>
     <div class="form-grid">
       <div class="form-group"><label>Email (Apollo)</label><input type="email" id="pf-email" placeholder="marie.dupont@airbus.com"></div>
-      <div class="form-group"><label>Téléphone (Apollo)</label><input type="tel" id="pf-phone" placeholder="+33 6 ..."></div>
+      <div class="form-group"><label>Canal utilisé</label>
+        <select id="pf-canal">
+          <option value="">— Non encore envoyé —</option>
+          <option value="inmail">InMail LinkedIn</option>
+          <option value="note">Note de connexion</option>
+          <option value="email">Email Apollo</option>
+          <option value="dm">DM LinkedIn (connecté)</option>
+        </select>
+      </div>
     </div>
-    <div class="form-full form-group"><label>Message envoyé (copie)</label><textarea class="tall" id="pf-message" placeholder="Colle ici le message personnalisé par Claude in Chrome…"></textarea></div>
+    <div class="form-full form-group">
+      <label>Message InMail / DM <span style="font-weight:400;color:var(--text3);">(message long)</span></label>
+      <textarea class="tall" id="pf-message" placeholder="Colle ici le message InMail/DM généré par Claude in Chrome…"></textarea>
+    </div>
+    <div class="form-full form-group">
+      <label style="display:flex;justify-content:space-between;">
+        Note de connexion <span style="font-weight:400;color:var(--text3);" id="pf-note-count">0 / 280</span>
+      </label>
+      <textarea id="pf-note" maxlength="280" placeholder="Version courte ≤ 280 caractères pour la demande de connexion…" oninput="document.getElementById('pf-note-count').textContent=this.value.length+' / 280';document.getElementById('pf-note-count').style.color=this.value.length>260?'var(--red)':'var(--text3)';"></textarea>
+    </div>
     <div class="form-full form-group"><label>Prochaine action</label><input type="text" id="pf-next" placeholder="ex: Relancer le 03/06 si pas de réponse"></div>
     <div class="form-full form-group"><label>Notes</label><textarea id="pf-notes" placeholder="Contexte, observations sur le profil…"></textarea></div>
     <div class="form-actions">
@@ -783,31 +801,38 @@ const PLAT_COLORS = {
 
 const STATUS_COLORS = ['#0369a1','#d97706','#16a34a','#065f46','#dc2626','#94a3b8'];
 
-const CLAUDE_PROMPT = `Tu es un assistant de prospection B2B pour Bleze TCHALLA,
+const CLAUDE_PROMPT = `Lis le contenu de la page LinkedIn actuellement ouverte dans cet onglet, puis :
+
+Tu es un assistant de prospection B2B pour Bleze TCHALLA,
 Business Data Analyst freelance (Power BI, SQL, ITIL 4, 8 ans).
 Grands comptes : ATR, TotalEnergies, GK Kevlar.
-
-Analyse le profil LinkedIn visible sur cette page et rédige
-un message de prospection personnalisé :
 
 ANGLE : transformation
 "Je transforme les processus de reporting chronophages en
 dashboards autonomes — pour que vos équipes décident en
 minutes, pas en jours."
 
-STRUCTURE (300 mots max) :
-1. Accroche sur quelque chose de spécifique au profil
-   (poste, secteur, entreprise, post récent, défi visible)
-2. Problème probable : reporting manuel, Excel chronophage,
-   données pas fraîches le matin, clôtures tardives
-3. Preuve concrète (choisir le plus pertinent) :
-   • ATR : données disponibles à 8h le lendemain
-   • TotalEnergies : 2h30 → 15 min par rapport
-   • GK Kevlar : clôtures mensuelles fiables, dans les délais
-4. Call to action : "20 min d'échange ?"
+PREUVES (choisir la plus pertinente selon le secteur) :
+• ATR (aéro/industrie) : données disponibles à 8h le lendemain
+• TotalEnergies (énergie/grands comptes) : 2h30 → 15 min par rapport
+• GK Kevlar (sécurité/services) : clôtures mensuelles fiables, dans les délais
 
-TON : professionnel, direct, humain — pas de jargon marketing
-FORMAT : LinkedIn DM (pas d'objet email)`;
+Génère DEUX versions :
+
+━━━ VERSION 1 — MESSAGE INMAIL / DM (300 mots max) ━━━
+Structure :
+1. Accroche personnalisée sur le profil (poste, secteur, défi visible)
+2. Problème probable : reporting manuel, Excel chronophage, données pas fraîches
+3. Preuve concrète la plus pertinente
+4. Call to action : "20 min d'échange ?"
+Ton : professionnel, direct, humain — pas de jargon marketing
+
+━━━ VERSION 2 — NOTE DE CONNEXION (280 caractères MAX) ━━━
+Version ultra-courte pour la demande de connexion LinkedIn.
+Accroche + problème + CTA en 1-2 phrases.
+IMPORTANT : compter exactement les caractères, ne pas dépasser 280.
+
+TON GLOBAL : consultant expert, pas commercial agressif`;
 
 // ═══════════════════════════════════════════════════════════
 //  TABS
@@ -926,8 +951,10 @@ function openProspForm(id = null) {
   document.getElementById('pf-status').value  = p?.status  ?? 'cold';
   document.getElementById('pf-linkedin').value = p?.linkedin ?? '';
   document.getElementById('pf-email').value   = p?.email   ?? '';
-  document.getElementById('pf-phone').value   = p?.phone   ?? '';
+  document.getElementById('pf-canal').value   = p?.canal   ?? '';
   document.getElementById('pf-message').value = p?.message ?? '';
+  document.getElementById('pf-note').value    = p?.note    ?? '';
+  document.getElementById('pf-note-count').textContent = (p?.note?.length ?? 0) + ' / 280';
   document.getElementById('pf-next').value    = p?.next    ?? '';
   document.getElementById('pf-notes').value   = p?.notes   ?? '';
   document.getElementById('prosp-overlay').classList.add('open');
@@ -955,8 +982,9 @@ async function saveProsp() {
     status:   document.getElementById('pf-status').value,
     linkedin: document.getElementById('pf-linkedin').value.trim(),
     email:    document.getElementById('pf-email').value.trim(),
-    phone:    document.getElementById('pf-phone').value.trim(),
+    canal:    document.getElementById('pf-canal').value,
     message:  document.getElementById('pf-message').value.trim(),
+    note:     document.getElementById('pf-note').value.trim(),
     next:     document.getElementById('pf-next').value.trim(),
     notes:    document.getElementById('pf-notes').value.trim()
   };
@@ -976,6 +1004,18 @@ async function deleteProsp(id) {
   prospects = prospects.filter(p => p.id !== id);
   renderProsp();
   await persistData();
+}
+
+function canalBadge(canal) {
+  const map = {
+    inmail: ['InMail', '#0077B5'],
+    note:   ['Note connexion', '#7c3aed'],
+    email:  ['Email Apollo', '#0d9488'],
+    dm:     ['DM LinkedIn', '#16a34a']
+  };
+  if (!canal || !map[canal]) return '<span style="color:var(--text3);font-size:12px;">—</span>';
+  const [label, color] = map[canal];
+  return `<span style="background:${color}18;color:${color};padding:2px 8px;border-radius:5px;font-size:11px;font-weight:600;">${label}</span>`;
 }
 
 async function copyEmail(email) {
@@ -1253,6 +1293,7 @@ function renderProsp() {
       <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${emailCell}</td>
       <td style="color:var(--text2);white-space:nowrap;">${dateStr}</td>
       <td><span class="badge ${s.cls}">${s.label}</span></td>
+      <td>${canalBadge(p.canal)}</td>
       <td style="color:var(--text2);font-size:12px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${esc(p.next)}">${esc(p.next||'—')}</td>
       <td><div class="td-actions">
         <button class="icon-btn" onclick="openProspForm(${p.id})" title="Modifier">✏️</button>
