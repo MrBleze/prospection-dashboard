@@ -512,7 +512,7 @@
       <div class="form-group"><label>Poste</label><input type="text" id="pf-role" placeholder="ex: DAF"></div>
       <div class="form-group"><label>Entreprise</label><input type="text" id="pf-company" placeholder="ex: Airbus"></div>
       <div class="form-group"><label>Secteur</label><input type="text" id="pf-sector" placeholder="ex: Aéronautique"></div>
-      <div class="form-group"><label>Date de contact</label><input type="date" id="pf-date"></div>
+      <div class="form-group"><label>Date de contact</label><input type="date" id="pf-date" oninput="updateRelanceDate()"></div>
       <div class="form-group"><label>Statut</label>
         <select id="pf-status">
           <option value="cold">À contacter</option>
@@ -547,6 +547,13 @@
         Note de connexion <span style="font-weight:400;color:var(--text3);" id="pf-note-count">0 / 280</span>
       </label>
       <textarea id="pf-note" maxlength="280" placeholder="Version courte ≤ 280 caractères pour la demande de connexion…" oninput="document.getElementById('pf-note-count').textContent=this.value.length+' / 280';document.getElementById('pf-note-count').style.color=this.value.length>260?'var(--red)':'var(--text3)';"></textarea>
+    </div>
+    <div class="form-full form-group">
+      <label style="display:flex;justify-content:space-between;align-items:center;">
+        Message de relance J+7
+        <span id="pf-relance-date-label" style="font-size:11px;font-weight:400;color:var(--teal);"></span>
+      </label>
+      <textarea id="pf-relance" placeholder="Colle ici le message de relance J+7 généré par Claude in Chrome…"></textarea>
     </div>
     <div class="form-full form-group"><label>Prochaine action</label><input type="text" id="pf-next" placeholder="ex: Relancer le 03/06 si pas de réponse"></div>
     <div class="form-full form-group"><label>Notes</label><textarea id="pf-notes" placeholder="Contexte, observations sur le profil…"></textarea></div>
@@ -832,6 +839,16 @@ Version ultra-courte pour la demande de connexion LinkedIn.
 Accroche + problème + CTA en 1-2 phrases.
 IMPORTANT : compter exactement les caractères, ne pas dépasser 280.
 
+━━━ VERSION 3 — RELANCE J+7 (150 mots max) ━━━
+Message de relance si pas de réponse après 7 jours.
+- Ne pas répéter le premier message
+- Angle différent : poser une question courte sur leur contexte
+  ou partager une insight rapide sur leur secteur
+- Rester léger, pas de pression
+- Finir par une alternative douce : "Si ce n'est pas le bon moment,
+  pas de souci — je reviendrai vers vous plus tard."
+Ton : encore plus détendu que le premier message
+
 TON GLOBAL : consultant expert, pas commercial agressif`;
 
 // ═══════════════════════════════════════════════════════════
@@ -955,8 +972,10 @@ function openProspForm(id = null) {
   document.getElementById('pf-message').value = p?.message ?? '';
   document.getElementById('pf-note').value    = p?.note    ?? '';
   document.getElementById('pf-note-count').textContent = (p?.note?.length ?? 0) + ' / 280';
+  document.getElementById('pf-relance').value = p?.relance ?? '';
   document.getElementById('pf-next').value    = p?.next    ?? '';
   document.getElementById('pf-notes').value   = p?.notes   ?? '';
+  updateRelanceDate();
   document.getElementById('prosp-overlay').classList.add('open');
   setTimeout(() => document.getElementById('pf-name').focus(), 80);
 }
@@ -985,6 +1004,8 @@ async function saveProsp() {
     canal:    document.getElementById('pf-canal').value,
     message:  document.getElementById('pf-message').value.trim(),
     note:     document.getElementById('pf-note').value.trim(),
+    relance:  document.getElementById('pf-relance').value.trim(),
+    relanceDate: calcRelanceDate(document.getElementById('pf-date').value),
     next:     document.getElementById('pf-next').value.trim(),
     notes:    document.getElementById('pf-notes').value.trim()
   };
@@ -1004,6 +1025,34 @@ async function deleteProsp(id) {
   prospects = prospects.filter(p => p.id !== id);
   renderProsp();
   await persistData();
+}
+
+function calcRelanceDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T12:00:00');
+  d.setDate(d.getDate() + 7);
+  return isoD(d);
+}
+
+function updateRelanceDate() {
+  const dateVal = document.getElementById('pf-date')?.value;
+  const label   = document.getElementById('pf-relance-date-label');
+  if (!label) return;
+  if (!dateVal) { label.textContent = ''; return; }
+  const rd = calcRelanceDate(dateVal);
+  const rdFmt = new Date(rd + 'T12:00:00').toLocaleDateString('fr-FR', { day:'numeric', month:'long' });
+  label.textContent = '→ à envoyer le ' + rdFmt;
+}
+
+function relanceDateBadge(relanceDate, status) {
+  if (!relanceDate || ['reponse','rdv','gagne','archive'].includes(status)) return '';
+  const today = isoD(new Date());
+  const isLate  = relanceDate < today && status === 'sent';
+  const isToday = relanceDate === today && status === 'sent';
+  const fmt = new Date(relanceDate + 'T12:00:00').toLocaleDateString('fr-FR', { day:'numeric', month:'short' });
+  if (isLate)  return `<div style="color:var(--red);font-size:11px;font-weight:600;">⚠ Relance en retard (${fmt})</div>`;
+  if (isToday) return `<div style="color:var(--amber);font-size:11px;font-weight:600;">📅 Relancer aujourd'hui</div>`;
+  return `<div style="color:var(--text3);font-size:11px;">Relance : ${fmt}</div>`;
 }
 
 function canalBadge(canal) {
@@ -1291,7 +1340,10 @@ function renderProsp() {
       </td>
       <td>${linkedinCell}</td>
       <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${emailCell}</td>
-      <td style="color:var(--text2);white-space:nowrap;">${dateStr}</td>
+      <td style="white-space:nowrap;">
+        <div style="color:var(--text2);">${dateStr}</div>
+        ${relanceDateBadge(p.relanceDate, p.status)}
+      </td>
       <td><span class="badge ${s.cls}">${s.label}</span></td>
       <td>${canalBadge(p.canal)}</td>
       <td style="color:var(--text2);font-size:12px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${esc(p.next)}">${esc(p.next||'—')}</td>
