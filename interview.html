@@ -618,6 +618,7 @@ function unlockApp() {
 // ═══════════════════════════════════════════
 let interviewData = { config:{}, history:[] };
 let histEditId = null;
+let currentQKey = null;
 
 async function persistData() {
   if (!cryptoKey) return;
