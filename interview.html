@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assistant Entretien — Bleze T.</title>
+  <style>
+    :root {
+      --bg:#f0f2f5; --card:#fff; --header:#0f172a; --accent:#2563eb; --accent-l:#dbeafe;
+      --text:#1e293b; --text2:#64748b; --text3:#94a3b8; --border:#e2e8f0;
+      --green:#16a34a; --green-l:#dcfce7; --amber:#d97706; --amber-l:#fef3c7;
+      --red:#dc2626; --red-l:#fee2e2; --gray-l:#f1f5f9; --purple:#7c3aed; --purple-l:#ede9fe;
+      --teal:#0d9488; --teal-l:#ccfbf1; --navy:#0a3d6b;
+      --r:10px; --sh:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;}
+
+    /* ── GATE ── */
+    #gate{position:fixed;inset:0;background:#0f172a;display:flex;align-items:center;justify-content:center;z-index:999;}
+    #gate-box{background:#1e293b;border-radius:18px;padding:44px 52px;width:100%;max-width:420px;text-align:center;}
+    .gate-lock{font-size:40px;margin-bottom:16px;display:block;}
+    #gate-box h1{color:#f1f5f9;font-size:20px;font-weight:600;margin-bottom:6px;}
+    #gate-box p{color:#94a3b8;font-size:13px;margin-bottom:28px;line-height:1.6;}
+    .gate-view{display:none;} .gate-view.active{display:block;}
+    .gate-field{margin-bottom:13px;text-align:left;}
+    .gate-field label{display:block;font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px;}
+    .gate-field input{width:100%;padding:11px 14px;border-radius:9px;border:1px solid #334155;background:#0f172a;color:#f1f5f9;font-size:14px;outline:none;transition:border .2s;}
+    .gate-field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.2);}
+    .gate-btn{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s;}
+    .gate-btn:hover{background:#1d4ed8;} .gate-btn:disabled{background:#334155;cursor:not-allowed;}
+    .gate-link{color:#60a5fa;font-size:12px;cursor:pointer;text-decoration:none;display:block;margin-top:14px;}
+    .gate-link:hover{color:#93c5fd;}
+    .gate-error{color:#f87171;font-size:12px;min-height:18px;margin-top:10px;}
+    .gate-info{background:#1c1917;border:1px solid #44403c;border-radius:8px;padding:11px 14px;font-size:12px;color:#a8a29e;margin-top:16px;text-align:left;line-height:1.6;}
+    .gate-info strong{color:#fcd34d;}
+    .gate-security{margin-top:20px;font-size:11px;color:#475569;display:flex;align-items:center;justify-content:center;gap:6px;}
+    .spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+
+    /* ── APP ── */
+    #app{display:none;max-width:1340px;margin:0 auto;padding:20px 16px 40px;}
+
+    /* HEADER */
+    .header{background:var(--header);color:#fff;border-radius:var(--r) var(--r) 0 0;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+    .header-left h1{font-size:17px;font-weight:600;}
+    .header-left p{color:#94a3b8;font-size:12px;margin-top:2px;}
+    .header-actions{display:flex;gap:8px;align-items:center;}
+    .btn{padding:7px 13px;border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;border:none;}
+    .btn-ghost{background:rgba(255,255,255,.08);color:#cbd5e1;} .btn-ghost:hover{background:rgba(255,255,255,.16);}
+    .btn-primary{background:var(--accent);color:#fff;} .btn-primary:hover{background:#1d4ed8;}
+    .btn-lock{background:rgba(251,191,36,.12);color:#fcd34d;} .btn-lock:hover{background:rgba(251,191,36,.22);}
+    .btn-focus{background:rgba(13,148,136,.2);color:#5eead4;} .btn-focus:hover{background:rgba(13,148,136,.35);}
+    .btn-sm{padding:6px 12px;font-size:12px;}
+
+    /* TABS */
+    .tab-nav{background:#1e293b;border-radius:0 0 var(--r) var(--r);padding:0 24px;display:flex;margin-bottom:18px;}
+    .tab-btn{background:none;border:none;color:#94a3b8;font-size:13px;font-weight:500;padding:11px 18px;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;}
+    .tab-btn:hover{color:#cbd5e1;} .tab-btn.active{color:#fff;border-bottom-color:var(--accent);}
+
+    /* CARDS */
+    .card{background:var(--card);border-radius:var(--r);padding:18px 20px;box-shadow:var(--sh);}
+    .card-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
+
+    /* SESSION BAR */
+    .session-bar{background:var(--card);border-radius:var(--r);padding:12px 20px;margin-bottom:14px;box-shadow:var(--sh);display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+    .session-field{display:flex;align-items:center;gap:8px;}
+    .session-field label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;}
+    .session-field input{padding:6px 10px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:13px;font-family:inherit;width:160px;}
+    .session-field input:focus{outline:none;border-color:var(--accent);}
+    .session-sep{width:1px;height:28px;background:var(--border);}
+    .timer{font-size:13px;font-weight:700;color:var(--accent);min-width:50px;}
+    .timer-btn{background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;color:var(--text2);}
+    .timer-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+    /* MAIN GRID */
+    .grid-interview{display:grid;grid-template-columns:1fr 300px;gap:14px;}
+
+    /* QUESTION BUTTONS */
+    .qcat-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;margin-top:14px;}
+    .qcat-title:first-child{margin-top:0;}
+    .qcat-title.pres{color:var(--accent);}
+    .qcat-title.exp{color:var(--teal);}
+    .qcat-title.tech{color:var(--purple);}
+    .qcat-title.hard{color:var(--amber);}
+    .qcat-title.custom{color:var(--green);}
+    .qbtn-grid{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:4px;}
+    .qbtn{padding:7px 13px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:12px;cursor:pointer;font-weight:500;transition:all .15s;text-align:left;}
+    .qbtn:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.1);}
+    .qbtn.pres{border-color:#bfdbfe;} .qbtn.pres:hover{background:var(--accent-l);border-color:var(--accent);color:var(--accent);}
+    .qbtn.exp{border-color:#99f6e4;} .qbtn.exp:hover{background:var(--teal-l);border-color:var(--teal);color:var(--teal);}
+    .qbtn.tech{border-color:#ddd6fe;} .qbtn.tech:hover{background:var(--purple-l);border-color:var(--purple);color:var(--purple);}
+    .qbtn.hard{border-color:#fde68a;} .qbtn.hard:hover{background:var(--amber-l);border-color:var(--amber);color:var(--amber);}
+    .qbtn.active-q{font-weight:700;box-shadow:0 0 0 2px currentColor;}
+
+    /* CUSTOM INPUT */
+    .custom-input-wrap{display:flex;gap:8px;margin-top:12px;}
+    .custom-input-wrap input{flex:1;padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:13px;font-family:inherit;}
+    .custom-input-wrap input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(22,163,74,.1);}
+    .custom-input-wrap button{padding:9px 14px;border-radius:8px;border:none;background:var(--green);color:#fff;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;}
+    .custom-input-wrap button:hover{background:#15803d;}
+
+    /* PROMPT OUTPUT */
+    .prompt-out-wrap{margin-top:14px;}
+    .prompt-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+    .prompt-out{background:#0f172a;border-radius:8px;padding:16px;font-size:12px;color:#94a3b8;line-height:1.8;font-family:'Courier New',monospace;white-space:pre-wrap;word-break:break-word;min-height:120px;max-height:320px;overflow-y:auto;border:1px solid #1e293b;}
+    .prompt-out.has-content{color:#e2e8f0;}
+    .copy-row{display:flex;gap:8px;margin-top:10px;}
+    .copy-btn{padding:8px 18px;border-radius:7px;border:none;background:var(--accent);color:#fff;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;}
+    .copy-btn:hover{background:#1d4ed8;} .copy-btn.copied{background:var(--green);}
+    .hint-btn{padding:8px 14px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--text2);font-size:12px;cursor:pointer;}
+    .hint-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+    /* PROFILE SIDEBAR */
+    .profile-snap{font-size:12px;line-height:1.7;}
+    .proof-item{padding:8px 10px;border-radius:6px;margin-bottom:6px;border-left:3px solid;}
+    .proof-item.atr{background:#eff6ff;border-color:var(--accent);}
+    .proof-item.total{background:#f0fdf4;border-color:var(--green);}
+    .proof-item.gk{background:#fef3c7;border-color:var(--amber);}
+    .proof-co{font-weight:700;font-size:11px;}
+    .proof-res{color:var(--text2);font-size:11px;}
+
+    /* SESSION NOTES */
+    .session-notes{width:100%;padding:9px 11px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:12px;font-family:inherit;resize:none;height:90px;}
+    .session-notes:focus{outline:none;border-color:var(--accent);}
+
+    /* FOCUS MODE */
+    #app.focus-mode .card:not(#focus-card){display:none;}
+    #app.focus-mode .session-bar{display:none;}
+    #app.focus-mode .grid-interview{grid-template-columns:1fr;}
+    #app.focus-mode .tab-nav{display:none;}
+    #focus-card{display:block!important;}
+
+    /* HISTORY */
+    table{width:100%;border-collapse:collapse;font-size:13px;}
+    thead th{text-align:left;padding:8px 12px;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--text2);border-bottom:1px solid var(--border);font-weight:600;}
+    tbody td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+    tbody tr:last-child td{border-bottom:none;}
+    tbody tr:hover{background:var(--gray-l);}
+    .badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:11px;font-weight:600;}
+    .b-ok{background:var(--green-l);color:#166534;} .b-nok{background:var(--red-l);color:#991b1b;}
+    .b-wait{background:#e0f2fe;color:#0369a1;} .b-prog{background:var(--amber-l);color:#92400e;}
+    .icon-btn{background:none;border:none;cursor:pointer;padding:4px 6px;border-radius:5px;font-size:14px;color:var(--text2);}
+    .icon-btn:hover{background:var(--border);}
+    .icon-btn.del:hover{background:var(--red-l);color:var(--red);}
+    .empty{text-align:center;padding:32px;color:var(--text3);}
+
+    /* PROFILE FORM */
+    .form-group label{display:block;font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px;}
+    .form-group input,.form-group textarea,.form-group select{width:100%;padding:9px 11px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:13px;font-family:inherit;}
+    .form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.1);}
+    .form-group textarea{height:70px;resize:none;}
+    .form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+    .form-full{margin-bottom:12px;}
+
+    /* OVERLAY */
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:100;}
+    .overlay.open{display:flex;}
+    .form-box{background:var(--card);border-radius:14px;padding:28px 32px;width:100%;max-width:500px;max-height:92vh;overflow-y:auto;}
+    .form-box h2{font-size:16px;margin-bottom:18px;}
+    .form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;}
+    .btn-cancel{padding:9px 18px;border-radius:7px;border:none;background:var(--gray-l);color:var(--text2);font-size:13px;cursor:pointer;}
+    .btn-save{padding:9px 22px;border-radius:7px;border:none;background:var(--accent);color:#fff;font-size:13px;font-weight:600;cursor:pointer;}
+    .btn-save:hover{background:#1d4ed8;}
+
+    .sec-footer{text-align:center;margin-top:28px;font-size:11px;color:var(--text3);}
+
+    @media(max-width:900px){.grid-interview{grid-template-columns:1fr;}}
+    @media(max-width:600px){.gate-box{padding:32px 24px;}.session-bar{flex-direction:column;align-items:flex-start;}}
+  </style>
+</head>
+<body>
+
+<!-- ══════════════ GATE ══════════════ -->
+<div id="gate">
+  <div id="gate-box">
+    <span class="gate-lock">🎤</span>
+
+    <div class="gate-view" id="view-setup">
+      <h1>Créer votre espace sécurisé</h1>
+      <p>Choisissez un mot de passe. Utilisez le même que votre index.html pour un accès unifié.</p>
+      <div class="gate-field"><label>Mot de passe</label><input type="password" id="setup-pwd" placeholder="Minimum 8 caractères"></div>
+      <div class="gate-field"><label>Confirmer</label><input type="password" id="setup-pwd2" placeholder="Retapez votre mot de passe"></div>
+      <button class="gate-btn" id="setup-btn" onclick="doSetup()">Créer mon espace</button>
+      <div class="gate-error" id="setup-err"></div>
+      <div class="gate-info"><strong>💡 Astuce :</strong> utilisez le même mot de passe que votre index.html — il sera reconnu automatiquement.</div>
+    </div>
+
+    <div class="gate-view" id="view-unlock">
+      <h1>Assistant Entretien</h1>
+      <p>Entrez votre mot de passe pour accéder à l'assistant.</p>
+      <div class="gate-field"><label>Mot de passe</label><input type="password" id="unlock-pwd" placeholder="••••••••"></div>
+      <button class="gate-btn" id="unlock-btn" onclick="doUnlock()">Déverrouiller</button>
+      <div class="gate-error" id="unlock-err"></div>
+      <span class="gate-link" onclick="showView('view-changepwd')">Changer de mot de passe</span>
+    </div>
+
+    <div class="gate-view" id="view-changepwd">
+      <h1>Changer de mot de passe</h1>
+      <p>Vos données seront re-chiffrées avec le nouveau mot de passe.</p>
+      <div class="gate-field"><label>Ancien mot de passe</label><input type="password" id="chg-old" placeholder="••••••••"></div>
+      <div class="gate-field"><label>Nouveau mot de passe</label><input type="password" id="chg-new" placeholder="Minimum 8 caractères"></div>
+      <div class="gate-field"><label>Confirmer le nouveau</label><input type="password" id="chg-new2" placeholder="Retapez le nouveau"></div>
+      <button class="gate-btn" id="chg-btn" onclick="doChangePassword()">Changer et re-chiffrer</button>
+      <div class="gate-error" id="chg-err"></div>
+      <span class="gate-link" onclick="showView('view-unlock')">← Retour</span>
+    </div>
+
+    <div class="gate-security">🛡 AES-256-GCM · PBKDF2 · 200 000 itérations</div>
+  </div>
+</div>
+
+<!-- ══════════════ APP ══════════════ -->
+<div id="app">
+
+  <div class="header">
+    <div class="header-left">
+      <h1>🎤 Assistant Entretien — Bleze T.</h1>
+      <p id="header-date"></p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-focus btn-sm" onclick="toggleFocus()" id="focus-btn">⚡ Mode focus</button>
+      <button class="btn btn-ghost btn-sm" onclick="openHistoryForm()">+ Enregistrer entretien</button>
+      <button class="btn btn-lock btn-sm" onclick="lockApp()">🔒 Verrouiller</button>
+    </div>
+  </div>
+
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="showTab('entretien',this)">🎤 En entretien</button>
+    <button class="tab-btn" onclick="showTab('profil',this)">👤 Mon profil & Config</button>
+    <button class="tab-btn" onclick="showTab('historique',this)">📋 Historique</button>
+  </div>
+
+  <!-- ══ TAB 1 — EN ENTRETIEN ══ -->
+  <div id="section-entretien">
+
+    <!-- Session bar -->
+    <div class="session-bar">
+      <div class="session-field">
+        <label>Entreprise</label>
+        <input type="text" id="sess-company" placeholder="ex: Airbus">
+      </div>
+      <div class="session-sep"></div>
+      <div class="session-field">
+        <label>Interlocuteur</label>
+        <input type="text" id="sess-contact" placeholder="ex: Marie Dupont — RH">
+      </div>
+      <div class="session-sep"></div>
+      <div class="session-field">
+        <label>Durée</label>
+        <span class="timer" id="timer-display">00:00</span>
+        <button class="timer-btn" id="timer-btn" onclick="toggleTimer()">▶ Démarrer</button>
+      </div>
+    </div>
+
+    <div class="grid-interview">
+      <!-- LEFT -->
+      <div id="focus-card">
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-title">Questions fréquentes</div>
+
+          <div class="qcat-title pres">🙋 Présentation</div>
+          <div class="qbtn-grid">
+            <button class="qbtn pres" onclick="selectQ(this,'pres_1')">Présentez-vous</button>
+            <button class="qbtn pres" onclick="selectQ(this,'pres_2')">Parlez-moi de votre parcours</button>
+            <button class="qbtn pres" onclick="selectQ(this,'pres_3')">Pourquoi le freelance ?</button>
+            <button class="qbtn pres" onclick="selectQ(this,'pres_4')">Ce qui vous différencie ?</button>
+          </div>
+
+          <div class="qcat-title exp">📊 Expérience & Références</div>
+          <div class="qbtn-grid">
+            <button class="qbtn exp" onclick="selectQ(this,'exp_1')">Vos références concrètes ?</button>
+            <button class="qbtn exp" onclick="selectQ(this,'exp_2')">ATR — que faisiez-vous ?</button>
+            <button class="qbtn exp" onclick="selectQ(this,'exp_3')">TotalEnergies — résultats ?</button>
+            <button class="qbtn exp" onclick="selectQ(this,'exp_4')">GK Kevlar — contexte ?</button>
+            <button class="qbtn exp" onclick="selectQ(this,'exp_5')">Background Finance/Contrôle ?</button>
+          </div>
+
+          <div class="qcat-title tech">⚙️ Compétences techniques</div>
+          <div class="qbtn-grid">
+            <button class="qbtn tech" onclick="selectQ(this,'tech_1')">Niveau Power BI ?</button>
+            <button class="qbtn tech" onclick="selectQ(this,'tech_2')">Niveau SQL ?</button>
+            <button class="qbtn tech" onclick="selectQ(this,'tech_3')">ITIL 4 — c'est quoi ?</button>
+            <button class="qbtn tech" onclick="selectQ(this,'tech_4')">ML / Data Science ?</button>
+            <button class="qbtn tech" onclick="selectQ(this,'tech_5')">Votre méthode de travail ?</button>
+            <button class="qbtn tech" onclick="selectQ(this,'tech_6')">Outils que vous maîtrisez ?</button>
+          </div>
+
+          <div class="qcat-title hard">🎯 Questions difficiles</div>
+          <div class="qbtn-grid">
+            <button class="qbtn hard" onclick="selectQ(this,'hard_1')">Votre TJM ?</button>
+            <button class="qbtn hard" onclick="selectQ(this,'hard_2')">Disponibilité ?</button>
+            <button class="qbtn hard" onclick="selectQ(this,'hard_3')">Vos points faibles ?</button>
+            <button class="qbtn hard" onclick="selectQ(this,'hard_4')">Pas de référence dans notre secteur ?</button>
+            <button class="qbtn hard" onclick="selectQ(this,'hard_5')">Pourquoi pas le salariat ?</button>
+            <button class="qbtn hard" onclick="selectQ(this,'hard_6')">Où en sont vos démarches ?</button>
+          </div>
+
+          <div class="qcat-title custom">✏️ Question personnalisée</div>
+          <div class="custom-input-wrap">
+            <input type="text" id="custom-q" placeholder="Tapez la question posée par l'interlocuteur…" onkeydown="if(event.key==='Enter')generateCustom()">
+            <button onclick="generateCustom()">Générer ➜</button>
+          </div>
+        </div>
+
+        <!-- Prompt output -->
+        <div class="card">
+          <div class="prompt-label">
+            <span id="prompt-q-label">Sélectionnez une question ci-dessus</span>
+            <span style="font-size:11px;color:var(--text3);font-weight:400;">→ Copier dans Claude in Chrome</span>
+          </div>
+          <div class="prompt-out" id="prompt-out">Cliquez sur une question pour générer le prompt Claude in Chrome correspondant.</div>
+          <div class="copy-row">
+            <button class="copy-btn" id="copy-prompt-btn" onclick="copyPrompt()">📋 Copier le prompt</button>
+            <button class="hint-btn" onclick="showHint()">💡 Conseil réponse</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT sidebar -->
+      <div>
+        <!-- Profile snapshot -->
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-title">Mon profil — rappel rapide</div>
+          <div class="profile-snap">
+            <div style="font-weight:700;color:var(--navy);margin-bottom:4px;">Bleze TCHALLA</div>
+            <div style="color:var(--text2);margin-bottom:10px;">Business Data Analyst Freelance · 8 ans · Power BI · SQL · ITIL 4</div>
+            <div style="font-size:11px;color:var(--text2);margin-bottom:6px;font-style:italic;">"Je transforme les processus de reporting chronophages en dashboards autonomes."</div>
+            <div style="margin-bottom:8px;">
+              <div class="proof-item atr">
+                <div class="proof-co">✈ ATR — Aéronautique</div>
+                <div class="proof-res">Données fraîches à 8h · zéro action manuelle</div>
+              </div>
+              <div class="proof-item total">
+                <div class="proof-co">⚡ TotalEnergies — Énergie</div>
+                <div class="proof-res">2h30 → 15 min par rapport mensuel</div>
+              </div>
+              <div class="proof-item gk">
+                <div class="proof-co">🛡 GK Kevlar — Sécurité</div>
+                <div class="proof-res">Clôtures fiables et dans les délais</div>
+              </div>
+            </div>
+            <div style="font-size:11px;color:var(--text2);border-top:1px solid var(--border);padding-top:8px;margin-top:4px;">
+              <div>📌 TJM : <strong id="snap-tjm" style="color:var(--text);">—</strong></div>
+              <div>📅 Dispo : <strong id="snap-dispo" style="color:var(--text);">—</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notes session -->
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-title">Notes de session</div>
+          <textarea class="session-notes" id="sess-notes" placeholder="Points clés, impressions, questions à poser…"></textarea>
+          <button class="btn btn-primary btn-sm" style="margin-top:8px;width:100%;" onclick="saveSession()">💾 Sauvegarder l'entretien</button>
+        </div>
+
+        <!-- Timer / conseils -->
+        <div class="card">
+          <div class="card-title">Rappels clés</div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.8;">
+            ✅ Toujours commencer par une accroche personnalisée<br>
+            ✅ Citer au moins 1 chiffre concret par réponse<br>
+            ✅ Finir par une question sur leur contexte<br>
+            ⚡ Power BI + SQL + background Finance = combo rare<br>
+            🎯 ITIL 4 : valoriser si secteur IT/banque/assurance
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /section-entretien -->
+
+  <!-- ══ TAB 2 — PROFIL & CONFIG ══ -->
+  <div id="section-profil" style="display:none;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+
+      <div class="card">
+        <div class="card-title">Configuration personnelle</div>
+        <div class="form-full form-group">
+          <label>Mon TJM (affiché dans le profil)</label>
+          <input type="text" id="cfg-tjm" placeholder="ex: 480 €/jour">
+        </div>
+        <div class="form-full form-group">
+          <label>Disponibilité</label>
+          <input type="text" id="cfg-dispo" placeholder="ex: Disponible dès le 15 juin">
+        </div>
+        <div class="form-full form-group">
+          <label>Zone géographique</label>
+          <input type="text" id="cfg-zone" placeholder="ex: Toulouse + remote France">
+        </div>
+        <div class="form-full form-group">
+          <label>Notes personnelles (non visibles en prompt)</label>
+          <textarea id="cfg-notes" placeholder="Infos confidentielles, stratégie, objectifs de mission…"></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="saveConfig()" style="width:100%;">💾 Sauvegarder</button>
+        <div id="cfg-saved" style="color:var(--green);font-size:12px;margin-top:8px;min-height:18px;"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Profil de base (fixe)</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.9;">
+          <div><strong style="color:var(--text);">Nom :</strong> Bleze TCHALLA</div>
+          <div><strong style="color:var(--text);">Titre :</strong> Business Data Analyst Freelance</div>
+          <div><strong style="color:var(--text);">Expérience :</strong> 8 ans</div>
+          <div><strong style="color:var(--text);">Compétences :</strong> Power BI (DAX, Power Query), SQL, ITIL 4, Azure, Excel avancé</div>
+          <div><strong style="color:var(--text);">Background :</strong> 4 ans contrôle de gestion & pilotage de la performance</div>
+          <div><strong style="color:var(--text);">Certification :</strong> ITIL 4</div>
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
+            <div><strong style="color:var(--text);">ATR :</strong> données fraîches à 8h, zéro action manuelle</div>
+            <div><strong style="color:var(--text);">TotalEnergies :</strong> 2h30 → 15 min par rapport mensuel</div>
+            <div><strong style="color:var(--text);">GK Kevlar :</strong> clôtures mensuelles fiables et dans les délais</div>
+          </div>
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-style:italic;color:var(--text3);">
+            Ces données sont intégrées dans tous les prompts générés.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /section-profil -->
+
+  <!-- ══ TAB 3 — HISTORIQUE ══ -->
+  <div id="section-historique" style="display:none;">
+    <div class="card">
+      <div class="card-title">
+        Historique des entretiens
+        <button class="btn btn-primary btn-sm" onclick="openHistoryForm()">+ Ajouter</button>
+      </div>
+      <div class="empty" id="hist-empty" style="display:none;">Aucun entretien enregistré.</div>
+      <div style="overflow-x:auto;">
+        <table id="hist-table" style="display:none;">
+          <thead><tr>
+            <th>Date</th><th>Entreprise</th><th>Interlocuteur</th>
+            <th>Statut</th><th>Notes</th><th></th>
+          </tr></thead>
+          <tbody id="hist-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div><!-- /section-historique -->
+
+  <div class="sec-footer">🔐 Données chiffrées · AES-256-GCM · PBKDF2 200 000 itérations · Clé jamais stockée</div>
+</div>
+
+<!-- ── HISTORY FORM ── -->
+<div class="overlay" id="hist-overlay" onclick="if(event.target===this)closeHistForm()">
+  <div class="form-box" onclick="event.stopPropagation()">
+    <h2 id="hist-form-title">Enregistrer un entretien</h2>
+    <div class="form-grid-2">
+      <div class="form-group"><label>Entreprise</label><input type="text" id="hf-company" placeholder="ex: Airbus"></div>
+      <div class="form-group"><label>Date</label><input type="date" id="hf-date"></div>
+      <div class="form-group"><label>Interlocuteur</label><input type="text" id="hf-contact" placeholder="ex: Marie Dupont — RH"></div>
+      <div class="form-group"><label>Statut</label>
+        <select id="hf-status">
+          <option value="wait">En attente de retour</option>
+          <option value="prog">En cours / 2ème round</option>
+          <option value="ok">Retour positif</option>
+          <option value="nok">Sans suite</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-full form-group"><label>Questions posées</label><textarea id="hf-questions" placeholder="Questions notables posées pendant l'entretien…"></textarea></div>
+    <div class="form-full form-group"><label>Notes & impressions</label><textarea id="hf-notes" placeholder="Ressenti, points à améliorer, contexte de la mission…"></textarea></div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeHistForm()">Annuler</button>
+      <button class="btn-save" onclick="saveHistory()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ═══════════════════════════════════════════
+//  STORAGE KEYS — partagés avec index.html
+// ═══════════════════════════════════════════
+const K_SALT   = 'btp_salt_v2';    // PARTAGÉ
+const K_VERIFY = 'btp_verify_v2';  // PARTAGÉ
+const K_DATA   = 'bti_data_v1';    // SPÉCIFIQUE interview
+
+// ═══════════════════════════════════════════
+//  CRYPTO
+// ═══════════════════════════════════════════
+let cryptoKey = null;
+function b64(buf)  { return btoa(String.fromCharCode(...new Uint8Array(buf))); }
+function unb64(s)  { return Uint8Array.from(atob(s), c => c.charCodeAt(0)); }
+async function deriveKey(password, salt) {
+  const km = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), { name:'PBKDF2' }, false, ['deriveKey']);
+  return crypto.subtle.deriveKey({ name:'PBKDF2', salt, iterations:200000, hash:'SHA-256' }, km, { name:'AES-GCM', length:256 }, false, ['encrypt','decrypt']);
+}
+async function aesEncrypt(key, plain) {
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const cipher = await crypto.subtle.encrypt({ name:'AES-GCM', iv }, key, new TextEncoder().encode(plain));
+  return { iv: b64(iv), c: b64(cipher) };
+}
+async function aesDecrypt(key, stored) {
+  const plain = await crypto.subtle.decrypt({ name:'AES-GCM', iv: unb64(stored.iv) }, key, unb64(stored.c));
+  return new TextDecoder().decode(plain);
+}
+
+// ═══════════════════════════════════════════
+//  AUTH
+// ═══════════════════════════════════════════
+function isFirstVisit() { return !localStorage.getItem(K_SALT); }
+function setLoading(id, on, label='Chargement…') {
+  const b = document.getElementById(id);
+  if (!b) return;
+  b.disabled = on;
+  b.innerHTML = on ? `<span class="spin"></span> ${label}` : (b.dataset.label || b.textContent);
+  if (!on && !b.dataset.label) b.dataset.label = b.textContent;
+}
+
+async function doSetup() {
+  const pwd = document.getElementById('setup-pwd').value;
+  const pwd2 = document.getElementById('setup-pwd2').value;
+  const err = document.getElementById('setup-err');
+  err.textContent = '';
+  if (pwd.length < 8) { err.textContent = 'Mot de passe trop court (8 caractères min).'; return; }
+  if (pwd !== pwd2)   { err.textContent = 'Les deux mots de passe ne correspondent pas.'; return; }
+  setLoading('setup-btn', true, 'Dérivation de la clé…');
+  try {
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    cryptoKey  = await deriveKey(pwd, salt);
+    localStorage.setItem(K_SALT,   b64(salt));
+    localStorage.setItem(K_VERIFY, JSON.stringify(await aesEncrypt(cryptoKey, 'VALID')));
+    interviewData = { config: {}, history: [] };
+    await persistData();
+    unlockApp();
+  } catch(e) { err.textContent = 'Erreur : ' + e.message; }
+  finally { setLoading('setup-btn', false); }
+}
+
+async function doUnlock() {
+  const pwd = document.getElementById('unlock-pwd').value;
+  const err = document.getElementById('unlock-err');
+  err.textContent = '';
+  if (!pwd) { err.textContent = 'Veuillez saisir votre mot de passe.'; return; }
+  setLoading('unlock-btn', true, 'Vérification…');
+  try {
+    const salt = unb64(localStorage.getItem(K_SALT));
+    const key  = await deriveKey(pwd, salt);
+    try {
+      const v = await aesDecrypt(key, JSON.parse(localStorage.getItem(K_VERIFY)));
+      if (v !== 'VALID') throw new Error();
+    } catch(_) { err.textContent = 'Mot de passe incorrect.'; return; }
+    cryptoKey = key;
+    const raw = localStorage.getItem(K_DATA);
+    if (raw) {
+      try { interviewData = JSON.parse(await aesDecrypt(cryptoKey, JSON.parse(raw))); } catch(_) { interviewData = { config:{}, history:[] }; }
+    } else { interviewData = { config:{}, history:[] }; }
+    document.getElementById('unlock-pwd').value = '';
+    unlockApp();
+  } catch(e) { err.textContent = 'Erreur : ' + e.message; }
+  finally { setLoading('unlock-btn', false); }
+}
+
+async function doChangePassword() {
+  const oldPwd = document.getElementById('chg-old').value;
+  const newPwd = document.getElementById('chg-new').value;
+  const newPwd2 = document.getElementById('chg-new2').value;
+  const err = document.getElementById('chg-err');
+  err.textContent = '';
+  if (!oldPwd)           { err.textContent = 'Saisissez votre ancien mot de passe.'; return; }
+  if (newPwd.length < 8) { err.textContent = 'Nouveau mot de passe trop court.'; return; }
+  if (newPwd !== newPwd2){ err.textContent = 'Les nouveaux mots de passe ne correspondent pas.'; return; }
+  setLoading('chg-btn', true, 'Re-chiffrement…');
+  try {
+    const oldSalt = unb64(localStorage.getItem(K_SALT));
+    const oldKey  = await deriveKey(oldPwd, oldSalt);
+    try { const v = await aesDecrypt(oldKey, JSON.parse(localStorage.getItem(K_VERIFY))); if (v !== 'VALID') throw new Error(); }
+    catch(_) { err.textContent = 'Ancien mot de passe incorrect.'; return; }
+    let existing = { config:{}, history:[] };
+    const raw = localStorage.getItem(K_DATA);
+    if (raw) { try { existing = JSON.parse(await aesDecrypt(oldKey, JSON.parse(raw))); } catch(_) {} }
+    const newSalt = crypto.getRandomValues(new Uint8Array(16));
+    const newKey  = await deriveKey(newPwd, newSalt);
+    cryptoKey = newKey; interviewData = existing;
+    localStorage.setItem(K_SALT,   b64(newSalt));
+    localStorage.setItem(K_VERIFY, JSON.stringify(await aesEncrypt(newKey, 'VALID')));
+    await persistData();
+    ['chg-old','chg-new','chg-new2'].forEach(id => document.getElementById(id).value = '');
+    err.style.color = '#4ade80';
+    err.textContent = '✓ Mot de passe changé avec succès.';
+    setTimeout(() => { err.textContent=''; err.style.color=''; showView('view-unlock'); }, 2000);
+  } catch(e) { err.textContent = 'Erreur : ' + e.message; }
+  finally { setLoading('chg-btn', false); }
+}
+
+function lockApp() {
+  cryptoKey = null; interviewData = { config:{}, history:[] };
+  stopTimer();
+  document.getElementById('app').style.display  = 'none';
+  document.getElementById('gate').style.display = 'flex';
+  document.getElementById('unlock-pwd').value = '';
+  showView('view-unlock');
+}
+
+function showView(id) {
+  document.querySelectorAll('.gate-view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function unlockApp() {
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('app').style.display  = 'block';
+  initApp();
+}
+
+// ═══════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════
+let interviewData = { config:{}, history:[] };
+let histEditId = null;
+
+async function persistData() {
+  if (!cryptoKey) return;
+  const enc = await aesEncrypt(cryptoKey, JSON.stringify(interviewData));
+  localStorage.setItem(K_DATA, JSON.stringify(enc));
+}
+
+// ═══════════════════════════════════════════
+//  PROFILE BASE
+// ═══════════════════════════════════════════
+const PROFILE_BASE = {
+  name: "Bleze TCHALLA",
+  title: "Business Data Analyst Freelance",
+  years: 8,
+  skills: "Power BI (DAX, Power Query, dataflows), SQL, ITIL 4, Azure, Excel avancé",
+  background: "4 ans en contrôle de gestion et pilotage de la performance dans un groupe multi-entités avant de passer côté BI",
+  itil: "Certifié ITIL 4 — comprend les environnements IT au-delà de la stack data : gestion des services, chaîne de valeur, risques de changement",
+  tagline: "Je transforme les processus de reporting chronophages en dashboards autonomes — pour que vos équipes décident en minutes, pas en jours.",
+  refs: [
+    { co:"ATR", sector:"Aéronautique", result:"Données disponibles à 8h le lendemain — zéro action manuelle", detail:"Flux automatisé Power BI + SQL, alimentation nocturne, dashboard à jour chaque matin" },
+    { co:"TotalEnergies", sector:"Énergie", result:"2h30 → 15 minutes par rapport mensuel, zéro ressaisie", detail:"Automatisation complète flux de données, modélisation Power Query + DAX" },
+    { co:"GK Kevlar", sector:"Sécurité privée", result:"Clôtures mensuelles fiables et dans les délais", detail:"Modélisation données, règles de gestion, dashboards de pilotage" }
+  ],
+  modes: [
+    "Mode pont métier/technique : cadrage KPIs avec les directions, ateliers, formalisation règles de gestion → implémentation Power BI",
+    "Mode technique pur : construction et déploiement solutions BI en autonomie (modélisation, DAX, SQL, Power Query)"
+  ]
+};
+
+function getProfileContext() {
+  const cfg = interviewData.config || {};
+  return `PROFIL : ${PROFILE_BASE.name} — ${PROFILE_BASE.title} — ${PROFILE_BASE.years} ans
+COMPÉTENCES : ${PROFILE_BASE.skills}
+BACKGROUND : ${PROFILE_BASE.background}
+CERTIFICATION : ${PROFILE_BASE.itil}
+TAGLINE : "${PROFILE_BASE.tagline}"
+RÉFÉRENCES :
+- ATR (Aéro) : ${PROFILE_BASE.refs[0].result}
+- TotalEnergies (Énergie) : ${PROFILE_BASE.refs[1].result}
+- GK Kevlar (Sécurité) : ${PROFILE_BASE.refs[2].result}
+MODES D'INTERVENTION :
+- ${PROFILE_BASE.modes[0]}
+- ${PROFILE_BASE.modes[1]}
+TJM : ${cfg.tjm || 'à définir selon la mission'}
+DISPONIBILITÉ : ${cfg.dispo || 'à préciser'}
+ZONE : ${cfg.zone || 'Toulouse + remote France'}`;
+}
+
+// ═══════════════════════════════════════════
+//  QUESTIONS & PROMPTS
+// ═══════════════════════════════════════════
+const QUESTIONS = {
+  pres_1: {
+    label: "Présentez-vous",
+    hint: "Utilise ta tagline dès la 2ème phrase. Mentionne le background Finance avant BI. Cite 1 référence.",
+    prompt: q => `${getProfileContext()}
+
+QUESTION EN ENTRETIEN : "${q}"
+
+Génère une présentation naturelle de 4-5 phrases maximum.
+Structure : qui je suis → ce que je fais (tagline) → ce qui me différencie (background Finance) → 1 preuve concrète → question de rebond sur leur contexte.
+Ton : confiant, humain, pas récité.`
+  },
+  pres_2: {
+    label: "Parlez-moi de votre parcours",
+    hint: "Fil rouge : métier d'abord (4 ans contrôle de gestion), puis BI depuis 2021. Le passage métier → BI est le point fort.",
+    prompt: q => `${getProfileContext()}
+
+QUESTION EN ENTRETIEN : "${q}"
+
+Génère un récit de parcours de 5-6 phrases.
+Structure : 4 ans côté métier (contrôle de gestion) → décision de passer à l'implémentation BI → premiers grands comptes → valeur unique apportée.
+Valorise le fait d'avoir été des deux côtés. Ton : storytelling naturel.`
+  },
+  pres_3: {
+    label: "Pourquoi le freelance ?",
+    hint: "Ne pas critiquer le salariat. Mettre en avant l'impact direct, la diversité des contextes, l'agilité.",
+    prompt: q => `${getProfileContext()}
+
+QUESTION EN ENTRETIEN : "${q}"
+
+Génère une réponse de 3-4 phrases.
+Arguments : impact direct sur chaque mission, diversité des contextes métier (accélère la montée en compétences), agilité d'un consultant indépendant.
+Éviter toute critique du salariat. Ton : convaincu et positif.`
+  },
+  pres_4: {
+    label: "Ce qui vous différencie ?",
+    hint: "3 éléments uniques : background Finance métier + preuves chiffrées + ITIL 4. Combo rare sur le marché.",
+    prompt: q => `${getProfileContext()}
+
+QUESTION EN ENTRETIEN : "${q}"
+
+Génère une réponse de 4-5 phrases sur les 3 différenciateurs :
+1. Background Finance métier (4 ans côté utilisateur avant d'être développeur BI)
+2. Preuves chiffrées sur grands comptes
+3. Certification ITIL 4 (rare pour un profil BI pur)
+Ton : factuel, pas arrogant.`
+  },
+  exp_1: {
+    label: "Vos références concrètes ?",
+    hint: "Citer les 3 références avec chiffres. Adapter selon le secteur de l'interlocuteur si connu.",
+    prompt: q => `${getProfileContext()}
+
+QUESTION EN ENTRETIEN : "${q}"
+
+Génère une réponse de 5-6 phrases présentant les 3 références avec leurs résultats chiffrés.
+Pour chaque : contexte en 1 phrase → solution → résultat concret avec chiffre.
+Finir par une question : "Dans votre contexte, quel est le reporting qui vous prend le plus de temps ?"
+Ton : factuel, précis.`
+  },
+  exp_2: {
+    label: "ATR — que faisiez-vous ?",
+    hint: "Données disponibles à 8h. Flux automatisé Power BI + SQL. Zéro action manuelle pour les managers.",
+    prompt: q => `${getProfileContext()}
+
+QUESTION EN ENTRETIEN : "${q}"
+
+Génère une réponse de 4-5 phrases sur la mission ATR.
+Contexte : reporting opérationnel produit manuellement, données avec retard.
+Solution : flux automatisé Power BI + SQL, alimentation nocturne.
+Résultat : données fraîches à 8h chaque matin, zéro ressaisie.
+Ton : concret, technique sans jargon.`
+  },
+  exp_3: {
+    label: "TotalEnergies — résultats ?",
+    hint: "2h30 → 15 min. Automatisation complète. Chiffre très fort à mettre en avant.",
+    prompt: q => `${getProfileContext()}
+
+QUESTION EN ENTRETIEN : "${q}"
+
+Génère une réponse de 4-5 phrases sur la mission TotalEnergies.
+Mettre en avant le chiffre clé : 2h30 → 15 minutes par rapport mensuel.
+Expliquer la démarche : automatisation complète du flux, modélisation Power Query + DAX.
+Ton : précis, les chiffres parlent d'eux-mêmes.`
+  },
+  exp_4: {
+    label: "GK Kevlar — contexte ?",
+    hint: "Clôtures mensuelles fiables. Sécurité privée. Pilotage en temps réel. Angle Finance/contrôle.",
+    prompt: q => `${getProfileContext()}
+
+QUESTION EN ENTRETIEN : "${q}"
+
+Génère une réponse de 4-5 phrases sur la mission GK Kevlar (sécurité privée).
+Contexte : clôtures mensuelles aléatoires, manque de visibilité.
+Solution : modélisation données, règles de gestion, dashboards pilotage.
+Résultat : clôtures fiables dans les délais, direction avec visibilité temps réel.
+Ton : contexte métier Finance valorisé.`
+  },
+  exp_5: {
+    label: "Background Finance/Contrôle ?",
+    hint: "4 ans en contrôle de gestion. Côté utilisateur avant d'être développeur. Comprend ce que les DAF attendent.",
+    prompt: q => `${getProfileContext()}
+
+QUESTION EN ENTRETIEN : "${q}"
+
+Génère une réponse de 4-5 phrases valorisant le background contrôle de gestion.
+Point clé : avoir été du côté métier avant BI change tout — je sais ce dont les équipes Finance ont besoin sans 3 aller-retours.
+Lien avec ITIL 4 si pertinent.
+Ton : différenciateur fort, pas un simple « j'ai fait de la compta ».`
+  },
+  tech_1: {
+    label: "Niveau Power BI ?",
+    hint: "DAX avancé, Power Query, dataflows, modélisation dimensionnelle. Citer les missions où Power BI a eu un impact direct.",
+    prompt: q => `${getProfileContext()}
+
+QUESTION EN ENTRETIEN : "${q}"
+
+Génère une réponse de 4-5 phrases sur le niveau Power BI.
+Couvrir : DAX (mesures complexes, time intelligence), Power Query (ETL, transformations), dataflows, modélisation en étoile/flocon.
+Ancrer dans les missions réelles (ATR, TotalEnergies).
+Ton : expert sans être prétentieux.`
+  },
+  tech_2: {
+    label: "Niveau SQL ?",
+    hint: "T-SQL, PostgreSQL. Requêtes analytiques, CTEs, fenêtres. Pas développeur backend mais analytique confirmé.",
+    prompt: q => `${getProfileContext()}
+
+QUESTION EN ENTRETIEN : "${q}"
+
+Génère une réponse de 3-4 phrases sur le niveau SQL.
+Préciser : T-SQL, PostgreSQL, requêtes analytiques (CTEs, fonctions de fenêtre, agrégations complexes).
+Positionner comme profil analytique/BI, pas développeur backend.
+Ton : honnête sur le périmètre, confiant sur les usages BI.`
+  },
+  tech_3: {
+    label: "ITIL 4 — c'est quoi ?",
+    hint: "Framework gestion des services IT. Valeur : s'intègre sans friction dans les environnements IT structurés. Rare pour un profil BI.",
+    prompt: q => `${getProfileContext()}
+
+QUESTION EN ENTRETIEN : "${q}"
+
+Génère une réponse de 3-4 phrases expliquant ITIL 4 et sa valeur dans un contexte BI.
+Définition simple : framework de gestion des services IT (chaîne de valeur, amélioration continue, gestion des changements).
+Valeur ajoutée : comprendre l'environnement IT au-delà de la stack data, s'intégrer sans créer de friction, gérer les risques de changement.
+Ton : pédagogique, valorisant.`
+  },
+  tech_4: {
+    label: "ML / Data Science ?",
+    hint: "Honnêteté totale. Ce n'est pas mon domaine. Mon expertise = BI/reporting. Ne pas surventre.",
+    prompt: q => `${getProfileContext()}
+
+QUESTION EN ENTRETIEN : "${q}"
+
+Génère une réponse honnête de 3 phrases sur les limites en ML/Data Science.
+Message clair : expertise = Business Intelligence (Power BI, SQL, reporting). ML/Data Science = profil différent, pas mon coeur de métier.
+Option : mentionner les notions de base (statistiques descriptives, compréhension des modèles) sans survendre.
+Proposer d'orienter vers des profils complémentaires si besoin.
+Ton : direct, sans excuse excessive.`
+  },
+  tech_5: {
+    label: "Votre méthode de travail ?",
+    hint: "Besoins métier d'abord. Formalisation règles de gestion. Itérations courtes. Formation utilisateurs = autonomie client.",
+    prompt: q => `${getProfileContext()}
+
+QUESTION EN ENTRETIEN : "${q}"
+
+Génère une réponse de 4-5 phrases sur la méthode de travail.
+Étapes clés : 1) comprendre le besoin métier (qui utilise, quelle décision) 2) formaliser les règles de gestion 3) livraisons itératives avec validation 4) formation des utilisateurs pour leur autonomie.
+Finir sur le fait que l'objectif = leur autonomie, pas la dépendance.
+Ton : structuré, professionnel.`
+  },
+  tech_6: {
+    label: "Outils que vous maîtrisez ?",
+    hint: "Power BI, SQL, Power Query, DAX, Azure, SharePoint, Excel avancé. ITIL 4. Pas Python/ML — être honnête.",
+    prompt: q => `${getProfileContext()}
+
+QUESTION EN ENTRETIEN : "${q}"
+
+Génère une réponse de 3-4 phrases listant les outils maîtrisés.
+Stack principale : Power BI (DAX, Power Query, dataflows), SQL (T-SQL, PostgreSQL), Azure (bases), SharePoint, Excel avancé.
+ITIL 4 comme framework IT.
+Être honnête sur Python (notions de base) et ML (hors périmètre).
+Ton : clair et précis.`
+  },
+  hard_1: {
+    label: "Votre TJM ?",
+    hint: "Ne jamais donner un chiffre seul sans contexte. Toujours conditionner à la durée, complexité et mode.",
+    prompt: q => `${getProfileContext()}
+
+QUESTION EN ENTRETIEN : "${q}"
+
+Génère une réponse de 3-4 phrases sur le TJM.
+Structure : donner une fourchette selon le contexte → préciser les variables (durée, complexité, mode d'intervention) → ouvrir sur la discussion.
+TJM configuré : ${interviewData.config?.tjm || 'à personnaliser dans votre configuration'}.
+Ne jamais lâcher un chiffre seul sans contexte. Ton : serein, pas défensif.`
+  },
+  hard_2: {
+    label: "Disponibilité ?",
+    hint: "Donner la date précise. Si plusieurs missions en cours de discussion, rester vague sur les autres.",
+    prompt: q => `${getProfileContext()}
+
+QUESTION EN ENTRETIEN : "${q}"
+
+Génère une réponse de 2-3 phrases sur la disponibilité.
+Disponibilité configurée : ${interviewData.config?.dispo || 'à personnaliser dans votre configuration'}.
+Zone : ${interviewData.config?.zone || 'Toulouse + remote France'}.
+Ton : direct et clair.`
+  },
+  hard_3: {
+    label: "Vos points faibles ?",
+    hint: "Choisir un vrai point faible qui ne disqualifie pas (ex: ML/Data Science) ET montrer qu'on en est conscient.",
+    prompt: q => `${getProfileContext()}
+
+QUESTION EN ENTRETIEN : "${q}"
+
+Génère une réponse honnête de 3-4 phrases sur les points faibles.
+Angle : reconnaître honnêtement les limites (ML/Data Science, Python avancé) → montrer la conscience de ces limites → expliquer comment on compense (clarté sur le périmètre, partenaires complémentaires).
+Éviter les faux points faibles du type "je travaille trop". Ton : maturité professionnelle.`
+  },
+  hard_4: {
+    label: "Pas de référence dans notre secteur ?",
+    hint: "Compenser avec : background Finance (universel) + méthode transférable + capacité d'adaptation prouvée.",
+    prompt: q => `${getProfileContext()}
+
+QUESTION EN ENTRETIEN : "${q}"
+
+Génère une réponse de 4-5 phrases sur l'absence de référence sectorielle.
+Arguments : les problèmes de reporting/BI sont universels entre secteurs → background Finance/contrôle de gestion est transversal → capacité d'adaptation prouvée (aéro, énergie, sécurité = secteurs très différents) → montée en contexte rapide grâce à la méthode de cadrage.
+Ton : confiant, pas sur la défensive.`
+  },
+  hard_5: {
+    label: "Pourquoi pas le salariat ?",
+    hint: "Impact direct, diversité des contextes, agilité. Ne jamais critiquer le salariat.",
+    prompt: q => `${getProfileContext()}
+
+QUESTION EN ENTRETIEN : "${q}"
+
+Génère une réponse de 3-4 phrases sur le choix du freelance vs salariat.
+Arguments positifs uniquement : concentration sur l'impact, diversité des contextes (accélère la compétence), agilité d'intervention.
+Ne jamais critiquer le salariat ou les entreprises. Ton : choix assumé et positif.`
+  },
+  hard_6: {
+    label: "Où en sont vos démarches ?",
+    hint: "Démarche active mais sélective. Ne pas se survendre comme 'très demandé'. Rester factuel.",
+    prompt: q => `${getProfileContext()}
+
+QUESTION EN ENTRETIEN : "${q}"
+
+Génère une réponse de 2-3 phrases sur l'état des démarches.
+Message : démarche active, discussions en cours, priorité à la bonne mission plutôt qu'à la première disponible.
+Sans donner de détails sur les autres discussions. Ton : serein, pas pressé.`
+  }
+};
+
+// ═══════════════════════════════════════════
+//  QUESTION SELECTION
+// ═══════════════════════════════════════════
+let currentQKey = null;
+
+function selectQ(btn, key) {
+  document.querySelectorAll('.qbtn').forEach(b => b.classList.remove('active-q'));
+  btn.classList.add('active-q');
+  currentQKey = key;
+  const q = QUESTIONS[key];
+  document.getElementById('prompt-q-label').textContent = '→ ' + q.label;
+  const prompt = q.prompt(q.label);
+  const out = document.getElementById('prompt-out');
+  out.textContent = prompt;
+  out.classList.add('has-content');
+}
+
+function generateCustom() {
+  const q = document.getElementById('custom-q').value.trim();
+  if (!q) return;
+  currentQKey = null;
+  document.querySelectorAll('.qbtn').forEach(b => b.classList.remove('active-q'));
+  document.getElementById('prompt-q-label').textContent = '→ Question personnalisée';
+  const profile = getProfileContext();
+  const prompt = `${profile}
+
+QUESTION EN ENTRETIEN : "${q}"
+
+Génère une réponse naturelle et convaincante de 3-5 phrases maximum.
+Utilise les preuves concrètes là où c'est pertinent (ATR, TotalEnergies, GK Kevlar).
+Adapte le ton selon le type de question (technique, comportemental, stratégique).
+Finir si possible par une question de rebond sur leur contexte.
+Ton : professionnel, humain, pas récité.`;
+  const out = document.getElementById('prompt-out');
+  out.textContent = prompt;
+  out.classList.add('has-content');
+}
+
+async function copyPrompt() {
+  const text = document.getElementById('prompt-out').textContent;
+  if (!text || text.startsWith('Cliquez')) return;
+  try {
+    await navigator.clipboard.writeText(text);
+    const btn = document.getElementById('copy-prompt-btn');
+    btn.textContent = '✓ Copié !';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.innerHTML = '📋 Copier le prompt'; btn.classList.remove('copied'); }, 2000);
+  } catch(_) { alert('Copiez manuellement le texte ci-dessus.'); }
+}
+
+function showHint() {
+  if (!currentQKey || !QUESTIONS[currentQKey]) return;
+  alert('💡 Conseil : ' + QUESTIONS[currentQKey].hint);
+}
+
+// ═══════════════════════════════════════════
+//  TIMER
+// ═══════════════════════════════════════════
+let timerInterval = null, timerSeconds = 0;
+
+function toggleTimer() {
+  if (timerInterval) {
+    stopTimer();
+    document.getElementById('timer-btn').textContent = '▶ Reprendre';
+  } else {
+    timerInterval = setInterval(() => {
+      timerSeconds++;
+      const m = String(Math.floor(timerSeconds/60)).padStart(2,'0');
+      const s = String(timerSeconds%60).padStart(2,'0');
+      document.getElementById('timer-display').textContent = m + ':' + s;
+    }, 1000);
+    document.getElementById('timer-btn').textContent = '⏸ Pause';
+  }
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+}
+
+// ═══════════════════════════════════════════
+//  FOCUS MODE
+// ═══════════════════════════════════════════
+let focusMode = false;
+function toggleFocus() {
+  focusMode = !focusMode;
+  const app = document.getElementById('app');
+  const btn = document.getElementById('focus-btn');
+  if (focusMode) {
+    app.classList.add('focus-mode');
+    btn.textContent = '✕ Quitter focus';
+    btn.style.background = 'rgba(220,38,38,.2)';
+    btn.style.color = '#fca5a5';
+  } else {
+    app.classList.remove('focus-mode');
+    btn.textContent = '⚡ Mode focus';
+    btn.style.background = '';
+    btn.style.color = '';
+  }
+}
+
+// ═══════════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════════
+function showTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  ['entretien','profil','historique'].forEach(t => {
+    document.getElementById('section-' + t).style.display = t === tab ? '' : 'none';
+  });
+  if (tab === 'historique') renderHistory();
+}
+
+// ═══════════════════════════════════════════
+//  CONFIG
+// ═══════════════════════════════════════════
+function loadConfig() {
+  const cfg = interviewData.config || {};
+  document.getElementById('cfg-tjm').value  = cfg.tjm  || '';
+  document.getElementById('cfg-dispo').value = cfg.dispo || '';
+  document.getElementById('cfg-zone').value  = cfg.zone  || '';
+  document.getElementById('cfg-notes').value = cfg.notes || '';
+  document.getElementById('snap-tjm').textContent  = cfg.tjm  || '—';
+  document.getElementById('snap-dispo').textContent = cfg.dispo || '—';
+}
+
+async function saveConfig() {
+  interviewData.config = {
+    tjm:   document.getElementById('cfg-tjm').value.trim(),
+    dispo: document.getElementById('cfg-dispo').value.trim(),
+    zone:  document.getElementById('cfg-zone').value.trim(),
+    notes: document.getElementById('cfg-notes').value.trim(),
+  };
+  await persistData();
+  document.getElementById('snap-tjm').textContent  = interviewData.config.tjm  || '—';
+  document.getElementById('snap-dispo').textContent = interviewData.config.dispo || '—';
+  const saved = document.getElementById('cfg-saved');
+  saved.textContent = '✓ Configuration sauvegardée';
+  setTimeout(() => { saved.textContent = ''; }, 2000);
+}
+
+// ═══════════════════════════════════════════
+//  SESSION SAVE
+// ═══════════════════════════════════════════
+async function saveSession() {
+  const company = document.getElementById('sess-company').value.trim();
+  if (!company) { alert('Renseignez au moins le nom de l\'entreprise.'); return; }
+  const entry = {
+    id: Date.now(),
+    date: new Date().toISOString().split('T')[0],
+    company,
+    contact:   document.getElementById('sess-contact').value.trim(),
+    notes:     document.getElementById('sess-notes').value.trim(),
+    questions: '',
+    status:    'wait',
+  };
+  if (!interviewData.history) interviewData.history = [];
+  interviewData.history.unshift(entry);
+  await persistData();
+  alert('✓ Entretien enregistré dans l\'historique !');
+}
+
+// ═══════════════════════════════════════════
+//  HISTORY CRUD
+// ═══════════════════════════════════════════
+function openHistoryForm(id = null) {
+  histEditId = id;
+  document.getElementById('hist-form-title').textContent = id ? 'Modifier l\'entretien' : 'Enregistrer un entretien';
+  const e = id ? (interviewData.history||[]).find(x => x.id === id) : null;
+  document.getElementById('hf-company').value   = e?.company   || document.getElementById('sess-company').value || '';
+  document.getElementById('hf-date').value      = e?.date      || new Date().toISOString().split('T')[0];
+  document.getElementById('hf-contact').value   = e?.contact   || document.getElementById('sess-contact').value || '';
+  document.getElementById('hf-status').value    = e?.status    || 'wait';
+  document.getElementById('hf-questions').value = e?.questions || '';
+  document.getElementById('hf-notes').value     = e?.notes     || document.getElementById('sess-notes').value || '';
+  document.getElementById('hist-overlay').classList.add('open');
+}
+
+function closeHistForm() {
+  document.getElementById('hist-overlay').classList.remove('open');
+  histEditId = null;
+}
+
+async function saveHistory() {
+  const company = document.getElementById('hf-company').value.trim();
+  if (!company) { alert('Renseignez l\'entreprise.'); return; }
+  const d = {
+    company,
+    date:      document.getElementById('hf-date').value,
+    contact:   document.getElementById('hf-contact').value.trim(),
+    status:    document.getElementById('hf-status').value,
+    questions: document.getElementById('hf-questions').value.trim(),
+    notes:     document.getElementById('hf-notes').value.trim(),
+  };
+  if (!interviewData.history) interviewData.history = [];
+  if (histEditId) {
+    const i = interviewData.history.findIndex(x => x.id === histEditId);
+    if (i !== -1) interviewData.history[i] = { ...interviewData.history[i], ...d };
+  } else {
+    interviewData.history.unshift({ id: Date.now(), ...d });
+  }
+  closeHistForm();
+  await persistData();
+  renderHistory();
+}
+
+async function deleteHistory(id) {
+  if (!confirm('Supprimer cet entretien ?')) return;
+  interviewData.history = (interviewData.history||[]).filter(x => x.id !== id);
+  await persistData();
+  renderHistory();
+}
+
+function renderHistory() {
+  const hist = interviewData.history || [];
+  const statusMap = { wait:'b-wait', prog:'b-prog', ok:'b-ok', nok:'b-nok' };
+  const statusLabel = { wait:'En attente', prog:'En cours', ok:'Retour positif', nok:'Sans suite' };
+  document.getElementById('hist-empty').style.display = hist.length === 0 ? 'block' : 'none';
+  document.getElementById('hist-table').style.display = hist.length === 0 ? 'none' : 'table';
+  const tbody = document.getElementById('hist-tbody');
+  tbody.innerHTML = '';
+  hist.forEach(e => {
+    const dateStr = e.date ? new Date(e.date+'T12:00:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'2-digit'}) : '—';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="white-space:nowrap;color:var(--text2);">${dateStr}</td>
+      <td style="font-weight:500;">${esc(e.company)}</td>
+      <td style="color:var(--text2);font-size:12px;">${esc(e.contact||'—')}</td>
+      <td><span class="badge ${statusMap[e.status]||'b-wait'}">${statusLabel[e.status]||e.status}</span></td>
+      <td style="color:var(--text2);font-size:12px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${esc(e.notes)}">${esc(e.notes||'—')}</td>
+      <td><div style="display:flex;gap:4px;">
+        <button class="icon-btn" onclick="openHistoryForm(${e.id})" title="Modifier">✏️</button>
+        <button class="icon-btn del" onclick="deleteHistory(${e.id})" title="Supprimer">🗑</button>
+      </div></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ═══════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════
+function initApp() {
+  document.getElementById('header-date').textContent =
+    new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('hf-date').value = new Date().toISOString().split('T')[0];
+  loadConfig();
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    if (document.getElementById('view-setup').classList.contains('active'))      doSetup();
+    else if (document.getElementById('view-unlock').classList.contains('active')) doUnlock();
+  }
+  if (e.key === 'Escape') { closeHistForm(); }
+  if (e.key === 'F2') toggleFocus();
+});
+
+// Boot
+window.addEventListener('DOMContentLoaded', () => {
+  if (isFirstVisit()) showView('view-setup');
+  else { showView('view-unlock'); setTimeout(() => document.getElementById('unlock-pwd').focus(), 100); }
+});
+</script>
+</body>
+</html>
