@@ -840,13 +840,16 @@ function renderAnswer(key, a) {
 }
 
 function selectQ(btn, key) {
-  document.querySelectorAll('.qbtn').forEach(b => b.classList.remove('active-q'));
-  btn.classList.add('active-q');
-  currentQKey = key;
-  const a = JSON.parse(JSON.stringify(ANSWERS[key]));
-  if (key==='hard_1') a.points[2].t = 'Mon TJM : <em>'+CFG_TJM()+'</em>';
-  if (key==='hard_2') { a.points[0].t='Disponibilite : <em>'+CFG_DISPO()+'</em>'; a.points[1].t='Zone : <em>'+CFG_ZONE()+'</em>'; }
-  renderAnswer(key, a);
+  try {
+    document.querySelectorAll('.qbtn').forEach(b => b.classList.remove('active-q'));
+    btn.classList.add('active-q');
+    currentQKey = key;
+    if (!ANSWERS[key]) { alert('Cle inconnue: ' + key); return; }
+    const a = JSON.parse(JSON.stringify(ANSWERS[key]));
+    if (key==='hard_1') a.points[2].t = 'Mon TJM : <em>'+CFG_TJM()+'</em>';
+    if (key==='hard_2') { a.points[0].t='Disponibilite : <em>'+CFG_DISPO()+'</em>'; a.points[1].t='Zone : <em>'+CFG_ZONE()+'</em>'; }
+    renderAnswer(key, a);
+  } catch(e) { alert('Erreur selectQ: ' + e.message + ' | stack: ' + e.stack.substring(0,200)); }
 }
 
 function generateCustom() {
