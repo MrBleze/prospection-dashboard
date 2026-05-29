@@ -101,15 +101,24 @@
     .custom-input-wrap button:hover{background:#15803d;}
 
     /* PROMPT OUTPUT */
-    .prompt-out-wrap{margin-top:14px;}
-    .prompt-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
-    .prompt-out{background:#0f172a;border-radius:8px;padding:16px;font-size:12px;color:#94a3b8;line-height:1.8;font-family:'Courier New',monospace;white-space:pre-wrap;word-break:break-word;min-height:120px;max-height:320px;overflow-y:auto;border:1px solid #1e293b;}
-    .prompt-out.has-content{color:#e2e8f0;}
-    .copy-row{display:flex;gap:8px;margin-top:10px;}
-    .copy-btn{padding:8px 18px;border-radius:7px;border:none;background:var(--accent);color:#fff;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;}
-    .copy-btn:hover{background:#1d4ed8;} .copy-btn.copied{background:var(--green);}
-    .hint-btn{padding:8px 14px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--text2);font-size:12px;cursor:pointer;}
-    .hint-btn:hover{border-color:var(--accent);color:var(--accent);}
+    /* TELEPROMPTER */
+    .tp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+    .tp-q-label{font-size:13px;font-weight:700;color:var(--text);}
+    .tp-badge{padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600;}
+    .tp-panel{background:var(--gray-l);border-radius:10px;padding:18px 20px;min-height:160px;border:2px solid var(--border);transition:border-color .2s;}
+    .tp-panel.active-pres{border-color:#93c5fd;}
+    .tp-panel.active-exp{border-color:#5eead4;}
+    .tp-panel.active-tech{border-color:#c4b5fd;}
+    .tp-panel.active-hard{border-color:#fde68a;}
+    .tp-panel.active-custom{border-color:#86efac;}
+    .tp-empty{color:var(--text3);font-size:13px;text-align:center;padding:24px 0;}
+    .tp-point{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border);font-size:14px;line-height:1.5;}
+    .tp-point:last-child{border-bottom:none;}
+    .tp-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
+    .tp-text{color:var(--text);flex:1;}
+    .tp-text strong{color:var(--navy);}
+    .tp-text em{color:var(--accent);font-style:normal;font-weight:600;}
+    .tp-finish{margin-top:12px;padding:10px 14px;background:#fff;border-radius:7px;border-left:3px solid var(--amber);font-size:13px;color:var(--amber);font-weight:500;}
 
     /* PROFILE SIDEBAR */
     .profile-snap{font-size:12px;line-height:1.7;}
@@ -303,16 +312,14 @@
           </div>
         </div>
 
-        <!-- Prompt output -->
+        <!-- Teleprompter -->
         <div class="card">
-          <div class="prompt-label">
-            <span id="prompt-q-label">Sélectionnez une question ci-dessus</span>
-            <span style="font-size:11px;color:var(--text3);font-weight:400;">→ Copier dans Claude in Chrome</span>
+          <div class="tp-header">
+            <span class="tp-q-label" id="tp-q-label">Cliquez sur une question</span>
+            <span class="tp-badge" id="tp-badge" style="background:var(--gray-l);color:var(--text2);">En attente</span>
           </div>
-          <div class="prompt-out" id="prompt-out">Cliquez sur une question pour générer le prompt Claude in Chrome correspondant.</div>
-          <div class="copy-row">
-            <button class="copy-btn" id="copy-prompt-btn" onclick="copyPrompt()">📋 Copier le prompt</button>
-            <button class="hint-btn" onclick="showHint()">💡 Conseil réponse</button>
+          <div class="tp-panel" id="tp-panel">
+            <div class="tp-empty">👆 Cliquez sur une question pour afficher les points clés</div>
           </div>
         </div>
       </div>
@@ -662,274 +669,76 @@ ZONE : ${cfg.zone || 'Toulouse + remote France'}`;
 // ═══════════════════════════════════════════
 //  QUESTIONS & PROMPTS
 // ═══════════════════════════════════════════
-const QUESTIONS = {
-  pres_1: {
-    label: "Présentez-vous",
-    hint: "Utilise ta tagline dès la 2ème phrase. Mentionne le background Finance avant BI. Cite 1 référence.",
-    prompt: q => `${getProfileContext()}
+const CFG_TJM   = () => interviewData.config?.tjm  || 'a definir';
+const CFG_DISPO = () => interviewData.config?.dispo || 'a preciser';
+const CFG_ZONE  = () => interviewData.config?.zone  || 'Toulouse + remote';
 
-QUESTION EN ENTRETIEN : "${q}"
-
-Génère une présentation naturelle de 4-5 phrases maximum.
-Structure : qui je suis → ce que je fais (tagline) → ce qui me différencie (background Finance) → 1 preuve concrète → question de rebond sur leur contexte.
-Ton : confiant, humain, pas récité.`
-  },
-  pres_2: {
-    label: "Parlez-moi de votre parcours",
-    hint: "Fil rouge : métier d'abord (4 ans contrôle de gestion), puis BI depuis 2021. Le passage métier → BI est le point fort.",
-    prompt: q => `${getProfileContext()}
-
-QUESTION EN ENTRETIEN : "${q}"
-
-Génère un récit de parcours de 5-6 phrases.
-Structure : 4 ans côté métier (contrôle de gestion) → décision de passer à l'implémentation BI → premiers grands comptes → valeur unique apportée.
-Valorise le fait d'avoir été des deux côtés. Ton : storytelling naturel.`
-  },
-  pres_3: {
-    label: "Pourquoi le freelance ?",
-    hint: "Ne pas critiquer le salariat. Mettre en avant l'impact direct, la diversité des contextes, l'agilité.",
-    prompt: q => `${getProfileContext()}
-
-QUESTION EN ENTRETIEN : "${q}"
-
-Génère une réponse de 3-4 phrases.
-Arguments : impact direct sur chaque mission, diversité des contextes métier (accélère la montée en compétences), agilité d'un consultant indépendant.
-Éviter toute critique du salariat. Ton : convaincu et positif.`
-  },
-  pres_4: {
-    label: "Ce qui vous différencie ?",
-    hint: "3 éléments uniques : background Finance métier + preuves chiffrées + ITIL 4. Combo rare sur le marché.",
-    prompt: q => `${getProfileContext()}
-
-QUESTION EN ENTRETIEN : "${q}"
-
-Génère une réponse de 4-5 phrases sur les 3 différenciateurs :
-1. Background Finance métier (4 ans côté utilisateur avant d'être développeur BI)
-2. Preuves chiffrées sur grands comptes
-3. Certification ITIL 4 (rare pour un profil BI pur)
-Ton : factuel, pas arrogant.`
-  },
-  exp_1: {
-    label: "Vos références concrètes ?",
-    hint: "Citer les 3 références avec chiffres. Adapter selon le secteur de l'interlocuteur si connu.",
-    prompt: q => `${getProfileContext()}
-
-QUESTION EN ENTRETIEN : "${q}"
-
-Génère une réponse de 5-6 phrases présentant les 3 références avec leurs résultats chiffrés.
-Pour chaque : contexte en 1 phrase → solution → résultat concret avec chiffre.
-Finir par une question : "Dans votre contexte, quel est le reporting qui vous prend le plus de temps ?"
-Ton : factuel, précis.`
-  },
-  exp_2: {
-    label: "ATR — que faisiez-vous ?",
-    hint: "Données disponibles à 8h. Flux automatisé Power BI + SQL. Zéro action manuelle pour les managers.",
-    prompt: q => `${getProfileContext()}
-
-QUESTION EN ENTRETIEN : "${q}"
-
-Génère une réponse de 4-5 phrases sur la mission ATR.
-Contexte : reporting opérationnel produit manuellement, données avec retard.
-Solution : flux automatisé Power BI + SQL, alimentation nocturne.
-Résultat : données fraîches à 8h chaque matin, zéro ressaisie.
-Ton : concret, technique sans jargon.`
-  },
-  exp_3: {
-    label: "TotalEnergies — résultats ?",
-    hint: "2h30 → 15 min. Automatisation complète. Chiffre très fort à mettre en avant.",
-    prompt: q => `${getProfileContext()}
-
-QUESTION EN ENTRETIEN : "${q}"
-
-Génère une réponse de 4-5 phrases sur la mission TotalEnergies.
-Mettre en avant le chiffre clé : 2h30 → 15 minutes par rapport mensuel.
-Expliquer la démarche : automatisation complète du flux, modélisation Power Query + DAX.
-Ton : précis, les chiffres parlent d'eux-mêmes.`
-  },
-  exp_4: {
-    label: "GK Kevlar — contexte ?",
-    hint: "Clôtures mensuelles fiables. Sécurité privée. Pilotage en temps réel. Angle Finance/contrôle.",
-    prompt: q => `${getProfileContext()}
-
-QUESTION EN ENTRETIEN : "${q}"
-
-Génère une réponse de 4-5 phrases sur la mission GK Kevlar (sécurité privée).
-Contexte : clôtures mensuelles aléatoires, manque de visibilité.
-Solution : modélisation données, règles de gestion, dashboards pilotage.
-Résultat : clôtures fiables dans les délais, direction avec visibilité temps réel.
-Ton : contexte métier Finance valorisé.`
-  },
-  exp_5: {
-    label: "Background Finance/Contrôle ?",
-    hint: "4 ans en contrôle de gestion. Côté utilisateur avant d'être développeur. Comprend ce que les DAF attendent.",
-    prompt: q => `${getProfileContext()}
-
-QUESTION EN ENTRETIEN : "${q}"
-
-Génère une réponse de 4-5 phrases valorisant le background contrôle de gestion.
-Point clé : avoir été du côté métier avant BI change tout — je sais ce dont les équipes Finance ont besoin sans 3 aller-retours.
-Lien avec ITIL 4 si pertinent.
-Ton : différenciateur fort, pas un simple « j'ai fait de la compta ».`
-  },
-  tech_1: {
-    label: "Niveau Power BI ?",
-    hint: "DAX avancé, Power Query, dataflows, modélisation dimensionnelle. Citer les missions où Power BI a eu un impact direct.",
-    prompt: q => `${getProfileContext()}
-
-QUESTION EN ENTRETIEN : "${q}"
-
-Génère une réponse de 4-5 phrases sur le niveau Power BI.
-Couvrir : DAX (mesures complexes, time intelligence), Power Query (ETL, transformations), dataflows, modélisation en étoile/flocon.
-Ancrer dans les missions réelles (ATR, TotalEnergies).
-Ton : expert sans être prétentieux.`
-  },
-  tech_2: {
-    label: "Niveau SQL ?",
-    hint: "T-SQL, PostgreSQL. Requêtes analytiques, CTEs, fenêtres. Pas développeur backend mais analytique confirmé.",
-    prompt: q => `${getProfileContext()}
-
-QUESTION EN ENTRETIEN : "${q}"
-
-Génère une réponse de 3-4 phrases sur le niveau SQL.
-Préciser : T-SQL, PostgreSQL, requêtes analytiques (CTEs, fonctions de fenêtre, agrégations complexes).
-Positionner comme profil analytique/BI, pas développeur backend.
-Ton : honnête sur le périmètre, confiant sur les usages BI.`
-  },
-  tech_3: {
-    label: "ITIL 4 — c'est quoi ?",
-    hint: "Framework gestion des services IT. Valeur : s'intègre sans friction dans les environnements IT structurés. Rare pour un profil BI.",
-    prompt: q => `${getProfileContext()}
-
-QUESTION EN ENTRETIEN : "${q}"
-
-Génère une réponse de 3-4 phrases expliquant ITIL 4 et sa valeur dans un contexte BI.
-Définition simple : framework de gestion des services IT (chaîne de valeur, amélioration continue, gestion des changements).
-Valeur ajoutée : comprendre l'environnement IT au-delà de la stack data, s'intégrer sans créer de friction, gérer les risques de changement.
-Ton : pédagogique, valorisant.`
-  },
-  tech_4: {
-    label: "ML / Data Science ?",
-    hint: "Honnêteté totale. Ce n'est pas mon domaine. Mon expertise = BI/reporting. Ne pas surventre.",
-    prompt: q => `${getProfileContext()}
-
-QUESTION EN ENTRETIEN : "${q}"
-
-Génère une réponse honnête de 3 phrases sur les limites en ML/Data Science.
-Message clair : expertise = Business Intelligence (Power BI, SQL, reporting). ML/Data Science = profil différent, pas mon coeur de métier.
-Option : mentionner les notions de base (statistiques descriptives, compréhension des modèles) sans survendre.
-Proposer d'orienter vers des profils complémentaires si besoin.
-Ton : direct, sans excuse excessive.`
-  },
-  tech_5: {
-    label: "Votre méthode de travail ?",
-    hint: "Besoins métier d'abord. Formalisation règles de gestion. Itérations courtes. Formation utilisateurs = autonomie client.",
-    prompt: q => `${getProfileContext()}
-
-QUESTION EN ENTRETIEN : "${q}"
-
-Génère une réponse de 4-5 phrases sur la méthode de travail.
-Étapes clés : 1) comprendre le besoin métier (qui utilise, quelle décision) 2) formaliser les règles de gestion 3) livraisons itératives avec validation 4) formation des utilisateurs pour leur autonomie.
-Finir sur le fait que l'objectif = leur autonomie, pas la dépendance.
-Ton : structuré, professionnel.`
-  },
-  tech_6: {
-    label: "Outils que vous maîtrisez ?",
-    hint: "Power BI, SQL, Power Query, DAX, Azure, SharePoint, Excel avancé. ITIL 4. Pas Python/ML — être honnête.",
-    prompt: q => `${getProfileContext()}
-
-QUESTION EN ENTRETIEN : "${q}"
-
-Génère une réponse de 3-4 phrases listant les outils maîtrisés.
-Stack principale : Power BI (DAX, Power Query, dataflows), SQL (T-SQL, PostgreSQL), Azure (bases), SharePoint, Excel avancé.
-ITIL 4 comme framework IT.
-Être honnête sur Python (notions de base) et ML (hors périmètre).
-Ton : clair et précis.`
-  },
-  hard_1: {
-    label: "Votre TJM ?",
-    hint: "Ne jamais donner un chiffre seul sans contexte. Toujours conditionner à la durée, complexité et mode.",
-    prompt: q => `${getProfileContext()}
-
-QUESTION EN ENTRETIEN : "${q}"
-
-Génère une réponse de 3-4 phrases sur le TJM.
-Structure : donner une fourchette selon le contexte → préciser les variables (durée, complexité, mode d'intervention) → ouvrir sur la discussion.
-TJM configuré : ${interviewData.config?.tjm || 'à personnaliser dans votre configuration'}.
-Ne jamais lâcher un chiffre seul sans contexte. Ton : serein, pas défensif.`
-  },
-  hard_2: {
-    label: "Disponibilité ?",
-    hint: "Donner la date précise. Si plusieurs missions en cours de discussion, rester vague sur les autres.",
-    prompt: q => `${getProfileContext()}
-
-QUESTION EN ENTRETIEN : "${q}"
-
-Génère une réponse de 2-3 phrases sur la disponibilité.
-Disponibilité configurée : ${interviewData.config?.dispo || 'à personnaliser dans votre configuration'}.
-Zone : ${interviewData.config?.zone || 'Toulouse + remote France'}.
-Ton : direct et clair.`
-  },
-  hard_3: {
-    label: "Vos points faibles ?",
-    hint: "Choisir un vrai point faible qui ne disqualifie pas (ex: ML/Data Science) ET montrer qu'on en est conscient.",
-    prompt: q => `${getProfileContext()}
-
-QUESTION EN ENTRETIEN : "${q}"
-
-Génère une réponse honnête de 3-4 phrases sur les points faibles.
-Angle : reconnaître honnêtement les limites (ML/Data Science, Python avancé) → montrer la conscience de ces limites → expliquer comment on compense (clarté sur le périmètre, partenaires complémentaires).
-Éviter les faux points faibles du type "je travaille trop". Ton : maturité professionnelle.`
-  },
-  hard_4: {
-    label: "Pas de référence dans notre secteur ?",
-    hint: "Compenser avec : background Finance (universel) + méthode transférable + capacité d'adaptation prouvée.",
-    prompt: q => `${getProfileContext()}
-
-QUESTION EN ENTRETIEN : "${q}"
-
-Génère une réponse de 4-5 phrases sur l'absence de référence sectorielle.
-Arguments : les problèmes de reporting/BI sont universels entre secteurs → background Finance/contrôle de gestion est transversal → capacité d'adaptation prouvée (aéro, énergie, sécurité = secteurs très différents) → montée en contexte rapide grâce à la méthode de cadrage.
-Ton : confiant, pas sur la défensive.`
-  },
-  hard_5: {
-    label: "Pourquoi pas le salariat ?",
-    hint: "Impact direct, diversité des contextes, agilité. Ne jamais critiquer le salariat.",
-    prompt: q => `${getProfileContext()}
-
-QUESTION EN ENTRETIEN : "${q}"
-
-Génère une réponse de 3-4 phrases sur le choix du freelance vs salariat.
-Arguments positifs uniquement : concentration sur l'impact, diversité des contextes (accélère la compétence), agilité d'intervention.
-Ne jamais critiquer le salariat ou les entreprises. Ton : choix assumé et positif.`
-  },
-  hard_6: {
-    label: "Où en sont vos démarches ?",
-    hint: "Démarche active mais sélective. Ne pas se survendre comme 'très demandé'. Rester factuel.",
-    prompt: q => `${getProfileContext()}
-
-QUESTION EN ENTRETIEN : "${q}"
-
-Génère une réponse de 2-3 phrases sur l'état des démarches.
-Message : démarche active, discussions en cours, priorité à la bonne mission plutôt qu'à la première disponible.
-Sans donner de détails sur les autres discussions. Ton : serein, pas pressé.`
-  }
+const ANSWERS = {
+  pres_1:{label:'Presentez-vous',cat:'pres',badge:'🙋 Presentation',finish:'→ "Et vous, quel est votre principal defi de reporting ?"',
+    points:[{i:'👤',t:'<strong>Bleze TCHALLA</strong>, Business Data Analyst freelance — 8 ans'},{i:'💡',t:'"Je transforme les processus de reporting chronophages en dashboards autonomes — decisions en <em>minutes</em>, pas en jours"'},{i:'🏢',t:'Avant la donnee : <em>4 ans en controle de gestion</em> → comprend le besoin metier de l'interieur'},{i:'📌',t:'Grands comptes : <em>ATR · TotalEnergies · GK Kevlar</em>'},{i:'🛡',t:'Certifie <em>ITIL 4</em> → integration sans friction dans les environnements IT'}]},
+  pres_2:{label:'Parlez-moi de votre parcours',cat:'pres',badge:'🙋 Presentation',finish:null,
+    points:[{i:'📍',t:'2 phases complementaires'},{i:'1️⃣',t:'Phase 1 — <em>4 ans cote metier</em> : controle de gestion, pilotage performance, groupe multi-entites'},{i:'2️⃣',t:'Phase 2 — depuis 2021 : <em>implementation BI en freelance</em> sur grands comptes'},{i:'🔑',t:'Passage metier → BI : je sais ce que les DAF attendent <em>sans 3 aller-retours</em>'},{i:'📊',t:'ATR → TotalEnergies → GK Kevlar : secteurs tres differents, meme impact'}]},
+  pres_3:{label:'Pourquoi le freelance ?',cat:'pres',badge:'🙋 Presentation',finish:null,
+    points:[{i:'🎯',t:'<em>Impact direct</em> : 100% concentre sur votre probleme'},{i:'🔄',t:'Diversite des contextes → <em>montee en competences acceleree</em>'},{i:'⚡',t:'Agilite : operationnel immediatement, pas de periode de rodage'},{i:'✅',t:'Choix positif et assume — pas une fuite du salariat'}]},
+  pres_4:{label:'Ce qui vous differencie ?',cat:'pres',badge:'🙋 Presentation',finish:null,
+    points:[{i:'🏅',t:'3 differenciateurs <em>rares sur le marche</em>'},{i:'①',t:'Background Finance <em>4 ans</em> → comprend le besoin sans traduction'},{i:'②',t:'Preuves chiffrees : ATR (8h), TotalEnergies (<em>2h30→15min</em>), GK Kevlar (clotures fiables)'},{i:'③',t:'<em>ITIL 4</em> → s'integre dans les environnements IT structures'},{i:'💎',t:'Combo rare : <em>metier + BI + IT</em>'}]},
+  exp_1:{label:'Vos references concretes ?',cat:'exp',badge:'📊 Experience',finish:'→ "Dans votre contexte, quel reporting prend le plus de temps a vos equipes ?"',
+    points:[{i:'✈',t:'<em>ATR</em> (Aeronautique) → Donnees fraiches a <em>8h le lendemain</em> — zero action manuelle'},{i:'⚡',t:'<em>TotalEnergies</em> (Energie) → <em>2h30 → 15 min</em> par rapport mensuel — zero ressaisie'},{i:'🛡',t:'<em>GK Kevlar</em> (Securite) → Clotures mensuelles <em>fiables et dans les delais</em>'}]},
+  exp_2:{label:'ATR — que faisiez-vous ?',cat:'exp',badge:'📊 Experience',finish:null,
+    points:[{i:'📍',t:'Contexte : reporting operationnel produit manuellement, donnees avec retard'},{i:'🔧',t:'Solution : flux automatise <em>Power BI + SQL</em>, alimentation nocturne'},{i:'✅',t:'Resultat : donnees disponibles a <em>8h chaque matin</em> — zero action manuelle'},{i:'💡',t:'Impact : equipes liberees pour l'analyse, pas la collecte'}]},
+  exp_3:{label:'TotalEnergies — resultats ?',cat:'exp',badge:'📊 Experience',finish:null,
+    points:[{i:'📍',t:'Contexte : rapport mensuel necessitant <em>2h30 de consolidation manuelle</em>'},{i:'🔧',t:'Solution : automatisation complete — Power Query + DAX + flux de donnees'},{i:'🏆',t:'Resultat : <em>2h30 → 15 minutes</em>. Zero ressaisie. Zero erreur.'},{i:'📉',t:'Chiffre cle : <em>-90% de temps de production</em>'}]},
+  exp_4:{label:'GK Kevlar — contexte ?',cat:'exp',badge:'📊 Experience',finish:null,
+    points:[{i:'📍',t:'Secteur : securite privee'},{i:'⚠',t:'Contexte : clotures mensuelles aleatoires, manque de visibilite'},{i:'🔧',t:'Solution : modelisation donnees + regles de gestion + dashboards pilotage'},{i:'✅',t:'Resultat : clotures <em>fiables et dans les delais</em>, direction avec visibilite temps reel'}]},
+  exp_5:{label:'Background Finance/Controle ?',cat:'exp',badge:'📊 Experience',finish:null,
+    points:[{i:'🏢',t:'<em>4 ans en controle de gestion</em> et pilotage de la performance'},{i:'🔑',t:'Dans un groupe multi-entites → connais les enjeux Finance/Ops <em>de l'interieur</em>'},{i:'💡',t:'Avant d'etre developpeur BI, j'etais <em>l'utilisateur</em> des dashboards'},{i:'✅',t:'Je sais ce que les DAF attendent <em>sans qu'on me l'explique</em>'}]},
+  tech_1:{label:'Niveau Power BI ?',cat:'tech',badge:'⚙️ Technique',finish:null,
+    points:[{i:'📊',t:'<em>DAX</em> : mesures complexes, time intelligence, KPIs calcules'},{i:'🔄',t:'<em>Power Query</em> : ETL, transformations, fusion de sources'},{i:'☁',t:'<em>Dataflows</em> : alimentation centralisee et reutilisable'},{i:'🗂',t:'<em>Modelisation</em> : schema en etoile/flocon, optimisation des relations'},{i:'✅',t:'Utilise sur ATR (flux nocturne) et TotalEnergies (automatisation complete)'}]},
+  tech_2:{label:'Niveau SQL ?',cat:'tech',badge:'⚙️ Technique',finish:null,
+    points:[{i:'💻',t:'<em>T-SQL</em> et <em>PostgreSQL</em>'},{i:'📊',t:'Requetes analytiques : CTEs, fonctions de fenetre, agregations complexes'},{i:'🎯',t:'Profil <em>BI/analytique</em> — pas developpeur backend'},{i:'🔗',t:'Utilise pour alimenter les modeles Power BI et les datawarehouses'}]},
+  tech_3:{label:'ITIL 4 — c'est quoi ?',cat:'tech',badge:'⚙️ Technique',finish:null,
+    points:[{i:'📚',t:'Framework de <em>gestion des services IT</em>'},{i:'🔄',t:'Chaine de valeur des services, amelioration continue, gestion des changements'},{i:'💡',t:'Valeur : comprend l'environnement IT <em>au-dela de la stack data</em>'},{i:'✅',t:'S'integre <em>sans creer de friction</em> dans les organisations IT structurees'},{i:'🏅',t:'Rare pour un profil BI pur → atout en banque, assurance, IT'}]},
+  tech_4:{label:'ML / Data Science ?',cat:'tech',badge:'⚙️ Technique',finish:null,
+    points:[{i:'✋',t:'<em>Honnetete totale</em> : ce n'est pas mon domaine'},{i:'🎯',t:'Mon expertise = <em>Business Intelligence</em> : Power BI, SQL, reporting, modelisation'},{i:'🔬',t:'ML/Data Science = profil different (Data Scientist)'},{i:'🤝',t:'→ Orienter vers des profils complementaires si besoin'}]},
+  tech_5:{label:'Votre methode de travail ?',cat:'tech',badge:'⚙️ Technique',finish:null,
+    points:[{i:'①',t:'<em>Comprendre le besoin metier</em> : qui utilise, quelle decision ?'},{i:'②',t:'<em>Formaliser les regles de gestion</em> AVANT de coder'},{i:'③',t:'Livraisons <em>iteratives</em> avec validation utilisateur a chaque etape'},{i:'④',t:'<em>Former les utilisateurs</em> → objectif = leur autonomie, pas ma presence'},{i:'⚠',t:'Un KPI mal defini en amont = un dashboard inutile a la livraison'}]},
+  tech_6:{label:'Outils que vous maitrisez ?',cat:'tech',badge:'⚙️ Technique',finish:null,
+    points:[{i:'📊',t:'<em>Power BI</em> : DAX, Power Query, dataflows'},{i:'💻',t:'<em>SQL</em> : T-SQL, PostgreSQL'},{i:'☁',t:'Azure (bases), SharePoint, Excel avance'},{i:'🛡',t:'<em>ITIL 4</em> — framework IT'},{i:'✋',t:'Python : notions de base · ML : hors perimetre'}]},
+  hard_1:{label:'Votre TJM ?',cat:'hard',badge:'🎯 Question difficile',finish:'→ "Quel est le budget prevu pour cette mission ?"',
+    points:[{i:'⚠',t:'Ne jamais donner un chiffre seul sans contexte'},{i:'📊',t:'Variables : duree, complexite technique, mode d'intervention'},{i:'💰',t:'Mon TJM : <em>__TJM__</em>'}]},
+  hard_2:{label:'Disponibilite ?',cat:'hard',badge:'🎯 Question difficile',finish:null,
+    points:[{i:'📅',t:'Disponibilite : <em>__DISPO__</em>'},{i:'📍',t:'Zone : <em>__ZONE__</em>'},{i:'💻',t:'Remote possible selon les besoins de la mission'}]},
+  hard_3:{label:'Vos points faibles ?',cat:'hard',badge:'🎯 Question difficile',finish:null,
+    points:[{i:'🎯',t:'<em>ML/Data Science</em> : honnetete totale, ce n'est pas mon perimetre'},{i:'🐍',t:'<em>Python avance</em> : notions de base, pas de developpement complexe'},{i:'✅',t:'Conscience de ces limites → clarte sur le perimetre des le depart'},{i:'❌',t:'Pas de faux point faible du type "je travaille trop"'}]},
+  hard_4:{label:'Pas de reference dans notre secteur ?',cat:'hard',badge:'🎯 Question difficile',finish:'→ "Quels sont vos outils et processus actuels ?"',
+    points:[{i:'💡',t:'Les problemes de reporting/BI sont <em>universels</em> entre secteurs'},{i:'🏢',t:'Background Finance/controle de gestion = <em>transversal</em> a tous les secteurs'},{i:'✅',t:'Preuve d'adaptation : aero + energie + securite = secteurs <em>tres differents</em>'},{i:'⚡',t:'Montee en contexte rapide grace a la <em>methode de cadrage metier</em>'}]},
+  hard_5:{label:'Pourquoi pas le salariat ?',cat:'hard',badge:'🎯 Question difficile',finish:null,
+    points:[{i:'🎯',t:'<em>Impact direct</em> : 100% concentre sur votre probleme'},{i:'🔄',t:'Diversite des contextes → <em>accelere la competence</em>'},{i:'✅',t:'Choix <em>positif et assume</em> — ne pas critiquer le salariat'}]},
+  hard_6:{label:'Ou en sont vos demarches ?',cat:'hard',badge:'🎯 Question difficile',finish:null,
+    points:[{i:'📊',t:'Demarche <em>active</em>, discussions en cours'},{i:'🎯',t:'Priorite a la <em>bonne mission</em> plutot qu'a la premiere disponible'},{i:'😌',t:'Rester serein, <em>pas presse</em>'}]},
 };
 
-// ═══════════════════════════════════════════
-//  QUESTION SELECTION
-// ═══════════════════════════════════════════
-let currentQKey = null;
+function renderAnswer(key, a) {
+  const catColors={pres:'#2563eb',exp:'#0d9488',tech:'#7c3aed',hard:'#d97706',custom:'#16a34a'};
+  const catBg={pres:'#dbeafe',exp:'#ccfbf1',tech:'#ede9fe',hard:'#fef3c7',custom:'#dcfce7'};
+  document.getElementById('tp-q-label').textContent = a.label;
+  const b = document.getElementById('tp-badge');
+  b.textContent = a.badge; b.style.background = catBg[a.cat]||'#f1f5f9'; b.style.color = catColors[a.cat]||'#64748b';
+  const panel = document.getElementById('tp-panel');
+  panel.className = 'tp-panel active-' + a.cat;
+  let html = a.points.map(p => '<div class="tp-point"><span class="tp-icon">'+p.i+'</span><span class="tp-text">'+p.t+'</span></div>').join('');
+  if (a.finish) html += '<div class="tp-finish">'+a.finish+'</div>';
+  panel.innerHTML = html;
+}
 
 function selectQ(btn, key) {
   document.querySelectorAll('.qbtn').forEach(b => b.classList.remove('active-q'));
   btn.classList.add('active-q');
   currentQKey = key;
-  const q = QUESTIONS[key];
-  document.getElementById('prompt-q-label').textContent = '→ ' + q.label;
-  const prompt = q.prompt(q.label);
-  const out = document.getElementById('prompt-out');
-  out.textContent = prompt;
-  out.classList.add('has-content');
+  const a = JSON.parse(JSON.stringify(ANSWERS[key]));
+  if (key==='hard_1') a.points[2].t = 'Mon TJM : <em>'+CFG_TJM()+'</em>';
+  if (key==='hard_2') { a.points[0].t='Disponibilite : <em>'+CFG_DISPO()+'</em>'; a.points[1].t='Zone : <em>'+CFG_ZONE()+'</em>'; }
+  renderAnswer(key, a);
 }
 
 function generateCustom() {
@@ -937,42 +746,34 @@ function generateCustom() {
   if (!q) return;
   currentQKey = null;
   document.querySelectorAll('.qbtn').forEach(b => b.classList.remove('active-q'));
-  document.getElementById('prompt-q-label').textContent = '→ Question personnalisée';
-  const profile = getProfileContext();
-  const prompt = `${profile}
-
-QUESTION EN ENTRETIEN : "${q}"
-
-Génère une réponse naturelle et convaincante de 3-5 phrases maximum.
-Utilise les preuves concrètes là où c'est pertinent (ATR, TotalEnergies, GK Kevlar).
-Adapte le ton selon le type de question (technique, comportemental, stratégique).
-Finir si possible par une question de rebond sur leur contexte.
-Ton : professionnel, humain, pas récité.`;
-  const out = document.getElementById('prompt-out');
-  out.textContent = prompt;
-  out.classList.add('has-content');
+  const qLow = q.toLowerCase();
+  let key = 'pres_1';
+  if (qLow.match(/tjm|tarif|prix|cout|budget/))           key='hard_1';
+  else if (qLow.match(/dispo|quand|disponib/))            key='hard_2';
+  else if (qLow.match(/faible|limit|manque|amelior/))     key='hard_3';
+  else if (qLow.match(/secteur|domai/))                   key='hard_4';
+  else if (qLow.match(/freelance|salar/))                 key='hard_5';
+  else if (qLow.match(/power.?bi|dashboard|tableau/))     key='tech_1';
+  else if (qLow.match(/sql|base.?donn/))                  key='tech_2';
+  else if (qLow.match(/itil|service.?it/))                key='tech_3';
+  else if (qLow.match(/ml|machine|data.?sci|python/))     key='tech_4';
+  else if (qLow.match(/methode|travail|approch|process/)) key='tech_5';
+  else if (qLow.match(/outil|stack|techno/))              key='tech_6';
+  else if (qLow.match(/different|distingue|unique/))      key='pres_4';
+  else if (qLow.match(/parcours|carriere|traject/))       key='pres_2';
+  else if (qLow.match(/reference|preuve|chiffre/))        key='exp_1';
+  else if (qLow.match(/atr/))                             key='exp_2';
+  else if (qLow.match(/total|energie/))                   key='exp_3';
+  else if (qLow.match(/kevlar|securite/))                 key='exp_4';
+  else if (qLow.match(/finance|controle|gestion/))        key='exp_5';
+  const a = JSON.parse(JSON.stringify(ANSWERS[key]));
+  a.label = '"' + q.substring(0,45) + (q.length>45?'...' :'"');
+  a.cat='custom'; a.badge='Question libre';
+  if (key==='hard_1') a.points[2].t='Mon TJM : <em>'+CFG_TJM()+'</em>';
+  if (key==='hard_2') { a.points[0].t='Disponibilite : <em>'+CFG_DISPO()+'</em>'; a.points[1].t='Zone : <em>'+CFG_ZONE()+'</em>'; }
+  renderAnswer('custom', a);
 }
 
-async function copyPrompt() {
-  const text = document.getElementById('prompt-out').textContent;
-  if (!text || text.startsWith('Cliquez')) return;
-  try {
-    await navigator.clipboard.writeText(text);
-    const btn = document.getElementById('copy-prompt-btn');
-    btn.textContent = '✓ Copié !';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.innerHTML = '📋 Copier le prompt'; btn.classList.remove('copied'); }, 2000);
-  } catch(_) { alert('Copiez manuellement le texte ci-dessus.'); }
-}
-
-function showHint() {
-  if (!currentQKey || !QUESTIONS[currentQKey]) return;
-  alert('💡 Conseil : ' + QUESTIONS[currentQKey].hint);
-}
-
-// ═══════════════════════════════════════════
-//  TIMER
-// ═══════════════════════════════════════════
 let timerInterval = null, timerSeconds = 0;
 
 function toggleTimer() {
