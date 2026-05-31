@@ -135,6 +135,15 @@
     .btn-cancel{padding:9px 18px;border-radius:7px;border:none;background:var(--gray-l);color:var(--text2);font-size:13px;cursor:pointer;}
     .btn-save{padding:9px 22px;border-radius:7px;border:none;background:var(--accent);color:#fff;font-size:13px;font-weight:600;cursor:pointer;}
     .sec-footer{text-align:center;margin-top:28px;font-size:11px;color:var(--text3);}
+    /* OVERLAY PANEL */
+    #overlay-panel{position:fixed;bottom:20px;right:20px;z-index:9999;background:#1e293b;border-radius:14px;padding:14px 18px;box-shadow:0 4px 24px rgba(0,0,0,.35);color:#f1f5f9;font-size:12px;min-width:200px;display:none;}
+    #overlay-panel.visible{display:block;}
+    #overlay-panel label{display:block;font-size:10px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;}
+    #opacity-slider{width:100%;accent-color:#2563eb;cursor:pointer;}
+    #overlay-toggle{position:fixed;bottom:20px;right:20px;z-index:10000;background:#0f172a;border:1px solid #334155;border-radius:10px;padding:8px 14px;color:#94a3b8;font-size:12px;cursor:pointer;display:none;}
+    #overlay-toggle:hover{background:#1e293b;color:#f1f5f9;}
+    body.overlay-mode{background:transparent !important;}
+    body.overlay-mode #gate{background:rgba(15,23,42,0.85);}
     @media(max-width:1100px){.grid-interview{grid-template-columns:280px 1fr;}}
     @media(max-width:760px){.grid-interview{grid-template-columns:1fr;}}
   </style>
@@ -185,6 +194,7 @@
     </div>
     <div class="header-actions">
       <button class="btn btn-focus btn-sm" onclick="toggleFocus()" id="focus-btn">⚡ Mode focus (F2)</button>
+      <button class="btn btn-ghost btn-sm" onclick="toggleOverlayPanel()" id="overlay-btn">🪟 Overlay</button>
       <button class="btn btn-ghost btn-sm" onclick="openHistoryForm()">+ Enregistrer</button>
       <button class="btn btn-lock btn-sm" onclick="lockApp()">🔒 Verrouiller</button>
     </div>
@@ -406,6 +416,16 @@
   <div class="sec-footer">🔐 Données chiffrées · AES-256-GCM · PBKDF2 200 000 itérations · Clé jamais stockée</div>
 </div>
 
+<!-- OVERLAY PANEL -->
+<div id="overlay-panel">
+  <label>🪟 Transparence</label>
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+    <input type="range" id="opacity-slider" min="20" max="100" value="100" oninput="applyOpacity(this.value)">
+    <span id="opacity-val" style="font-size:11px;color:#94a3b8;min-width:30px;">100%</span>
+  </div>
+  <button onclick="toggleOverlayPanel()" style="width:100%;padding:7px;border-radius:7px;border:1px solid #334155;background:transparent;color:#94a3b8;font-size:11px;cursor:pointer;">✕ Fermer</button>
+</div>
+
 <!-- HISTORY FORM -->
 <div class="overlay" id="hist-overlay" onclick="if(event.target===this)closeHistForm()">
   <div class="form-box" onclick="event.stopPropagation()">
@@ -439,7 +459,7 @@ function b64(buf){return btoa(String.fromCharCode(...new Uint8Array(buf)));}
 function unb64(s){return Uint8Array.from(atob(s),c=>c.charCodeAt(0));}
 async function deriveKey(pwd,salt){
   const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pwd),{name:"PBKDF2"},false,["deriveKey"]);
-  return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:200000,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["encrypt","decrypt"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:200000,hash:"SHA-256"},km,{name:"AES-GCM",length:256},true,["encrypt","decrypt"]);
 }
 async function enc(key,plain){
   const iv=crypto.getRandomValues(new Uint8Array(12));
@@ -486,6 +506,9 @@ async function doUnlock(){
     const raw=localStorage.getItem(K_DATA);
     if(raw){try{iData=JSON.parse(await dec(cryptoKey,JSON.parse(raw)));}catch(_){iData={config:{},history:[]};}}
     else{iData={config:{},history:[]};}
+    // Save key to sessionStorage for auto-restore on refresh
+    const exported=await crypto.subtle.exportKey("raw",cryptoKey);
+    sessionStorage.setItem("btp_sk",b64(exported));
     document.getElementById("unlock-pwd").value="";unlockApp();
   }catch(e){err.textContent="Erreur : "+e.message;}
   finally{setLoading("unlock-btn",false);}
@@ -521,6 +544,7 @@ async function doChangePassword(){
 }
 function lockApp(){
   cryptoKey=null;iData={config:{},history:[]};stopTimer();
+  sessionStorage.removeItem("btp_sk");
   document.getElementById("app").style.display="none";
   document.getElementById("gate").style.display="flex";
   document.getElementById("unlock-pwd").value="";showView("view-unlock");
@@ -930,6 +954,16 @@ function toggleTimer(){
   else{timerInterval=setInterval(()=>{timerSec++;const m=String(Math.floor(timerSec/60)).padStart(2,"0");const s=String(timerSec%60).padStart(2,"0");document.getElementById("timer-display").textContent=m+":"+s;},1000);document.getElementById("timer-btn").textContent="⏸ Pause";}
 }
 function stopTimer(){clearInterval(timerInterval);timerInterval=null;}
+function toggleOverlayPanel(){
+  const panel=document.getElementById("overlay-panel");
+  panel.classList.toggle("visible");
+}
+function applyOpacity(val){
+  document.getElementById("opacity-val").textContent=val+"%";
+  document.getElementById("app").style.opacity=val/100;
+  // Keep overlay panel always fully visible
+  document.getElementById("overlay-panel").style.opacity=1;
+}
 let focusMode=false;
 function toggleFocus(){
   focusMode=!focusMode;
@@ -1010,9 +1044,75 @@ document.addEventListener("keydown",e=>{
   if(e.key==="Escape")closeHistForm();
   if(e.key==="F2")toggleFocus();
 });
-window.addEventListener("DOMContentLoaded",()=>{
-  if(isFirstVisit())showView("view-setup");
-  else{showView("view-unlock");setTimeout(()=>document.getElementById("unlock-pwd").focus(),100);}
+window.addEventListener("DOMContentLoaded",async()=>{
+  if(isFirstVisit()){showView("view-setup");return;}
+  // Try auto-restore from sessionStorage (survives refresh, not tab close)
+  const sk=sessionStorage.getItem("btp_sk");
+  if(sk){
+    try{
+      const rawKey=unb64(sk);
+      const key=await crypto.subtle.importKey("raw",rawKey,{name:"AES-GCM",length:256},true,["encrypt","decrypt"]);
+      const v=await dec(key,JSON.parse(localStorage.getItem(K_VERIFY)));
+      if(v==="VALID"){
+        cryptoKey=key;
+        const raw=localStorage.getItem(K_DATA);
+        if(raw){try{iData=JSON.parse(await dec(cryptoKey,JSON.parse(raw)));}catch(_){iData={config:{},history:[]};}}
+        else{iData={config:{},history:[]};}
+        unlockApp();return;
+      }
+    }catch(_){}
+  }
+  showView("view-unlock");setTimeout(()=>document.getElementById("unlock-pwd").focus(),100);
+});
+</script>
+</body>
+</html>l={wait:"En attente",prog:"En cours",ok:"Retour positif",nok:"Sans suite"};
+  document.getElementById("hist-empty").style.display=hist.length===0?"block":"none";
+  document.getElementById("hist-table").style.display=hist.length===0?"none":"table";
+  const tbody=document.getElementById("hist-tbody");tbody.innerHTML="";
+  hist.forEach(e2=>{
+    const dateStr=e2.date?new Date(e2.date+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"short",year:"2-digit"}):"—";
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td style="white-space:nowrap;color:var(--text2);">${dateStr}</td><td style="font-weight:500;">${esc(e2.company)}</td><td style="color:var(--text2);font-size:12px;">${esc(e2.contact||"—")}</td><td style="font-size:12px;color:var(--text2);">${e2.sector?(SECTOR_LABELS[e2.sector]||e2.sector):"—"}</td><td><span class="badge ${statusMap[e2.status]||"b-wait"}">${statusLabel[e2.status]||e2.status}</span></td><td style="color:var(--text2);font-size:12px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(e2.notes||"—")}</td><td><div style="display:flex;gap:4px;"><button class="icon-btn" onclick="openHistoryForm(${e2.id})">✏️</button><button class="icon-btn del" onclick="deleteHistory(${e2.id})">🗑</button></div></td>`;
+    tbody.appendChild(tr);
+  });
+}
+function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function initApp(){
+  document.getElementById("header-date").textContent=new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  loadConfig();
+}
+document.addEventListener("keydown",e=>{
+  if(e.key==="Enter"){
+    if(document.getElementById("view-setup").classList.contains("active"))doSetup();
+    else if(document.getElementById("view-unlock").classList.contains("active"))doUnlock();
+  }
+  if(e.key==="Escape")closeHistForm();
+  if(e.key==="F2")toggleFocus();
+});
+window.addEventListener("DOMContentLoaded",async()=>{
+  if(isFirstVisit()){showView("view-setup");return;}
+  const sk=sessionStorage.getItem("btp_sk");
+  if(sk){
+    try{
+      const rawKey=unb64(sk);
+      const key=await crypto.subtle.importKey("raw",rawKey,{name:"AES-GCM",length:256},true,["encrypt","decrypt"]);
+      const v=await dec(key,JSON.parse(localStorage.getItem(K_VERIFY)));
+      if(v==="VALID"){
+        cryptoKey=key;
+        const raw=localStorage.getItem(K_DATA);
+        if(raw){try{iData=JSON.parse(await dec(cryptoKey,JSON.parse(raw)));}catch(_){iData={config:{},history:[]};}}
+        else{iData={config:{},history:[]};}
+        unlockApp();return;
+      }
+    }catch(_){}
+  }
+  showView("view-unlock");setTimeout(()=>document.getElementById("unlock-pwd").focus(),100);
+});
+</script>
+</body>
+</html>
+nt.getElementById("unlock-pwd").focus(),100);
 });
 </script>
 </body>
