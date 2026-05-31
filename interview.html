@@ -14,12 +14,11 @@
       --r:10px; --sh:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
     }
     *{box-sizing:border-box;margin:0;padding:0;}
-    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;}
 
-    /* ── GATE ── */
+    /* GATE */
     #gate{position:fixed;inset:0;background:#0f172a;display:flex;align-items:center;justify-content:center;z-index:999;}
     #gate-box{background:#1e293b;border-radius:18px;padding:44px 52px;width:100%;max-width:420px;text-align:center;}
-    .gate-lock{font-size:40px;margin-bottom:16px;display:block;}
     #gate-box h1{color:#f1f5f9;font-size:20px;font-weight:600;margin-bottom:6px;}
     #gate-box p{color:#94a3b8;font-size:13px;margin-bottom:28px;line-height:1.6;}
     .gate-view{display:none;} .gate-view.active{display:block;}
@@ -30,7 +29,6 @@
     .gate-btn{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s;}
     .gate-btn:hover{background:#1d4ed8;} .gate-btn:disabled{background:#334155;cursor:not-allowed;}
     .gate-link{color:#60a5fa;font-size:12px;cursor:pointer;text-decoration:none;display:block;margin-top:14px;}
-    .gate-link:hover{color:#93c5fd;}
     .gate-error{color:#f87171;font-size:12px;min-height:18px;margin-top:10px;}
     .gate-info{background:#1c1917;border:1px solid #44403c;border-radius:8px;padding:11px 14px;font-size:12px;color:#a8a29e;margin-top:16px;text-align:left;line-height:1.6;}
     .gate-info strong{color:#fcd34d;}
@@ -38,10 +36,8 @@
     .spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
     @keyframes spin{to{transform:rotate(360deg);}}
 
-    /* ── APP ── */
-    #app{display:none;max-width:1340px;margin:0 auto;padding:20px 16px 40px;}
-
-    /* HEADER */
+    /* APP */
+    #app{display:none;max-width:1400px;margin:0 auto;padding:20px 16px 40px;}
     .header{background:var(--header);color:#fff;border-radius:var(--r) var(--r) 0 0;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
     .header-left h1{font-size:17px;font-weight:600;}
     .header-left p{color:#94a3b8;font-size:12px;margin-top:2px;}
@@ -66,79 +62,76 @@
     .session-bar{background:var(--card);border-radius:var(--r);padding:12px 20px;margin-bottom:14px;box-shadow:var(--sh);display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
     .session-field{display:flex;align-items:center;gap:8px;}
     .session-field label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;}
-    .session-field input{padding:6px 10px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:13px;font-family:inherit;width:160px;}
-    .session-field input:focus{outline:none;border-color:var(--accent);}
+    .session-field input,.session-field select{padding:6px 10px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:13px;font-family:inherit;width:160px;}
+    .session-field select{width:180px;}
+    .session-field input:focus,.session-field select:focus{outline:none;border-color:var(--accent);}
     .session-sep{width:1px;height:28px;background:var(--border);}
     .timer{font-size:13px;font-weight:700;color:var(--accent);min-width:50px;}
     .timer-btn{background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;color:var(--text2);}
     .timer-btn:hover{border-color:var(--accent);color:var(--accent);}
 
-    /* MAIN GRID */
-    .grid-interview{display:grid;grid-template-columns:1fr 300px;gap:14px;}
+    /* CONTEXT BADGE */
+    .ctx-badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;background:var(--accent-l);color:var(--accent);display:inline-block;margin-left:8px;}
+
+    /* LAYOUT */
+    .grid-interview{display:grid;grid-template-columns:340px 1fr 260px;gap:14px;}
 
     /* QUESTION BUTTONS */
-    .qcat-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;margin-top:14px;}
+    .qcat-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;margin-top:12px;padding-left:2px;}
     .qcat-title:first-child{margin-top:0;}
     .qcat-title.pres{color:var(--accent);}
     .qcat-title.exp{color:var(--teal);}
     .qcat-title.tech{color:var(--purple);}
     .qcat-title.hard{color:var(--amber);}
-    .qcat-title.custom{color:var(--green);}
-    .qbtn-grid{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:4px;}
-    .qbtn{padding:7px 13px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:12px;cursor:pointer;font-weight:500;transition:all .15s;text-align:left;}
-    .qbtn:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.1);}
-    .qbtn.pres{border-color:#bfdbfe;} .qbtn.pres:hover{background:var(--accent-l);border-color:var(--accent);color:var(--accent);}
-    .qbtn.exp{border-color:#99f6e4;} .qbtn.exp:hover{background:var(--teal-l);border-color:var(--teal);color:var(--teal);}
-    .qbtn.tech{border-color:#ddd6fe;} .qbtn.tech:hover{background:var(--purple-l);border-color:var(--purple);color:var(--purple);}
-    .qbtn.hard{border-color:#fde68a;} .qbtn.hard:hover{background:var(--amber-l);border-color:var(--amber);color:var(--amber);}
-    .qbtn.active-q{font-weight:700;box-shadow:0 0 0 2px currentColor;}
+    .qcat-title.soft{color:var(--green);}
+    .qbtn-grid{display:flex;flex-direction:column;gap:5px;margin-bottom:2px;}
+    .qbtn{padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:12px;cursor:pointer;font-weight:500;transition:all .15s;text-align:left;line-height:1.4;}
+    .qbtn:hover{transform:translateX(2px);}
+    .qbtn.pres:hover,.qbtn.pres.active-q{background:var(--accent-l);border-color:var(--accent);color:var(--accent);}
+    .qbtn.exp:hover,.qbtn.exp.active-q{background:var(--teal-l);border-color:var(--teal);color:var(--teal);}
+    .qbtn.tech:hover,.qbtn.tech.active-q{background:var(--purple-l);border-color:var(--purple);color:var(--purple);}
+    .qbtn.hard:hover,.qbtn.hard.active-q{background:var(--amber-l);border-color:var(--amber);color:var(--amber);}
+    .qbtn.soft:hover,.qbtn.soft.active-q{background:var(--green-l);border-color:var(--green);color:var(--green);}
+    .qbtn.en:hover,.qbtn.en.active-q{background:#dbeafe;border-color:#1e40af;color:#1e40af;}
+    .qbtn.active-q{font-weight:700;}
+    .qcat-title.en{color:#1e40af;}
+    .tp-panel.active-en{border-color:#1e40af;background:#eff6ff;}
 
     /* CUSTOM INPUT */
-    .custom-input-wrap{display:flex;gap:8px;margin-top:12px;}
+    .custom-input-wrap{display:flex;gap:8px;margin-top:10px;}
     .custom-input-wrap input{flex:1;padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:13px;font-family:inherit;}
     .custom-input-wrap input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(22,163,74,.1);}
     .custom-input-wrap button{padding:9px 14px;border-radius:8px;border:none;background:var(--green);color:#fff;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;}
     .custom-input-wrap button:hover{background:#15803d;}
 
-    /* PROMPT OUTPUT */
     /* TELEPROMPTER */
-    .tp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-    .tp-q-label{font-size:13px;font-weight:700;color:var(--text);}
+    .tp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
+    .tp-q-label{font-size:14px;font-weight:700;color:var(--text);}
     .tp-badge{padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600;}
-    .tp-panel{background:var(--gray-l);border-radius:10px;padding:18px 20px;min-height:160px;border:2px solid var(--border);transition:border-color .2s;}
-    .tp-panel.active-pres{border-color:#93c5fd;}
-    .tp-panel.active-exp{border-color:#5eead4;}
-    .tp-panel.active-tech{border-color:#c4b5fd;}
-    .tp-panel.active-hard{border-color:#fde68a;}
-    .tp-panel.active-custom{border-color:#86efac;}
-    .tp-empty{color:var(--text3);font-size:13px;text-align:center;padding:24px 0;}
-    .tp-point{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border);font-size:14px;line-height:1.5;}
-    .tp-point:last-child{border-bottom:none;}
-    .tp-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
-    .tp-text{color:var(--text);flex:1;}
-    .tp-text strong{color:var(--navy);}
-    .tp-text em{color:var(--accent);font-style:normal;font-weight:600;}
-    .tp-finish{margin-top:12px;padding:10px 14px;background:#fff;border-radius:7px;border-left:3px solid var(--amber);font-size:13px;color:var(--amber);font-weight:500;}
+    .tp-ctx{font-size:11px;color:var(--teal);font-weight:500;margin-top:2px;}
+    .tp-panel{background:var(--gray-l);border-radius:10px;padding:22px 24px;min-height:200px;border-left:4px solid var(--border);transition:border-color .2s,background .2s;font-size:15px;line-height:1.8;color:var(--text);}
+    .tp-panel.active-pres{border-color:var(--accent);background:#f0f5ff;}
+    .tp-panel.active-exp{border-color:var(--teal);background:#f0fdf9;}
+    .tp-panel.active-tech{border-color:var(--purple);background:#faf5ff;}
+    .tp-panel.active-hard{border-color:var(--amber);background:#fffbeb;}
+    .tp-panel.active-soft{border-color:var(--green);background:#f0fdf4;}
+    .tp-panel.active-custom{border-color:var(--green);background:#f0fdf4;}
+    .tp-empty{color:var(--text3);font-size:13px;text-align:center;padding:40px 0;}
+    .tp-finish{margin-top:18px;padding:10px 16px;background:#fff;border-radius:7px;border-left:3px solid var(--amber);font-size:13px;color:#92400e;font-weight:500;font-style:italic;}
+    .tp-nav{display:flex;gap:8px;margin-top:14px;}
+    .tp-nav button{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--text2);font-size:11px;cursor:pointer;}
+    .tp-nav button:hover{border-color:var(--accent);color:var(--accent);}
 
     /* PROFILE SIDEBAR */
-    .profile-snap{font-size:12px;line-height:1.7;}
+    .profile-snap{font-size:12px;line-height:1.8;}
     .proof-item{padding:8px 10px;border-radius:6px;margin-bottom:6px;border-left:3px solid;}
     .proof-item.atr{background:#eff6ff;border-color:var(--accent);}
     .proof-item.total{background:#f0fdf4;border-color:var(--green);}
     .proof-item.gk{background:#fef3c7;border-color:var(--amber);}
     .proof-co{font-weight:700;font-size:11px;}
     .proof-res{color:var(--text2);font-size:11px;}
-
-    /* SESSION NOTES */
-    .session-notes{width:100%;padding:9px 11px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:12px;font-family:inherit;resize:none;height:90px;}
+    .session-notes{width:100%;padding:9px 11px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:12px;font-family:inherit;resize:none;height:80px;}
     .session-notes:focus{outline:none;border-color:var(--accent);}
-
-    /* FOCUS MODE */
-    #app.focus-mode .card:not(#focus-card){display:none;}
-    #app.focus-mode .session-bar{display:none;}
-    #app.focus-mode .grid-interview{grid-template-columns:1fr;}
-    #app.focus-mode .tab-nav{display:none;}
-    #focus-card{display:block!important;}
 
     /* HISTORY */
     table{width:100%;border-collapse:collapse;font-size:13px;}
@@ -153,16 +146,11 @@
     .icon-btn:hover{background:var(--border);}
     .icon-btn.del:hover{background:var(--red-l);color:var(--red);}
     .empty{text-align:center;padding:32px;color:var(--text3);}
-
-    /* PROFILE FORM */
     .form-group label{display:block;font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px;}
     .form-group input,.form-group textarea,.form-group select{width:100%;padding:9px 11px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:13px;font-family:inherit;}
-    .form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.1);}
     .form-group textarea{height:70px;resize:none;}
     .form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
     .form-full{margin-bottom:12px;}
-
-    /* OVERLAY */
     .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:100;}
     .overlay.open{display:flex;}
     .form-box{background:var(--card);border-radius:14px;padding:28px 32px;width:100%;max-width:500px;max-height:92vh;overflow-y:auto;}
@@ -170,79 +158,69 @@
     .form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;}
     .btn-cancel{padding:9px 18px;border-radius:7px;border:none;background:var(--gray-l);color:var(--text2);font-size:13px;cursor:pointer;}
     .btn-save{padding:9px 22px;border-radius:7px;border:none;background:var(--accent);color:#fff;font-size:13px;font-weight:600;cursor:pointer;}
-    .btn-save:hover{background:#1d4ed8;}
-
     .sec-footer{text-align:center;margin-top:28px;font-size:11px;color:var(--text3);}
-
-    @media(max-width:900px){.grid-interview{grid-template-columns:1fr;}}
-    @media(max-width:600px){.gate-box{padding:32px 24px;}.session-bar{flex-direction:column;align-items:flex-start;}}
+    @media(max-width:1100px){.grid-interview{grid-template-columns:280px 1fr;}}
+    @media(max-width:760px){.grid-interview{grid-template-columns:1fr;}}
   </style>
 </head>
 <body>
 
-<!-- ══════════════ GATE ══════════════ -->
+<!-- GATE -->
 <div id="gate">
   <div id="gate-box">
-    <span class="gate-lock">🎤</span>
-
+    <span style="font-size:40px;margin-bottom:16px;display:block;">🎤</span>
     <div class="gate-view" id="view-setup">
-      <h1>Créer votre espace sécurisé</h1>
-      <p>Choisissez un mot de passe. Utilisez le même que votre index.html pour un accès unifié.</p>
+      <h1>Créer votre espace</h1>
+      <p>Utilisez le même mot de passe que votre index.html pour un accès unifié.</p>
       <div class="gate-field"><label>Mot de passe</label><input type="password" id="setup-pwd" placeholder="Minimum 8 caractères"></div>
       <div class="gate-field"><label>Confirmer</label><input type="password" id="setup-pwd2" placeholder="Retapez votre mot de passe"></div>
       <button class="gate-btn" id="setup-btn" onclick="doSetup()">Créer mon espace</button>
       <div class="gate-error" id="setup-err"></div>
-      <div class="gate-info"><strong>💡 Astuce :</strong> utilisez le même mot de passe que votre index.html — il sera reconnu automatiquement.</div>
+      <div class="gate-info"><strong>💡</strong> Même mot de passe que index.html — reconnu automatiquement.</div>
     </div>
-
     <div class="gate-view" id="view-unlock">
       <h1>Assistant Entretien</h1>
-      <p>Entrez votre mot de passe pour accéder à l'assistant.</p>
+      <p>Entrez votre mot de passe pour accéder.</p>
       <div class="gate-field"><label>Mot de passe</label><input type="password" id="unlock-pwd" placeholder="••••••••"></div>
       <button class="gate-btn" id="unlock-btn" onclick="doUnlock()">Déverrouiller</button>
       <div class="gate-error" id="unlock-err"></div>
       <span class="gate-link" onclick="showView('view-changepwd')">Changer de mot de passe</span>
     </div>
-
     <div class="gate-view" id="view-changepwd">
       <h1>Changer de mot de passe</h1>
       <p>Vos données seront re-chiffrées avec le nouveau mot de passe.</p>
-      <div class="gate-field"><label>Ancien mot de passe</label><input type="password" id="chg-old" placeholder="••••••••"></div>
-      <div class="gate-field"><label>Nouveau mot de passe</label><input type="password" id="chg-new" placeholder="Minimum 8 caractères"></div>
-      <div class="gate-field"><label>Confirmer le nouveau</label><input type="password" id="chg-new2" placeholder="Retapez le nouveau"></div>
+      <div class="gate-field"><label>Ancien mot de passe</label><input type="password" id="chg-old"></div>
+      <div class="gate-field"><label>Nouveau mot de passe</label><input type="password" id="chg-new"></div>
+      <div class="gate-field"><label>Confirmer</label><input type="password" id="chg-new2"></div>
       <button class="gate-btn" id="chg-btn" onclick="doChangePassword()">Changer et re-chiffrer</button>
       <div class="gate-error" id="chg-err"></div>
-      <span class="gate-link" onclick="showView('view-unlock')">← Retour</span>
+      <span class="gate-link" onclick="showView("view-unlock")">← Retour</span>
     </div>
-
     <div class="gate-security">🛡 AES-256-GCM · PBKDF2 · 200 000 itérations</div>
   </div>
 </div>
 
-<!-- ══════════════ APP ══════════════ -->
+<!-- APP -->
 <div id="app">
-
   <div class="header">
     <div class="header-left">
       <h1>🎤 Assistant Entretien — Bleze T.</h1>
       <p id="header-date"></p>
     </div>
     <div class="header-actions">
-      <button class="btn btn-focus btn-sm" onclick="toggleFocus()" id="focus-btn">⚡ Mode focus</button>
-      <button class="btn btn-ghost btn-sm" onclick="openHistoryForm()">+ Enregistrer entretien</button>
+      <button class="btn btn-focus btn-sm" onclick="toggleFocus()" id="focus-btn">⚡ Mode focus (F2)</button>
+      <button class="btn btn-ghost btn-sm" onclick="openHistoryForm()">+ Enregistrer</button>
       <button class="btn btn-lock btn-sm" onclick="lockApp()">🔒 Verrouiller</button>
     </div>
   </div>
-
   <div class="tab-nav">
-    <button class="tab-btn active" onclick="showTab('entretien',this)">🎤 En entretien</button>
-    <button class="tab-btn" onclick="showTab('profil',this)">👤 Mon profil & Config</button>
-    <button class="tab-btn" onclick="showTab('historique',this)">📋 Historique</button>
+    <button class="tab-btn active" onclick="showTab("entretien",this)">🎤 En entretien</button>
+    <button class="tab-btn" onclick="showTab("profil",this)">👤 Mon profil</button>
+    <button class="tab-btn" onclick="showTab("historique",this)">📋 Historique</button>
   </div>
 
-  <!-- ══ TAB 1 — EN ENTRETIEN ══ -->
+  <!-- TAB ENTRETIEN -->
   <div id="section-entretien">
-
     <!-- Session bar -->
     <div class="session-bar">
       <div class="session-field">
@@ -251,212 +229,222 @@
       </div>
       <div class="session-sep"></div>
       <div class="session-field">
-        <label>Interlocuteur</label>
-        <input type="text" id="sess-contact" placeholder="ex: Marie Dupont — RH">
+        <label>Secteur</label>
+        <select id="sess-sector" onchange="updateCtxBadge()">
+          <option value="">— Secteur —</option>
+          <option value="S1">Industrie / Aéronautique / Défense</option>
+          <option value="S2">Énergie / Utilities / Pétrole &amp; Gaz</option>
+          <option value="S3">Sécurité / Facilities / Services</option>
+          <option value="S4">Banque / Assurance / Finance / Audit</option>
+          <option value="S5">Tech / IT / SaaS / Télécoms</option>
+          <option value="S6">Santé / Retail / Logistique / Public / Autre</option>
+        </select>
+      </div>
+      <div class="session-sep"></div>
+      <div class="session-field">
+        <label>Poste interlocuteur</label>
+        <input type="text" id="sess-role" placeholder="ex: DAF, DSI, Recruteur" oninput="updateCtxBadge()">
       </div>
       <div class="session-sep"></div>
       <div class="session-field">
         <label>Durée</label>
         <span class="timer" id="timer-display">00:00</span>
-        <button class="timer-btn" id="timer-btn" onclick="toggleTimer()">▶ Démarrer</button>
+        <button class="timer-btn" id="timer-btn" onclick="toggleTimer()">▶ Start</button>
       </div>
     </div>
 
+    <!-- 3-column grid -->
     <div class="grid-interview">
-      <!-- LEFT -->
-      <div id="focus-card">
-        <div class="card" style="margin-bottom:14px;">
-          <div class="card-title">Questions fréquentes</div>
 
-          <div class="qcat-title pres">🙋 Présentation</div>
+      <!-- COL 1 : Questions -->
+      <div>
+        <div class="card" style="height:100%;overflow-y:auto;max-height:82vh;">
+          <div class="card-title">Questions <span id="ctx-badge" style="font-size:11px;font-weight:400;color:var(--text3);">aucun contexte</span></div>
+
+          <div class="qcat-title pres">🎯 Présentation</div>
           <div class="qbtn-grid">
-            <button class="qbtn pres" onclick="selectQ(this,'pres_1')">Présentez-vous</button>
-            <button class="qbtn pres" onclick="selectQ(this,'pres_2')">Parlez-moi de votre parcours</button>
-            <button class="qbtn pres" onclick="selectQ(this,'pres_3')">Pourquoi le freelance ?</button>
-            <button class="qbtn pres" onclick="selectQ(this,'pres_4')">Ce qui vous différencie ?</button>
+            <button class="qbtn pres" onclick="selectQ(this,"pres_court")">⚡ Elevator pitch — 30 sec</button>
+            <button class="qbtn pres" onclick="selectQ(this,"pres_moyen")">📊 Présentation — 2 à 3 min</button>
+            <button class="qbtn pres" onclick="selectQ(this,"pres_long")">🎙 Présentation — 5 à 7 min</button>
+            <button class="qbtn pres" onclick="selectQ(this,"pres_1")">Présentez-vous</button>
+            <button class="qbtn pres" onclick="selectQ(this,"pres_2")">Parlez-moi de votre parcours</button>
+            <button class="qbtn pres" onclick="selectQ(this,"pres_3")">Pourquoi le freelance ?</button>
+            <button class="qbtn pres" onclick="selectQ(this,"pres_4")">Ce qui vous différencie ?</button>
           </div>
 
-          <div class="qcat-title exp">📊 Expérience & Références</div>
+          <div class="qcat-title exp">📊 Expérience &amp; Références</div>
           <div class="qbtn-grid">
-            <button class="qbtn exp" onclick="selectQ(this,'exp_1')">Vos références concrètes ?</button>
-            <button class="qbtn exp" onclick="selectQ(this,'exp_2')">ATR — que faisiez-vous ?</button>
-            <button class="qbtn exp" onclick="selectQ(this,'exp_3')">TotalEnergies — résultats ?</button>
-            <button class="qbtn exp" onclick="selectQ(this,'exp_4')">GK Kevlar — contexte ?</button>
-            <button class="qbtn exp" onclick="selectQ(this,'exp_5')">Background Finance/Contrôle ?</button>
+            <button class="qbtn exp" onclick="selectQ(this,"exp_1")">Vos références concrètes ?</button>
+            <button class="qbtn exp" onclick="selectQ(this,"exp_2")">ATR — que faisiez-vous ?</button>
+            <button class="qbtn exp" onclick="selectQ(this,"exp_3")">TotalEnergies — résultats ?</button>
+            <button class="qbtn exp" onclick="selectQ(this,"exp_4")">GK Kevlar — contexte ?</button>
+            <button class="qbtn exp" onclick="selectQ(this,"exp_5")">Background Finance/Contrôle ?</button>
           </div>
 
           <div class="qcat-title tech">⚙️ Compétences techniques</div>
           <div class="qbtn-grid">
-            <button class="qbtn tech" onclick="selectQ(this,'tech_1')">Niveau Power BI ?</button>
-            <button class="qbtn tech" onclick="selectQ(this,'tech_2')">Niveau SQL ?</button>
-            <button class="qbtn tech" onclick="selectQ(this,'tech_3')">ITIL 4 — c'est quoi ?</button>
-            <button class="qbtn tech" onclick="selectQ(this,'tech_4')">ML / Data Science ?</button>
-            <button class="qbtn tech" onclick="selectQ(this,'tech_5')">Votre méthode de travail ?</button>
-            <button class="qbtn tech" onclick="selectQ(this,'tech_6')">Outils que vous maîtrisez ?</button>
+            <button class="qbtn tech" onclick="selectQ(this,"tech_1")">Niveau Power BI ?</button>
+            <button class="qbtn tech" onclick="selectQ(this,"tech_2")">Niveau SQL ?</button>
+            <button class="qbtn tech" onclick="selectQ(this,"tech_3")">ITIL 4 ?</button>
+            <button class="qbtn tech" onclick="selectQ(this,"tech_4")">ML / Data Science ?</button>
+            <button class="qbtn tech" onclick="selectQ(this,"tech_5")">Votre méthode de travail ?</button>
+            <button class="qbtn tech" onclick="selectQ(this,"tech_6")">Outils maîtrisés ?</button>
           </div>
 
           <div class="qcat-title hard">🎯 Questions difficiles</div>
           <div class="qbtn-grid">
-            <button class="qbtn hard" onclick="selectQ(this,'hard_1')">Votre TJM ?</button>
-            <button class="qbtn hard" onclick="selectQ(this,'hard_2')">Disponibilité ?</button>
-            <button class="qbtn hard" onclick="selectQ(this,'hard_3')">Vos points faibles ?</button>
-            <button class="qbtn hard" onclick="selectQ(this,'hard_4')">Pas de référence dans notre secteur ?</button>
-            <button class="qbtn hard" onclick="selectQ(this,'hard_5')">Pourquoi pas le salariat ?</button>
-            <button class="qbtn hard" onclick="selectQ(this,'hard_6')">Où en sont vos démarches ?</button>
+            <button class="qbtn hard" onclick="selectQ(this,"hard_1")">Votre TJM ?</button>
+            <button class="qbtn hard" onclick="selectQ(this,"hard_2")">Disponibilité ?</button>
+            <button class="qbtn hard" onclick="selectQ(this,"hard_3")">Vos points faibles ?</button>
+            <button class="qbtn hard" onclick="selectQ(this,"hard_4")">Pas de référence dans notre secteur ?</button>
+            <button class="qbtn hard" onclick="selectQ(this,"hard_5")">Pourquoi pas le salariat ?</button>
+            <button class="qbtn hard" onclick="selectQ(this,"hard_6")">Où en sont vos démarches ?</button>
           </div>
 
-          <div class="qcat-title custom">✏️ Question personnalisée</div>
+          <div class="qcat-title soft">🤝 Savoir-être</div>
+          <div class="qbtn-grid">
+            <button class="qbtn soft" onclick="selectQ(this,"soft_1")">3 adjectifs qui vous définissent ?</button>
+            <button class="qbtn soft" onclick="selectQ(this,"soft_2")">Changement de specs en cours de mission ?</button>
+            <button class="qbtn soft" onclick="selectQ(this,"soft_3")">Expliquer la technique au métier ?</button>
+            <button class="qbtn soft" onclick="selectQ(this,"soft_4")">Tensions avec l'équipe IT ?</button>
+            <button class="qbtn soft" onclick="selectQ(this,"soft_5")">Autonome ou besoin d'un cadre ?</button>
+            <button class="qbtn soft" onclick="selectQ(this,"soft_6")">Situation difficile bien gérée ?</button>
+          </div>
+
+          <div class="qcat-title soft" style="color:var(--green);">✏️ Question libre</div>
           <div class="custom-input-wrap">
-            <input type="text" id="custom-q" placeholder="Tapez la question posée par l'interlocuteur…" onkeydown="if(event.key==='Enter')generateCustom()">
-            <button onclick="generateCustom()">Générer ➜</button>
+            <input type="text" id="custom-q" placeholder="Tapez la question posée..." onkeydown="if(event.key===&quot;Enter&quot;)generateCustom()">
+            <button onclick="generateCustom()">➜</button>
+          </div>
+
+          <div class="qcat-title en" style="margin-top:16px;">🇬🇧 English</div>
+          <div class="qbtn-grid">
+            <button class="qbtn en" onclick="selectQ(this,'en_pres_court')">⚡ Elevator pitch — 30 sec</button>
+            <button class="qbtn en" onclick="selectQ(this,'en_pres_moyen')">📊 Presentation — 2-3 min</button>
+            <button class="qbtn en" onclick="selectQ(this,'en_pres_long')">🎙 Presentation — 5-7 min</button>
+          </div>
+          <div class="qcat-title en" style="margin-top:10px;">✏️ English question</div>
+          <div class="custom-input-wrap">
+            <input type="text" id="custom-q-en" placeholder="Type the question in English..." onkeydown="if(event.key===&quot;Enter&quot;)generateCustomEN()">
+            <button onclick="generateCustomEN()" style="background:#1e40af;">➜</button>
           </div>
         </div>
+      </div>
 
-        <!-- Teleprompter -->
-        <div class="card">
+      <!-- COL 2 : Teleprompter -->
+      <div>
+        <div class="card" style="margin-bottom:14px;">
           <div class="tp-header">
-            <span class="tp-q-label" id="tp-q-label">Cliquez sur une question</span>
+            <div>
+              <div class="tp-q-label" id="tp-q-label">Sélectionnez une question</div>
+              <div class="tp-ctx" id="tp-ctx"></div>
+            </div>
             <span class="tp-badge" id="tp-badge" style="background:var(--gray-l);color:var(--text2);">En attente</span>
           </div>
           <div class="tp-panel" id="tp-panel">
-            <div class="tp-empty">👆 Cliquez sur une question pour afficher les points clés</div>
+            <div class="tp-empty">👈 Cliquez sur une question pour afficher la réponse</div>
           </div>
+          <div id="tp-finish-wrap"></div>
+          <div class="tp-nav" id="tp-nav" style="display:none;">
+            <button onclick="prevAnswer()">← Précédente</button>
+            <button onclick="nextAnswer()">Suivante →</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Notes de session</div>
+          <textarea class="session-notes" id="sess-notes" placeholder="Points clés, impressions, questions à poser..."></textarea>
+          <button class="btn btn-primary btn-sm" style="margin-top:8px;width:100%;" onclick="saveSession()">💾 Sauvegarder cet entretien</button>
         </div>
       </div>
 
-      <!-- RIGHT sidebar -->
+      <!-- COL 3 : Sidebar -->
       <div>
-        <!-- Profile snapshot -->
         <div class="card" style="margin-bottom:14px;">
-          <div class="card-title">Mon profil — rappel rapide</div>
+          <div class="card-title">Profil — rappel</div>
           <div class="profile-snap">
             <div style="font-weight:700;color:var(--navy);margin-bottom:4px;">Bleze TCHALLA</div>
-            <div style="color:var(--text2);margin-bottom:10px;">Business Data Analyst Freelance · 8 ans · Power BI · SQL · ITIL 4</div>
-            <div style="font-size:11px;color:var(--text2);margin-bottom:6px;font-style:italic;">"Je transforme les processus de reporting chronophages en dashboards autonomes."</div>
-            <div style="margin-bottom:8px;">
-              <div class="proof-item atr">
-                <div class="proof-co">✈ ATR — Aéronautique</div>
-                <div class="proof-res">Données fraîches à 8h · zéro action manuelle</div>
-              </div>
-              <div class="proof-item total">
-                <div class="proof-co">⚡ TotalEnergies — Énergie</div>
-                <div class="proof-res">2h30 → 15 min par rapport mensuel</div>
-              </div>
-              <div class="proof-item gk">
-                <div class="proof-co">🛡 GK Kevlar — Sécurité</div>
-                <div class="proof-res">Clôtures fiables et dans les délais</div>
-              </div>
-            </div>
-            <div style="font-size:11px;color:var(--text2);border-top:1px solid var(--border);padding-top:8px;margin-top:4px;">
-              <div>📌 TJM : <strong id="snap-tjm" style="color:var(--text);">—</strong></div>
+            <div style="color:var(--text2);margin-bottom:8px;font-size:11px;">Business Data Analyst Freelance · 8 ans · Power BI · SQL · ITIL 4</div>
+            <div class="proof-item atr"><div class="proof-co">✈ ATR</div><div class="proof-res">Données à 8h · zéro action manuelle</div></div>
+            <div class="proof-item total"><div class="proof-co">⚡ TotalEnergies</div><div class="proof-res">2h30 → 15 min par rapport</div></div>
+            <div class="proof-item gk"><div class="proof-co">🛡 GK Kevlar</div><div class="proof-res">Clôtures fiables et dans les délais</div></div>
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--text2);">
+              <div>💰 TJM : <strong id="snap-tjm" style="color:var(--text);">—</strong></div>
               <div>📅 Dispo : <strong id="snap-dispo" style="color:var(--text);">—</strong></div>
+              <div>📍 Zone : <strong id="snap-zone" style="color:var(--text);">—</strong></div>
             </div>
           </div>
         </div>
-
-        <!-- Notes session -->
-        <div class="card" style="margin-bottom:14px;">
-          <div class="card-title">Notes de session</div>
-          <textarea class="session-notes" id="sess-notes" placeholder="Points clés, impressions, questions à poser…"></textarea>
-          <button class="btn btn-primary btn-sm" style="margin-top:8px;width:100%;" onclick="saveSession()">💾 Sauvegarder l'entretien</button>
-        </div>
-
-        <!-- Timer / conseils -->
         <div class="card">
           <div class="card-title">Rappels clés</div>
-          <div style="font-size:12px;color:var(--text2);line-height:1.8;">
-            ✅ Toujours commencer par une accroche personnalisée<br>
-            ✅ Citer au moins 1 chiffre concret par réponse<br>
-            ✅ Finir par une question sur leur contexte<br>
-            ⚡ Power BI + SQL + background Finance = combo rare<br>
-            🎯 ITIL 4 : valoriser si secteur IT/banque/assurance
+          <div style="font-size:12px;color:var(--text2);line-height:1.9;">
+            ✅ Toujours commencer par le besoin métier<br>
+            ✅ Citer au moins 1 chiffre concret<br>
+            ✅ Finir par une question de rebond<br>
+            ⚡ Power BI + SQL + Finance = combo rare<br>
+            🎯 ITIL 4 → atout en banque / IT<br>
+            🤝 Structuré · Analytique · Pédagogue
           </div>
         </div>
       </div>
-    </div>
 
+    </div><!-- /grid -->
   </div><!-- /section-entretien -->
 
-  <!-- ══ TAB 2 — PROFIL & CONFIG ══ -->
+  <!-- TAB PROFIL -->
   <div id="section-profil" style="display:none;">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-
       <div class="card">
-        <div class="card-title">Configuration personnelle</div>
-        <div class="form-full form-group">
-          <label>Mon TJM (affiché dans le profil)</label>
-          <input type="text" id="cfg-tjm" placeholder="ex: 480 €/jour">
-        </div>
-        <div class="form-full form-group">
-          <label>Disponibilité</label>
-          <input type="text" id="cfg-dispo" placeholder="ex: Disponible dès le 15 juin">
-        </div>
-        <div class="form-full form-group">
-          <label>Zone géographique</label>
-          <input type="text" id="cfg-zone" placeholder="ex: Toulouse + remote France">
-        </div>
-        <div class="form-full form-group">
-          <label>Notes personnelles (non visibles en prompt)</label>
-          <textarea id="cfg-notes" placeholder="Infos confidentielles, stratégie, objectifs de mission…"></textarea>
-        </div>
+        <div class="card-title">Configuration</div>
+        <div class="form-full form-group"><label>Mon TJM</label><input type="text" id="cfg-tjm" placeholder="ex: 480 EUR/jour"></div>
+        <div class="form-full form-group"><label>Disponibilité</label><input type="text" id="cfg-dispo" placeholder="ex: Disponible dès le 15 juin"></div>
+        <div class="form-full form-group"><label>Zone géographique</label><input type="text" id="cfg-zone" placeholder="ex: Toulouse + remote France"></div>
+        <div class="form-full form-group"><label>Notes confidentielles</label><textarea id="cfg-notes" placeholder="Stratégie, objectifs, infos sensibles..."></textarea></div>
         <button class="btn btn-primary" onclick="saveConfig()" style="width:100%;">💾 Sauvegarder</button>
         <div id="cfg-saved" style="color:var(--green);font-size:12px;margin-top:8px;min-height:18px;"></div>
       </div>
-
       <div class="card">
         <div class="card-title">Profil de base (fixe)</div>
         <div style="font-size:12px;color:var(--text2);line-height:1.9;">
-          <div><strong style="color:var(--text);">Nom :</strong> Bleze TCHALLA</div>
-          <div><strong style="color:var(--text);">Titre :</strong> Business Data Analyst Freelance</div>
-          <div><strong style="color:var(--text);">Expérience :</strong> 8 ans</div>
-          <div><strong style="color:var(--text);">Compétences :</strong> Power BI (DAX, Power Query), SQL, ITIL 4, Azure, Excel avancé</div>
-          <div><strong style="color:var(--text);">Background :</strong> 4 ans contrôle de gestion & pilotage de la performance</div>
-          <div><strong style="color:var(--text);">Certification :</strong> ITIL 4</div>
-          <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
-            <div><strong style="color:var(--text);">ATR :</strong> données fraîches à 8h, zéro action manuelle</div>
-            <div><strong style="color:var(--text);">TotalEnergies :</strong> 2h30 → 15 min par rapport mensuel</div>
-            <div><strong style="color:var(--text);">GK Kevlar :</strong> clôtures mensuelles fiables et dans les délais</div>
-          </div>
-          <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-style:italic;color:var(--text3);">
-            Ces données sont intégrées dans tous les prompts générés.
+          <div><strong>Nom :</strong> Bleze TCHALLA</div>
+          <div><strong>Titre :</strong> Business Data Analyst Freelance — 8 ans</div>
+          <div><strong>Compétences :</strong> Power BI (DAX, Power Query), SQL, ITIL 4</div>
+          <div><strong>Background :</strong> 4 ans contrôle de gestion & pilotage</div>
+          <div><strong>Savoir-être :</strong> Structuré · Analytique · Pédagogue</div>
+          <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);">
+            <div><strong>ATR :</strong> données à 8h, zéro action manuelle</div>
+            <div><strong>TotalEnergies :</strong> 2h30 → 15 min par rapport</div>
+            <div><strong>GK Kevlar :</strong> clôtures fiables dans les délais</div>
           </div>
         </div>
       </div>
-
     </div>
-  </div><!-- /section-profil -->
+  </div>
 
-  <!-- ══ TAB 3 — HISTORIQUE ══ -->
+  <!-- TAB HISTORIQUE -->
   <div id="section-historique" style="display:none;">
     <div class="card">
-      <div class="card-title">
-        Historique des entretiens
-        <button class="btn btn-primary btn-sm" onclick="openHistoryForm()">+ Ajouter</button>
-      </div>
-      <div class="empty" id="hist-empty" style="display:none;">Aucun entretien enregistré.</div>
+      <div class="card-title">Historique des entretiens <button class="btn btn-primary btn-sm" onclick="openHistoryForm()">+ Ajouter</button></div>
+      <div class="empty" id="hist-empty">Aucun entretien enregistré.</div>
       <div style="overflow-x:auto;">
         <table id="hist-table" style="display:none;">
-          <thead><tr>
-            <th>Date</th><th>Entreprise</th><th>Interlocuteur</th>
-            <th>Statut</th><th>Notes</th><th></th>
-          </tr></thead>
+          <thead><tr><th>Date</th><th>Entreprise</th><th>Interlocuteur</th><th>Secteur</th><th>Statut</th><th>Notes</th><th></th></tr></thead>
           <tbody id="hist-tbody"></tbody>
         </table>
       </div>
     </div>
-  </div><!-- /section-historique -->
+  </div>
 
   <div class="sec-footer">🔐 Données chiffrées · AES-256-GCM · PBKDF2 200 000 itérations · Clé jamais stockée</div>
 </div>
 
-<!-- ── HISTORY FORM ── -->
+<!-- HISTORY FORM -->
 <div class="overlay" id="hist-overlay" onclick="if(event.target===this)closeHistForm()">
   <div class="form-box" onclick="event.stopPropagation()">
     <h2 id="hist-form-title">Enregistrer un entretien</h2>
     <div class="form-grid-2">
-      <div class="form-group"><label>Entreprise</label><input type="text" id="hf-company" placeholder="ex: Airbus"></div>
+      <div class="form-group"><label>Entreprise</label><input type="text" id="hf-company"></div>
       <div class="form-group"><label>Date</label><input type="date" id="hf-date"></div>
-      <div class="form-group"><label>Interlocuteur</label><input type="text" id="hf-contact" placeholder="ex: Marie Dupont — RH"></div>
+      <div class="form-group"><label>Interlocuteur</label><input type="text" id="hf-contact"></div>
       <div class="form-group"><label>Statut</label>
         <select id="hf-status">
           <option value="wait">En attente de retour</option>
@@ -466,8 +454,7 @@
         </select>
       </div>
     </div>
-    <div class="form-full form-group"><label>Questions posées</label><textarea id="hf-questions" placeholder="Questions notables posées pendant l'entretien…"></textarea></div>
-    <div class="form-full form-group"><label>Notes & impressions</label><textarea id="hf-notes" placeholder="Ressenti, points à améliorer, contexte de la mission…"></textarea></div>
+    <div class="form-full form-group"><label>Notes</label><textarea id="hf-notes"></textarea></div>
     <div class="form-actions">
       <button class="btn-cancel" onclick="closeHistForm()">Annuler</button>
       <button class="btn-save" onclick="saveHistory()">Enregistrer</button>
@@ -476,624 +463,1260 @@
 </div>
 
 <script>
-'use strict';
+"use strict";
 
-// ═══════════════════════════════════════════
-//  STORAGE KEYS — partagés avec index.html
-// ═══════════════════════════════════════════
-const K_SALT   = 'btp_salt_v2';    // PARTAGÉ
-const K_VERIFY = 'btp_verify_v2';  // PARTAGÉ
-const K_DATA   = 'bti_data_v1';    // SPÉCIFIQUE interview
+// ── STORAGE ─────────────────────────────────────────────────────────────────
+const K_SALT   = "btp_salt_v2";
+const K_VERIFY = "btp_verify_v2";
+const K_DATA   = "bti_data_v2";
 
-// ═══════════════════════════════════════════
-//  CRYPTO
-// ═══════════════════════════════════════════
+// ── CRYPTO ──────────────────────────────────────────────────────────────────
 let cryptoKey = null;
 function b64(buf)  { return btoa(String.fromCharCode(...new Uint8Array(buf))); }
 function unb64(s)  { return Uint8Array.from(atob(s), c => c.charCodeAt(0)); }
-async function deriveKey(password, salt) {
-  const km = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), { name:'PBKDF2' }, false, ['deriveKey']);
-  return crypto.subtle.deriveKey({ name:'PBKDF2', salt, iterations:200000, hash:'SHA-256' }, km, { name:'AES-GCM', length:256 }, false, ['encrypt','decrypt']);
+async function deriveKey(pwd, salt) {
+  const km = await crypto.subtle.importKey("raw", new TextEncoder().encode(pwd), {name:"PBKDF2"}, false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:200000,hash:"SHA-256"}, km, {name:"AES-GCM",length:256}, false, ["encrypt","decrypt"]);
 }
-async function aesEncrypt(key, plain) {
+async function enc(key, plain) {
   const iv = crypto.getRandomValues(new Uint8Array(12));
-  const cipher = await crypto.subtle.encrypt({ name:'AES-GCM', iv }, key, new TextEncoder().encode(plain));
-  return { iv: b64(iv), c: b64(cipher) };
+  const c  = await crypto.subtle.encrypt({name:"AES-GCM",iv}, key, new TextEncoder().encode(plain));
+  return {iv:b64(iv), c:b64(c)};
 }
-async function aesDecrypt(key, stored) {
-  const plain = await crypto.subtle.decrypt({ name:'AES-GCM', iv: unb64(stored.iv) }, key, unb64(stored.c));
-  return new TextDecoder().decode(plain);
+async function dec(key, stored) {
+  const p = await crypto.subtle.decrypt({name:"AES-GCM",iv:unb64(stored.iv)}, key, unb64(stored.c));
+  return new TextDecoder().decode(p);
 }
 
-// ═══════════════════════════════════════════
-//  AUTH
-// ═══════════════════════════════════════════
+// ── AUTH ─────────────────────────────────────────────────────────────────────
 function isFirstVisit() { return !localStorage.getItem(K_SALT); }
-function setLoading(id, on, label='Chargement…') {
+function setLoading(id, on, lbl="Chargement...") {
   const b = document.getElementById(id);
   if (!b) return;
   b.disabled = on;
-  b.innerHTML = on ? `<span class="spin"></span> ${label}` : (b.dataset.label || b.textContent);
+  b.innerHTML = on ? `<span class="spin"></span> ${lbl}` : (b.dataset.label || b.textContent);
   if (!on && !b.dataset.label) b.dataset.label = b.textContent;
 }
-
 async function doSetup() {
-  const pwd = document.getElementById('setup-pwd').value;
-  const pwd2 = document.getElementById('setup-pwd2').value;
-  const err = document.getElementById('setup-err');
-  err.textContent = '';
-  if (pwd.length < 8) { err.textContent = 'Mot de passe trop court (8 caractères min).'; return; }
-  if (pwd !== pwd2)   { err.textContent = 'Les deux mots de passe ne correspondent pas.'; return; }
-  setLoading('setup-btn', true, 'Dérivation de la clé…');
+  const pwd = document.getElementById("setup-pwd").value;
+  const pwd2 = document.getElementById("setup-pwd2").value;
+  const err = document.getElementById("setup-err");
+  err.textContent = "";
+  if (pwd.length < 8) { err.textContent = "Mot de passe trop court (8 car. min)."; return; }
+  if (pwd !== pwd2)   { err.textContent = "Les deux mots de passe ne correspondent pas."; return; }
+  setLoading("setup-btn", true, "Dérivation de la clé...");
   try {
     const salt = crypto.getRandomValues(new Uint8Array(16));
     cryptoKey  = await deriveKey(pwd, salt);
     localStorage.setItem(K_SALT,   b64(salt));
-    localStorage.setItem(K_VERIFY, JSON.stringify(await aesEncrypt(cryptoKey, 'VALID')));
-    interviewData = { config: {}, history: [] };
-    await persistData();
+    localStorage.setItem(K_VERIFY, JSON.stringify(await enc(cryptoKey, "VALID")));
+    iData = {config:{}, history:[]};
+    await persist();
     unlockApp();
-  } catch(e) { err.textContent = 'Erreur : ' + e.message; }
-  finally { setLoading('setup-btn', false); }
+  } catch(e) { err.textContent = "Erreur : " + e.message; }
+  finally { setLoading("setup-btn", false); }
 }
-
 async function doUnlock() {
-  const pwd = document.getElementById('unlock-pwd').value;
-  const err = document.getElementById('unlock-err');
-  err.textContent = '';
-  if (!pwd) { err.textContent = 'Veuillez saisir votre mot de passe.'; return; }
-  setLoading('unlock-btn', true, 'Vérification…');
+  const pwd = document.getElementById("unlock-pwd").value;
+  const err = document.getElementById("unlock-err");
+  err.textContent = "";
+  if (!pwd) { err.textContent = "Veuillez saisir votre mot de passe."; return; }
+  setLoading("unlock-btn", true, "Vérification...");
   try {
     const salt = unb64(localStorage.getItem(K_SALT));
     const key  = await deriveKey(pwd, salt);
     try {
-      const v = await aesDecrypt(key, JSON.parse(localStorage.getItem(K_VERIFY)));
-      if (v !== 'VALID') throw new Error();
-    } catch(_) { err.textContent = 'Mot de passe incorrect.'; return; }
+      const v = await dec(key, JSON.parse(localStorage.getItem(K_VERIFY)));
+      if (v !== "VALID") throw new Error();
+    } catch(_) { err.textContent = "Mot de passe incorrect."; return; }
     cryptoKey = key;
     const raw = localStorage.getItem(K_DATA);
-    if (raw) {
-      try { interviewData = JSON.parse(await aesDecrypt(cryptoKey, JSON.parse(raw))); } catch(_) { interviewData = { config:{}, history:[] }; }
-    } else { interviewData = { config:{}, history:[] }; }
-    document.getElementById('unlock-pwd').value = '';
+    if (raw) { try { iData = JSON.parse(await dec(cryptoKey, JSON.parse(raw))); } catch(_) { iData = {config:{}, history:[]}; } }
+    else { iData = {config:{}, history:[]}; }
+    document.getElementById("unlock-pwd").value = "";
     unlockApp();
-  } catch(e) { err.textContent = 'Erreur : ' + e.message; }
-  finally { setLoading('unlock-btn', false); }
+  } catch(e) { err.textContent = "Erreur : " + e.message; }
+  finally { setLoading("unlock-btn", false); }
 }
-
 async function doChangePassword() {
-  const oldPwd = document.getElementById('chg-old').value;
-  const newPwd = document.getElementById('chg-new').value;
-  const newPwd2 = document.getElementById('chg-new2').value;
-  const err = document.getElementById('chg-err');
-  err.textContent = '';
-  if (!oldPwd)           { err.textContent = 'Saisissez votre ancien mot de passe.'; return; }
-  if (newPwd.length < 8) { err.textContent = 'Nouveau mot de passe trop court.'; return; }
-  if (newPwd !== newPwd2){ err.textContent = 'Les nouveaux mots de passe ne correspondent pas.'; return; }
-  setLoading('chg-btn', true, 'Re-chiffrement…');
+  const oldP = document.getElementById("chg-old").value;
+  const newP = document.getElementById("chg-new").value;
+  const newP2 = document.getElementById("chg-new2").value;
+  const err = document.getElementById("chg-err");
+  err.textContent = "";
+  if (!oldP) { err.textContent = "Saisissez votre ancien mot de passe."; return; }
+  if (newP.length < 8) { err.textContent = "Nouveau mot de passe trop court."; return; }
+  if (newP !== newP2) { err.textContent = "Les mots de passe ne correspondent pas."; return; }
+  setLoading("chg-btn", true, "Re-chiffrement...");
   try {
     const oldSalt = unb64(localStorage.getItem(K_SALT));
-    const oldKey  = await deriveKey(oldPwd, oldSalt);
-    try { const v = await aesDecrypt(oldKey, JSON.parse(localStorage.getItem(K_VERIFY))); if (v !== 'VALID') throw new Error(); }
-    catch(_) { err.textContent = 'Ancien mot de passe incorrect.'; return; }
-    let existing = { config:{}, history:[] };
+    const oldKey  = await deriveKey(oldP, oldSalt);
+    try { const v = await dec(oldKey, JSON.parse(localStorage.getItem(K_VERIFY))); if (v!=="VALID") throw new Error(); }
+    catch(_) { err.textContent = "Ancien mot de passe incorrect."; return; }
+    let existing = {config:{}, history:[]};
     const raw = localStorage.getItem(K_DATA);
-    if (raw) { try { existing = JSON.parse(await aesDecrypt(oldKey, JSON.parse(raw))); } catch(_) {} }
+    if (raw) { try { existing = JSON.parse(await dec(oldKey, JSON.parse(raw))); } catch(_) {} }
     const newSalt = crypto.getRandomValues(new Uint8Array(16));
-    const newKey  = await deriveKey(newPwd, newSalt);
-    cryptoKey = newKey; interviewData = existing;
+    const newKey  = await deriveKey(newP, newSalt);
+    cryptoKey = newKey; iData = existing;
     localStorage.setItem(K_SALT,   b64(newSalt));
-    localStorage.setItem(K_VERIFY, JSON.stringify(await aesEncrypt(newKey, 'VALID')));
-    await persistData();
-    ['chg-old','chg-new','chg-new2'].forEach(id => document.getElementById(id).value = '');
-    err.style.color = '#4ade80';
-    err.textContent = '✓ Mot de passe changé avec succès.';
-    setTimeout(() => { err.textContent=''; err.style.color=''; showView('view-unlock'); }, 2000);
-  } catch(e) { err.textContent = 'Erreur : ' + e.message; }
-  finally { setLoading('chg-btn', false); }
+    localStorage.setItem(K_VERIFY, JSON.stringify(await enc(newKey, "VALID")));
+    await persist();
+    ["chg-old","chg-new","chg-new2"].forEach(id => document.getElementById(id).value = "");
+    err.style.color = "#4ade80";
+    err.textContent = "✓ Mot de passe changé avec succès.";
+    setTimeout(() => { err.textContent=""; err.style.color=""; showView("view-unlock"); }, 2000);
+  } catch(e) { err.textContent = "Erreur : " + e.message; }
+  finally { setLoading("chg-btn", false); }
 }
-
 function lockApp() {
-  cryptoKey = null; interviewData = { config:{}, history:[] };
+  cryptoKey = null; iData = {config:{}, history:[]};
   stopTimer();
-  document.getElementById('app').style.display  = 'none';
-  document.getElementById('gate').style.display = 'flex';
-  document.getElementById('unlock-pwd').value = '';
-  showView('view-unlock');
+  document.getElementById("app").style.display  = "none";
+  document.getElementById("gate").style.display = "flex";
+  document.getElementById("unlock-pwd").value = "";
+  showView("view-unlock");
 }
-
 function showView(id) {
-  document.querySelectorAll('.gate-view').forEach(v => v.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  document.querySelectorAll(".gate-view").forEach(v => v.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
 }
-
 function unlockApp() {
-  document.getElementById('gate').style.display = 'none';
-  document.getElementById('app').style.display  = 'block';
+  document.getElementById("gate").style.display = "none";
+  document.getElementById("app").style.display  = "block";
   initApp();
 }
 
-// ═══════════════════════════════════════════
-//  DATA
-// ═══════════════════════════════════════════
-let interviewData = { config:{}, history:[] };
+// ── DATA ─────────────────────────────────────────────────────────────────────
+let iData = {config:{}, history:[]};
 let histEditId = null;
 let currentQKey = null;
 
-async function persistData() {
+async function persist() {
   if (!cryptoKey) return;
-  const enc = await aesEncrypt(cryptoKey, JSON.stringify(interviewData));
-  localStorage.setItem(K_DATA, JSON.stringify(enc));
+  const e2 = await enc(cryptoKey, JSON.stringify(iData));
+  localStorage.setItem(K_DATA, JSON.stringify(e2));
 }
 
-// ═══════════════════════════════════════════
-//  PROFILE BASE
-// ═══════════════════════════════════════════
-const PROFILE_BASE = {
-  name: "Bleze TCHALLA",
-  title: "Business Data Analyst Freelance",
-  years: 8,
-  skills: "Power BI (DAX, Power Query, dataflows), SQL, ITIL 4, Azure, Excel avancé",
-  background: "4 ans en contrôle de gestion et pilotage de la performance dans un groupe multi-entités avant de passer côté BI",
-  itil: "Certifié ITIL 4 — comprend les environnements IT au-delà de la stack data : gestion des services, chaîne de valeur, risques de changement",
-  tagline: "Je transforme les processus de reporting chronophages en dashboards autonomes — pour que vos équipes décident en minutes, pas en jours.",
-  refs: [
-    { co:"ATR", sector:"Aéronautique", result:"Données disponibles à 8h le lendemain — zéro action manuelle", detail:"Flux automatisé Power BI + SQL, alimentation nocturne, dashboard à jour chaque matin" },
-    { co:"TotalEnergies", sector:"Énergie", result:"2h30 → 15 minutes par rapport mensuel, zéro ressaisie", detail:"Automatisation complète flux de données, modélisation Power Query + DAX" },
-    { co:"GK Kevlar", sector:"Sécurité privée", result:"Clôtures mensuelles fiables et dans les délais", detail:"Modélisation données, règles de gestion, dashboards de pilotage" }
-  ],
-  modes: [
-    "Mode pont métier/technique : cadrage KPIs avec les directions, ateliers, formalisation règles de gestion → implémentation Power BI",
-    "Mode technique pur : construction et déploiement solutions BI en autonomie (modélisation, DAX, SQL, Power Query)"
-  ]
-};
-
-function getProfileContext() {
-  const cfg = interviewData.config || {};
-  return `PROFIL : ${PROFILE_BASE.name} — ${PROFILE_BASE.title} — ${PROFILE_BASE.years} ans
-COMPÉTENCES : ${PROFILE_BASE.skills}
-BACKGROUND : ${PROFILE_BASE.background}
-CERTIFICATION : ${PROFILE_BASE.itil}
-TAGLINE : "${PROFILE_BASE.tagline}"
-RÉFÉRENCES :
-- ATR (Aéro) : ${PROFILE_BASE.refs[0].result}
-- TotalEnergies (Énergie) : ${PROFILE_BASE.refs[1].result}
-- GK Kevlar (Sécurité) : ${PROFILE_BASE.refs[2].result}
-MODES D'INTERVENTION :
-- ${PROFILE_BASE.modes[0]}
-- ${PROFILE_BASE.modes[1]}
-TJM : ${cfg.tjm || 'à définir selon la mission'}
-DISPONIBILITÉ : ${cfg.dispo || 'à préciser'}
-ZONE : ${cfg.zone || 'Toulouse + remote France'}`;
-}
-
-// ═══════════════════════════════════════════
-//  QUESTIONS & PROMPTS
-// ═══════════════════════════════════════════
-const CFG_TJM   = () => interviewData.config?.tjm  || 'a definir';
-const CFG_DISPO = () => interviewData.config?.dispo || 'a preciser';
-const CFG_ZONE  = () => interviewData.config?.zone  || 'Toulouse + remote';
-
+// ── ANSWERS ──────────────────────────────────────────────────────────────────
 const ANSWERS = {
-  pres_1:{label:"Presentez-vous",cat:"pres",badge:"Presentation",finish:"&rarr; Et vous, quel est votre principal defi de reporting aujourd'hui ?",
-    points:[
-      {i:"\u{1F464}",t:"<strong>Bleze TCHALLA</strong>, Business Data Analyst freelance &mdash; 8 ans"},
-      {i:"\u{1F4A1}",t:"&laquo;Je transforme les processus de reporting chronophages en dashboards autonomes &mdash; decisions en <em>minutes</em>, pas en jours&raquo;"},
-      {i:"\u{1F3E2}",t:"Avant la donnee : <em>4 ans en controle de gestion</em> &rarr; comprend le besoin metier de l&#x27;interieur"},
-      {i:"\u{1F4CC}",t:"Grands comptes : <em>ATR &middot; TotalEnergies &middot; GK Kevlar</em>"},
-      {i:"\u{1F6E1}",t:"Certifie <em>ITIL 4</em> &rarr; integration sans friction dans les environnements IT"},
-    ]},
-  pres_2:{label:"Parlez-moi de votre parcours",cat:"pres",badge:"Presentation",finish:null,
-    points:[
-      {i:"\u{1F4CD}",t:"2 phases complementaires"},
-      {i:"1️⃣",t:"Phase 1 &mdash; <em>4 ans cote metier</em> : controle de gestion, pilotage performance, groupe multi-entites"},
-      {i:"2️⃣",t:"Phase 2 &mdash; depuis 2021 : <em>implementation BI en freelance</em> sur grands comptes"},
-      {i:"\u{1F511}",t:"Passage metier &rarr; BI : je sais ce que les DAF attendent <em>sans 3 aller-retours</em>"},
-      {i:"\u{1F4CA}",t:"ATR &rarr; TotalEnergies &rarr; GK Kevlar : secteurs tres differents, meme impact"},
-    ]},
-  pres_3:{label:"Pourquoi le freelance ?",cat:"pres",badge:"Presentation",finish:null,
-    points:[
-      {i:"\u{1F3AF}",t:"<em>Impact direct</em> : 100% concentre sur votre probleme"},
-      {i:"\u{1F504}",t:"Diversite des contextes &rarr; <em>montee en competences acceleree</em>"},
-      {i:"⚡",t:"Agilite : operationnel immediatement, pas de periode de rodage"},
-      {i:"✅",t:"Choix positif et assume &mdash; pas une fuite du salariat"},
-    ]},
-  pres_4:{label:"Ce qui vous differencie ?",cat:"pres",badge:"Presentation",finish:null,
-    points:[
-      {i:"\u{1F3C5}",t:"3 differenciateurs <em>rares sur le marche</em>"},
-      {i:"①",t:"Background Finance <em>4 ans</em> &rarr; comprend le besoin sans traduction"},
-      {i:"②",t:"Preuves chiffrees : ATR (8h), TotalEnergies (<em>2h30&rarr;15min</em>), GK Kevlar (clotures fiables)"},
-      {i:"③",t:"<em>ITIL 4</em> &rarr; s&#x27;integre dans les environnements IT structures"},
-      {i:"\u{1F48E}",t:"Combo rare : <em>metier + BI + IT</em>"},
-    ]},
-  exp_1:{label:"Vos references concretes ?",cat:"exp",badge:"Experience",finish:"&rarr; Dans votre contexte, quel reporting prend le plus de temps ?",
-    points:[
-      {i:"✈",t:"<em>ATR</em> (Aeronautique) &rarr; Donnees fraiches a <em>8h le lendemain</em> &mdash; zero action manuelle"},
-      {i:"⚡",t:"<em>TotalEnergies</em> (Energie) &rarr; <em>2h30 &rarr; 15 min</em> par rapport mensuel &mdash; zero ressaisie"},
-      {i:"\u{1F6E1}",t:"<em>GK Kevlar</em> (Securite) &rarr; Clotures mensuelles <em>fiables et dans les delais</em>"},
-    ]},
-  exp_2:{label:"ATR",cat:"exp",badge:"Experience",finish:null,
-    points:[
-      {i:"\u{1F4CD}",t:"Contexte : reporting operationnel produit manuellement, donnees avec retard"},
-      {i:"\u{1F527}",t:"Solution : flux automatise <em>Power BI + SQL</em>, alimentation nocturne"},
-      {i:"✅",t:"Resultat : donnees disponibles a <em>8h chaque matin</em> &mdash; zero action manuelle"},
-      {i:"\u{1F4A1}",t:"Impact : equipes liberees pour l&#x27;analyse, pas la collecte"},
-    ]},
-  exp_3:{label:"TotalEnergies",cat:"exp",badge:"Experience",finish:null,
-    points:[
-      {i:"\u{1F4CD}",t:"Contexte : rapport mensuel necessitant <em>2h30 de consolidation manuelle</em>"},
-      {i:"\u{1F527}",t:"Solution : automatisation complete &mdash; Power Query + DAX + flux de donnees"},
-      {i:"\u{1F3C6}",t:"Resultat : <em>2h30 &rarr; 15 minutes</em>. Zero ressaisie. Zero erreur."},
-      {i:"\u{1F4C9}",t:"Chiffre cle : <em>-90% de temps de production</em>"},
-    ]},
-  exp_4:{label:"GK Kevlar",cat:"exp",badge:"Experience",finish:null,
-    points:[
-      {i:"\u{1F4CD}",t:"Secteur : securite privee"},
-      {i:"⚠",t:"Contexte : clotures mensuelles aleatoires, manque de visibilite"},
-      {i:"\u{1F527}",t:"Solution : modelisation donnees + regles de gestion + dashboards pilotage"},
-      {i:"✅",t:"Resultat : clotures <em>fiables et dans les delais</em>, direction avec visibilite temps reel"},
-    ]},
-  exp_5:{label:"Background Finance/Controle",cat:"exp",badge:"Experience",finish:null,
-    points:[
-      {i:"\u{1F3E2}",t:"<em>4 ans en controle de gestion</em> et pilotage de la performance"},
-      {i:"\u{1F511}",t:"Dans un groupe multi-entites &rarr; connais les enjeux Finance/Ops <em>de l&#x27;interieur</em>"},
-      {i:"\u{1F4A1}",t:"Avant d&#x27;etre developpeur BI, j&#x27;etais <em>l&#x27;utilisateur</em> des dashboards"},
-      {i:"✅",t:"Je sais ce que les DAF attendent <em>sans qu&#x27;on me l&#x27;explique</em>"},
-    ]},
-  tech_1:{label:"Niveau Power BI ?",cat:"tech",badge:"Technique",finish:null,
-    points:[
-      {i:"\u{1F4CA}",t:"<em>DAX</em> : mesures complexes, time intelligence, KPIs calcules"},
-      {i:"\u{1F504}",t:"<em>Power Query</em> : ETL, transformations, fusion de sources"},
-      {i:"☁",t:"<em>Dataflows</em> : alimentation centralisee et reutilisable"},
-      {i:"\u{1F5C2}",t:"<em>Modelisation</em> : schema en etoile/flocon, optimisation des relations"},
-      {i:"✅",t:"Utilise sur ATR (flux nocturne) et TotalEnergies (automatisation complete)"},
-    ]},
-  tech_2:{label:"Niveau SQL ?",cat:"tech",badge:"Technique",finish:null,
-    points:[
-      {i:"\u{1F4BB}",t:"<em>T-SQL</em> et <em>PostgreSQL</em>"},
-      {i:"\u{1F4CA}",t:"Requetes analytiques : CTEs, fonctions de fenetre, agregations complexes"},
-      {i:"\u{1F3AF}",t:"Profil <em>BI/analytique</em> &mdash; pas developpeur backend"},
-      {i:"\u{1F517}",t:"Utilise pour alimenter les modeles Power BI et les datawarehouses"},
-    ]},
-  tech_3:{label:"ITIL 4 ?",cat:"tech",badge:"Technique",finish:null,
-    points:[
-      {i:"\u{1F4DA}",t:"Framework de <em>gestion des services IT</em>"},
-      {i:"\u{1F504}",t:"Chaine de valeur des services, amelioration continue, gestion des changements"},
-      {i:"\u{1F4A1}",t:"Valeur : comprend l&#x27;environnement IT <em>au-dela de la stack data</em>"},
-      {i:"✅",t:"S&#x27;integre <em>sans creer de friction</em> dans les organisations IT structurees"},
-      {i:"\u{1F3C5}",t:"Rare pour un profil BI pur &rarr; atout en banque, assurance, IT"},
-    ]},
-  tech_4:{label:"ML / Data Science ?",cat:"tech",badge:"Technique",finish:null,
-    points:[
-      {i:"✋",t:"<em>Honnetete totale</em> : ce n&#x27;est pas mon domaine"},
-      {i:"\u{1F3AF}",t:"Mon expertise = <em>Business Intelligence</em> : Power BI, SQL, reporting, modelisation"},
-      {i:"\u{1F52C}",t:"ML/Data Science = profil different (Data Scientist)"},
-      {i:"\u{1F91D}",t:"&rarr; Orienter vers des profils complementaires si besoin"},
-    ]},
-  tech_5:{label:"Votre methode de travail ?",cat:"tech",badge:"Technique",finish:null,
-    points:[
-      {i:"①",t:"<em>Comprendre le besoin metier</em> : qui utilise, quelle decision ?"},
-      {i:"②",t:"<em>Formaliser les regles de gestion</em> AVANT de coder"},
-      {i:"③",t:"Livraisons <em>iteratives</em> avec validation utilisateur a chaque etape"},
-      {i:"④",t:"<em>Former les utilisateurs</em> &rarr; objectif = leur autonomie, pas ma presence"},
-      {i:"⚠",t:"Un KPI mal defini en amont = un dashboard inutile a la livraison"},
-    ]},
-  tech_6:{label:"Outils maitrisez ?",cat:"tech",badge:"Technique",finish:null,
-    points:[
-      {i:"\u{1F4CA}",t:"<em>Power BI</em> : DAX, Power Query, dataflows"},
-      {i:"\u{1F4BB}",t:"<em>SQL</em> : T-SQL, PostgreSQL"},
-      {i:"☁",t:"Azure (bases), SharePoint, Excel avance"},
-      {i:"\u{1F6E1}",t:"<em>ITIL 4</em> &mdash; framework IT"},
-      {i:"✋",t:"Python : notions de base &middot; ML : hors perimetre"},
-    ]},
-  hard_1:{label:"Votre TJM ?",cat:"hard",badge:"Question difficile",finish:"&rarr; Quel est le budget prevu pour cette mission ?",
-    points:[
-      {i:"⚠",t:"Ne jamais donner un chiffre seul sans contexte"},
-      {i:"\u{1F4CA}",t:"Variables : duree, complexite technique, mode d&#x27;intervention"},
-      {i:"\u{1F4B0}",t:"Mon TJM : <em>__TJM__</em>"},
-    ]},
-  hard_2:{label:"Disponibilite ?",cat:"hard",badge:"Question difficile",finish:null,
-    points:[
-      {i:"\u{1F4C5}",t:"Disponibilite : <em>__DISPO__</em>"},
-      {i:"\u{1F4CD}",t:"Zone : <em>__ZONE__</em>"},
-      {i:"\u{1F4BB}",t:"Remote possible selon les besoins de la mission"},
-    ]},
-  hard_3:{label:"Vos points faibles ?",cat:"hard",badge:"Question difficile",finish:null,
-    points:[
-      {i:"\u{1F3AF}",t:"<em>ML/Data Science</em> : honnetete totale, ce n&#x27;est pas mon perimetre"},
-      {i:"\u{1F40D}",t:"<em>Python avance</em> : notions de base, pas de developpement complexe"},
-      {i:"✅",t:"Conscience de ces limites &rarr; clarte sur le perimetre des le depart"},
-      {i:"❌",t:"Pas de faux point faible du type &laquo;je travaille trop&raquo;"},
-    ]},
-  hard_4:{label:"Pas de reference dans votre secteur ?",cat:"hard",badge:"Question difficile",finish:"&rarr; Quels sont vos outils et processus actuels ?",
-    points:[
-      {i:"\u{1F4A1}",t:"Les problemes de reporting/BI sont <em>universels</em> entre secteurs"},
-      {i:"\u{1F3E2}",t:"Background Finance/controle de gestion = <em>transversal</em> a tous les secteurs"},
-      {i:"✅",t:"Preuve d&#x27;adaptation : aero + energie + securite = secteurs <em>tres differents</em>"},
-      {i:"⚡",t:"Montee en contexte rapide grace a la <em>methode de cadrage metier</em>"},
-    ]},
-  hard_5:{label:"Pourquoi pas le salariat ?",cat:"hard",badge:"Question difficile",finish:null,
-    points:[
-      {i:"\u{1F3AF}",t:"<em>Impact direct</em> : 100% concentre sur votre probleme"},
-      {i:"\u{1F504}",t:"Diversite des contextes &rarr; <em>accelere la competence</em>"},
-      {i:"✅",t:"Choix <em>positif et assume</em> &mdash; ne pas critiquer le salariat"},
-    ]},
-  hard_6:{label:"Ou en sont vos demarches ?",cat:"hard",badge:"Question difficile",finish:null,
-    points:[
-      {i:"\u{1F4CA}",t:"Demarche <em>active</em>, discussions en cours"},
-      {i:"\u{1F3AF}",t:"Priorite a la <em>bonne mission</em> plutot qu&#x27;a la premiere disponible"},
-      {i:"\u{1F60C}",t:"Rester serein, <em>pas presse</em>"},
-    ]},
+  pres_court: {
+    label: "Présentation 30 secondes",
+    cat: "pres",
+    finish: null,
+    text: "Bonjour, je suis Bleze TCHALLA, Business Data Analyst freelance depuis 8 ans. Je transforme les processus de reporting chronophages en dashboards autonomes — pour que vos équipes décident en minutes, pas en jours. Avant de me spécialiser en Power BI et SQL, j&#x27;ai passé 4 ans en contrôle de gestion côté métier. Ce double profil me permet de comprendre à la fois ce que les équipes Finance et Ops attendent, et comment le construire techniquement. J&#x27;ai des références chez ATR, TotalEnergies et GK Kevlar.",
+    textByContext: {
+  "S4": "Bonjour, je suis Bleze TCHALLA, Business Data Analyst freelance depuis 8 ans. Ce qui me différencie, c&#x27;est mon double profil : 4 ans en contrôle de gestion côté métier, puis 4 ans à implémenter des solutions Power BI et SQL sur des grands comptes. Dans votre secteur, je comprends directement les enjeux de reporting Finance sans traduction. Chez TotalEnergies, j&#x27;ai réduit le temps de production d&#x27;un rapport mensuel de 2h30 à 15 minutes.",
+  "S5": "Bonjour, je suis Bleze TCHALLA, Business Data Analyst freelance depuis 8 ans, spécialisé Power BI et SQL, certifié ITIL 4. Cette certification me permet de m&#x27;intégrer sans friction dans les environnements IT structurés — je comprends la gestion des services, les risques de changement et la chaîne de valeur IT. J&#x27;ai automatisé des processus de reporting chez ATR, TotalEnergies et GK Kevlar.",
+  "DAF": "Bonjour, je suis Bleze TCHALLA, Business Data Analyst freelance. Avant d&#x27;implémenter des dashboards Power BI, j&#x27;ai passé 4 ans en contrôle de gestion — ce qui veut dire que je comprends vos enjeux de pilotage de l&#x27;intérieur. Chez TotalEnergies, j&#x27;ai réduit un reporting mensuel de 2h30 à 15 minutes. L&#x27;objectif est toujours le même : que vos équipes aient les bonnes données au bon moment.",
+  "DSI": "Bonjour, je suis Bleze TCHALLA, Business Data Analyst freelance certifié ITIL 4. Cette certification me place à l&#x27;intersection entre le besoin métier et l&#x27;environnement IT — je comprends la gestion des services, la continuité et les risques de changement. Je construis des solutions Power BI et SQL qui s&#x27;intègrent dans vos processus existants, pas à côté.",
+  "recruteur": "Bonjour, je suis Bleze TCHALLA, Business Data Analyst freelance depuis 8 ans. Je me spécialise en Power BI, SQL et pilotage de la performance. Mon profil est rare : double compétence métier Finance et technique BI, certifié ITIL 4, avec des références chez ATR, TotalEnergies et GK Kevlar. Je suis disponible pour une nouvelle mission."
+}
+  },
+  pres_moyen: {
+    label: "Présentation 2-3 minutes",
+    cat: "pres",
+    finish: null,
+    text: "Je suis Bleze TCHALLA, Business Data Analyst freelance depuis 8 ans, basé à Toulouse. Mon cœur de métier : transformer des processus de reporting qui consomment des heures chaque semaine en dashboards Power BI autonomes, alimentés par SQL, qui donnent les bonnes informations aux bonnes personnes au bon moment. Ce qui me distingue, c&#x27;est un double profil rare sur le marché. Avant d&#x27;être dans la donnée, j&#x27;étais du côté métier : 4 ans en contrôle de gestion et pilotage de la performance dans un groupe multi-entités. Ce passage m&#x27;a appris ce dont les équipes Finance, Ops et Commerce ont réellement besoin. Depuis 2021, j&#x27;implémente ces solutions moi-même en Power BI et SQL chez des grands comptes. Chez ATR, les données sont disponibles à 8h le lendemain — sans aucune action manuelle. Chez TotalEnergies, j&#x27;ai réduit le temps de production d&#x27;un rapport mensuel de 2h30 à 15 minutes. Chez GK Kevlar dans la sécurité privée, j&#x27;ai sécurisé les clôtures mensuelles et redonné de la visibilité à la direction sur la performance. Je suis également certifié ITIL 4, ce qui me permet de m&#x27;intégrer sans friction dans des environnements IT structurés, en comprenant les contraintes et les risques de changement. J&#x27;interviens en deux modes selon les besoins : soit en mode pont métier-technique, où je cadre les KPI avec les directions et implémente les dashboards, soit en mode technique pur sur la base d&#x27;un cadrage existant. Et pour votre contexte, quels sont les reportings qui vous prennent le plus de temps actuellement ?",
+    textByContext: {}
+  },
+  pres_long: {
+    label: "Présentation 5-7 minutes",
+    cat: "pres",
+    finish: null,
+    text: "Je vais vous présenter mon parcours en trois temps. D&#x27;abord, mon background. J&#x27;ai commencé par 4 ans côté métier, en contrôle de gestion et pilotage de la performance dans un groupe multi-entités. Ce n&#x27;est pas un détail : j&#x27;ai été l&#x27;utilisateur des dashboards avant d&#x27;être celui qui les construit. Je sais ce que les DAF et les Responsables Contrôle attendent, sans qu&#x27;ils aient besoin de me l&#x27;expliquer. Ensuite, depuis 2021, je suis freelance et j&#x27;implémente des solutions BI sur des grands comptes. Mes trois références principales : ATR dans l&#x27;aéronautique, où les managers trouvent leurs données fraîches à 8h chaque matin, sans aucune action manuelle. TotalEnergies dans l&#x27;énergie, où j&#x27;ai réduit le temps de production d&#x27;un rapport mensuel de 2h30 à 15 minutes — soit une réduction de 90%. Et GK Kevlar dans la sécurité privée, où j&#x27;ai sécurisé les clôtures mensuelles et redonné une visibilité temps réel à la direction. Troisième point : ma méthode. Je commence toujours par le besoin métier — qui utilise le dashboard, quelle décision doit-il faciliter. Je formalise les règles de gestion avant de coder, ce qui évite de livrer quelque chose d&#x27;inutile. Je livre en itérations courtes avec validation à chaque étape. Et je forme les utilisateurs pour qu&#x27;ils soient autonomes à la fin de la mission. Je suis aussi certifié ITIL 4, ce qui me permet de m&#x27;intégrer sans créer de friction dans les environnements IT structurés — je comprends la gestion des services, les risques de changement et la continuité. En résumé : un profil rare qui combine l&#x27;expérience métier Finance, la technique BI et la compréhension de l&#x27;environnement IT. Ce qui se traduit concrètement par des dashboards qui correspondent exactement à ce que les équipes attendent, livrés sans surprises. Est-ce que vous souhaitez que je détaille l&#x27;un de ces points en particulier ?",
+    textByContext: {}
+  },
+  pres_1: {
+    label: "Présentez-vous",
+    cat: "pres",
+    finish: "→ Et vous, quel est votre principal défi de reporting aujourd&#x27;hui ?",
+    text: "Je suis Bleze TCHALLA, Business Data Analyst freelance depuis 8 ans. Je transforme les processus de reporting chronophages en dashboards autonomes — pour que vos équipes décident en minutes, pas en jours. Avant de me spécialiser en Power BI et SQL, j&#x27;ai passé 4 ans en contrôle de gestion côté métier. Ce double profil me permet de comprendre à la fois ce que les équipes Finance et Ops attendent, et comment le construire techniquement. Je suis certifié ITIL 4 et j&#x27;ai des références chez ATR, TotalEnergies et GK Kevlar.",
+    textByContext: {
+  "S4": "Je suis Bleze TCHALLA, Business Data Analyst freelance depuis 8 ans. Dans votre secteur, ce qui me différencie, c&#x27;est mon double profil : 4 ans en contrôle de gestion côté métier, puis 4 ans à implémenter des solutions Power BI et SQL sur des grands comptes. Je comprends directement les enjeux de reporting Finance — consolidation, clôtures, pilotage des ratios — sans avoir besoin de traduction. Chez TotalEnergies, j&#x27;ai réduit le temps de production d&#x27;un rapport mensuel de 2h30 à 15 minutes.",
+  "S5": "Je suis Bleze TCHALLA, Business Data Analyst freelance depuis 8 ans, spécialisé Power BI et SQL, certifié ITIL 4. Cette certification me place à l&#x27;intersection entre le besoin métier et l&#x27;environnement IT — je comprends la gestion des services, les risques de changement et la chaîne de valeur IT. Je construis des solutions qui s&#x27;intègrent dans vos processus existants, pas à côté.",
+  "DAF": "Je suis Bleze TCHALLA, Business Data Analyst freelance. Avant d&#x27;implémenter des dashboards Power BI, j&#x27;ai passé 4 ans en contrôle de gestion — ce qui veut dire que je comprends vos enjeux de pilotage de l&#x27;intérieur. Quand je construis un dashboard Finance, je sais déjà quelles questions vous allez poser. Chez TotalEnergies, j&#x27;ai réduit un reporting mensuel de 2h30 à 15 minutes, zéro ressaisie.",
+  "DSI": "Je suis Bleze TCHALLA, Business Data Analyst freelance certifié ITIL 4. Je comprends l&#x27;environnement IT au-delà de la stack data : gestion des services, continuité, risques de changement. Je construis des solutions Power BI et SQL qui s&#x27;intègrent dans vos processus sans créer de friction avec les équipes IT.",
+  "recruteur": "Je suis Bleze TCHALLA, Business Data Analyst freelance depuis 8 ans. Je me spécialise en Power BI, SQL et pilotage de la performance. Double profil rare : 4 ans contrôle de gestion côté métier, puis implémentation BI sur grands comptes. Certifié ITIL 4. Références chez ATR, TotalEnergies, GK Kevlar. Disponible pour une nouvelle mission."
+}
+  },
+  pres_2: {
+    label: "Parlez-moi de votre parcours",
+    cat: "pres",
+    finish: null,
+    text: "Mon parcours se lit en deux phases complémentaires. La première : 4 ans côté métier, en contrôle de gestion et pilotage de la performance dans un groupe multi-entités. J&#x27;étais l&#x27;utilisateur des outils de reporting, je vivais les clôtures, les consolidations, les demandes de KPI urgentes. Cette expérience m&#x27;a appris ce que les équipes Finance et Ops attendent vraiment d&#x27;un dashboard. La deuxième phase : depuis 2021, je suis freelance et j&#x27;implémente ces solutions moi-même en Power BI et SQL chez des grands comptes — ATR, TotalEnergies, GK Kevlar. Ce parcours me donne un avantage concret : quand je construis une solution, je n&#x27;ai pas besoin de 3 aller-retours pour comprendre le besoin. Je le vis d&#x27;expérience.",
+    textByContext: {}
+  },
+  pres_3: {
+    label: "Pourquoi le freelance ?",
+    cat: "pres",
+    finish: null,
+    text: "J&#x27;ai choisi le freelance pour l&#x27;impact direct. En mission, je suis 100% concentré sur votre problème — pas sur une fiche de poste ou une prochaine promotion. Je mesure ma valeur à ce que je livre concrètement. L&#x27;autre raison, c&#x27;est la diversité des contextes. Passer de l&#x27;aéronautique à l&#x27;énergie, puis à la sécurité privée m&#x27;a permis de consolider des méthodes qui fonctionnent dans des environnements très différents. Cette diversité accélère la montée en compétences et profite directement aux missions suivantes. C&#x27;est un choix positif et assumé — pas une fuite du salariat.",
+    textByContext: {}
+  },
+  pres_4: {
+    label: "Ce qui vous différencie ?",
+    cat: "pres",
+    finish: null,
+    text: "Je dirais trois choses rares combinées. D&#x27;abord, le double profil : avant d&#x27;être dans la donnée, j&#x27;étais du côté métier — 4 ans en contrôle de gestion. Ça change tout : je comprends ce qu&#x27;un DAF ou un Responsable Contrôle attend sans qu&#x27;il ait besoin de me l&#x27;expliquer. Ensuite, des preuves chiffrées sur grands comptes : ATR avec des données disponibles à 8h le lendemain, TotalEnergies avec 2h30 réduit à 15 minutes, GK Kevlar avec des clôtures sécurisées. Et troisièmement, la certification ITIL 4 — rare pour un profil BI pur — qui me permet de m&#x27;intégrer sans friction dans les environnements IT structurés. C&#x27;est ce combo métier, technique et IT qui me distingue sur le marché.",
+    textByContext: {}
+  },
+  exp_1: {
+    label: "Vos références concrètes ?",
+    cat: "exp",
+    finish: "→ Dans votre contexte, quel reporting prend le plus de temps à vos équipes ?",
+    text: "J&#x27;ai trois références principales. Chez ATR dans l&#x27;aéronautique, j&#x27;ai mis en place un flux automatisé Power BI et SQL qui alimente les dashboards chaque nuit — les managers trouvent leurs données fraîches à 8h le lendemain matin, sans aucune action manuelle. Chez TotalEnergies dans l&#x27;énergie, j&#x27;ai automatisé la production d&#x27;un rapport mensuel qui nécessitait 2h30 de travail manuel — il est maintenant généré en 15 minutes, zéro ressaisie, zéro erreur. Et chez GK Kevlar dans la sécurité privée, j&#x27;ai modélisé les données et défini les règles de gestion pour sécuriser les clôtures mensuelles et donner à la direction une visibilité en temps réel sur la performance.",
+    textByContext: {
+  "S4": "Mes références montrent une forte orientation Finance. Chez TotalEnergies, j&#x27;ai automatisé un reporting Finance mensuel qui prenait 2h30 de consolidation manuelle — il est maintenant produit en 15 minutes, avec zéro ressaisie. Mon background en contrôle de gestion me permet de comprendre les enjeux de clôture, de consolidation et de pilotage des ratios directement. Chez GK Kevlar, j&#x27;ai sécurisé les clôtures mensuelles et mis en place des dashboards de pilotage de la performance financière.",
+  "S1": "Mes références sont particulièrement pertinentes dans votre secteur. Chez ATR dans l&#x27;aéronautique, j&#x27;ai automatisé le reporting opérationnel — les données sont disponibles à 8h le lendemain sans aucune action manuelle. Ce type de flux nocturne alimenté par SQL et Power BI est directement applicable à un contexte industriel où la fraîcheur des données est critique pour la prise de décision."
+}
+  },
+  exp_2: {
+    label: "ATR — que faisiez-vous ?",
+    cat: "exp",
+    finish: null,
+    text: "Chez ATR, le reporting opérationnel était produit manuellement, ce qui créait des délais et des risques d&#x27;erreur. J&#x27;ai mis en place un flux automatisé : extraction SQL des données sources, transformation Power Query, chargement nocturne dans les modèles Power BI. Résultat : les managers trouvent leurs tableaux de bord à jour à 8h chaque matin, sans aucune action manuelle de leur part. Zéro ressaisie, zéro délai. Les équipes ont pu se concentrer sur l&#x27;analyse et la décision plutôt que sur la collecte des données.",
+    textByContext: {}
+  },
+  exp_3: {
+    label: "TotalEnergies — résultats ?",
+    cat: "exp",
+    finish: null,
+    text: "Chez TotalEnergies, le contexte était un rapport mensuel qui nécessitait 2h30 de travail de consolidation manuelle à chaque échéance. J&#x27;ai automatisé l&#x27;ensemble du flux : connexion aux sources de données, transformation Power Query, modélisation DAX, génération automatique du rapport. Le résultat est sans ambiguïté : 2h30 réduit à 15 minutes. Zéro ressaisie, zéro erreur de copier-coller. C&#x27;est une réduction de 90% du temps de production, et les équipes ont retrouvé du temps pour l&#x27;analyse.",
+    textByContext: {}
+  },
+  exp_4: {
+    label: "GK Kevlar — contexte ?",
+    cat: "exp",
+    finish: null,
+    text: "Chez GK Kevlar, dans le secteur de la sécurité privée, les clôtures mensuelles étaient aléatoires et la direction manquait de visibilité sur la performance. J&#x27;ai travaillé sur la modélisation des données, la définition et la formalisation des règles de gestion avec les équipes Finance, puis j&#x27;ai construit des dashboards de pilotage de la performance. Résultat : des clôtures mensuelles fiables et dans les délais, et une direction avec une visibilité en temps réel sur les indicateurs clés. C&#x27;est un bon exemple de mission où le travail de cadrage métier en amont a été aussi important que le développement technique.",
+    textByContext: {}
+  },
+  exp_5: {
+    label: "Background Finance/Contrôle ?",
+    cat: "exp",
+    finish: null,
+    text: "Avant de me spécialiser en BI, j&#x27;ai passé 4 ans en contrôle de gestion et pilotage de la performance dans un groupe multi-entités. J&#x27;étais du côté utilisateur — je vivais les clôtures, les consolidations, les reportings de direction, les demandes urgentes de KPI. Ce passage côté métier change fondamentalement ma façon d&#x27;aborder une mission BI : je sais ce dont les équipes Finance et Ops ont réellement besoin sans qu&#x27;elles aient besoin de me l&#x27;expliquer. Quand je construis un dashboard pour un DAF, je sais déjà quelles questions il va poser. C&#x27;est ce double profil qui me différencie sur le marché.",
+    textByContext: {}
+  },
+  tech_1: {
+    label: "Niveau Power BI ?",
+    cat: "tech",
+    finish: null,
+    text: "Mon niveau Power BI est avancé. En DAX, je construis des mesures complexes, du time intelligence, des KPI calculés avec des logiques de gestion fines. En Power Query, je gère l&#x27;ETL complet : connexion aux sources, transformations, fusion de flux hétérogènes. Je travaille avec des dataflows pour centraliser et réutiliser les transformations à l&#x27;échelle. Et en modélisation, je construis des schémas en étoile ou en flocon optimisés pour la performance. Concrètement, j&#x27;ai utilisé tout cela chez ATR pour construire un flux nocturne automatisé, et chez TotalEnergies pour passer d&#x27;un reporting manuel de 2h30 à une génération automatique en 15 minutes.",
+    textByContext: {}
+  },
+  tech_2: {
+    label: "Niveau SQL ?",
+    cat: "tech",
+    finish: null,
+    text: "Mon profil SQL est analytique et orienté BI, pas développeur backend. Je maîtrise T-SQL et PostgreSQL. J&#x27;écris des requêtes analytiques complexes : CTEs, fonctions de fenêtre, agrégations sur de grands volumes, requêtes d&#x27;alimentation de datawarehouse. Dans mes missions, SQL est la colonne vertébrale de l&#x27;extraction et de la préparation des données qui alimentent ensuite les modèles Power BI. C&#x27;est un outil que j&#x27;utilise quotidiennement, en complément de Power Query pour les transformations les plus complexes.",
+    textByContext: {}
+  },
+  tech_3: {
+    label: "ITIL 4 ?",
+    cat: "tech",
+    finish: null,
+    text: "ITIL 4 est un framework de gestion des services IT. Il couvre la chaîne de valeur des services, la gestion des changements, l&#x27;amélioration continue et la continuité de service. Concrètement, pour un Business Data Analyst freelance, cette certification apporte une valeur différenciante : je comprends les contraintes et les processus de l&#x27;environnement IT bien au-delà de la seule stack data. Quand j&#x27;arrive chez un client, je sais comment fonctionnent les équipes IT, comment aborder un déploiement en minimisant les risques, et comment m&#x27;intégrer dans les processus existants sans créer de friction. C&#x27;est rare pour un profil BI pur, et c&#x27;est particulièrement utile dans des secteurs structurés comme la banque, l&#x27;assurance ou les grandes entreprises IT.",
+    textByContext: {}
+  },
+  tech_4: {
+    label: "ML / Data Science ?",
+    cat: "tech",
+    finish: null,
+    text: "Je préfère être direct sur ce point : le Machine Learning et la Data Science ne sont pas mon domaine. Mon expertise est le Business Intelligence — Power BI, SQL, modélisation de données, automatisation du reporting et pilotage de la performance. Ce sont deux métiers différents, avec des compétences différentes, et je pense qu&#x27;il est plus utile pour vous que je sois clair sur mon périmètre plutôt que de surventre ce que je ne sais pas faire. Si votre besoin combine BI et ML, je peux vous orienter vers des profils complémentaires. Mais si le cœur du besoin est le reporting, l&#x27;analyse et le pilotage de la performance, c&#x27;est là que j&#x27;apporte de la valeur.",
+    textByContext: {}
+  },
+  tech_5: {
+    label: "Votre méthode de travail ?",
+    cat: "tech",
+    finish: null,
+    text: "Ma méthode repose sur 4 principes. Premier : je commence toujours par le besoin métier. Qui utilise le dashboard ? Quelle décision doit-il faciliter ? À quelle fréquence ? Un outil non utilisé ne sert à rien, même s&#x27;il est techniquement parfait. Deuxième : je formalise les règles de gestion avant de coder. Un KPI mal défini en amont, c&#x27;est un dashboard inutile à la livraison. Troisième : je livre en itérations courtes avec validation utilisateur à chaque étape. Pas de grande surprise après 3 mois de développement. Quatrième : je forme les utilisateurs finaux. L&#x27;objectif est leur autonomie — que la solution vive après mon départ, pas qu&#x27;elle dépende de ma présence.",
+    textByContext: {}
+  },
+  tech_6: {
+    label: "Outils maîtrisés ?",
+    cat: "tech",
+    finish: null,
+    text: "Ma stack principale : Power BI en premier lieu — DAX, Power Query, dataflows, modélisation — c&#x27;est mon outil de production quotidien. SQL ensuite, en T-SQL et PostgreSQL, pour l&#x27;extraction et la préparation des données. Azure pour les environnements cloud, SharePoint pour l&#x27;intégration et le partage, Excel avancé pour les analyses ad hoc et les échanges avec les équipes Finance. Et ITIL 4 comme framework de compréhension de l&#x27;environnement IT. Sur Python, j&#x27;ai des notions de base. Sur le Machine Learning, je suis honnête : hors de mon périmètre.",
+    textByContext: {}
+  },
+  hard_1: {
+    label: "Votre TJM ?",
+    cat: "hard",
+    finish: "→ Quel est le budget prévu pour cette mission ?",
+    text: "Mon TJM varie selon les paramètres de la mission : la durée, la complexité technique, le mode d&#x27;intervention et les conditions. Pour une mission standard en régie, je suis aux alentours de __TJM__. Je préfère qu&#x27;on échange d&#x27;abord sur les besoins réels de la mission avant de fixer un chiffre définitif — ça nous permettra de trouver un cadre qui convient aux deux parties. Et de votre côté, quel est le budget prévu pour ce type de profil ?",
+    textByContext: {}
+  },
+  hard_2: {
+    label: "Disponibilité ?",
+    cat: "hard",
+    finish: null,
+    text: "Je suis __DISPO__. Je peux intervenir __ZONE__, en mode hybride ou full remote selon les besoins de la mission. Si votre besoin est urgent, je suis ouvert à en discuter — il m&#x27;arrive de gérer des transitions entre deux missions pour des contextes prioritaires.",
+    textByContext: {}
+  },
+  hard_3: {
+    label: "Vos points faibles ?",
+    cat: "hard",
+    finish: null,
+    text: "Je suis honnête sur deux limites claires. La première : le Machine Learning et la Data Science ne sont pas mon domaine — si le besoin va dans cette direction, je ne suis pas le bon profil. La deuxième : Python avancé, j&#x27;ai des notions de base mais pas un niveau de développement. Ces deux points ne sont pas des excuses mais de la clarté — je préfère poser les limites dès le départ plutôt que de créer des attentes que je ne peux pas tenir. Ce que je fais très bien en revanche, c&#x27;est tout ce qui touche au BI, au reporting, à la modélisation et au pilotage de la performance.",
+    textByContext: {}
+  },
+  hard_4: {
+    label: "Pas de référence dans notre secteur ?",
+    cat: "hard",
+    finish: "→ Quels sont vos outils et processus de reporting actuels ?",
+    text: "C&#x27;est une question légitime. Ce que je peux vous dire, c&#x27;est que les problèmes de reporting et de pilotage sont universels d&#x27;un secteur à l&#x27;autre — les enjeux de consolidation, de fraîcheur des données et de fiabilité des indicateurs existent partout. Mon background en contrôle de gestion est transversal à tous les secteurs Finance. Et la preuve de mon adaptabilité, c&#x27;est que j&#x27;ai travaillé dans l&#x27;aéronautique, l&#x27;énergie et la sécurité privée — trois contextes très différents — avec des résultats concrets dans chaque cas. Ma méthode de cadrage métier me permet de monter en contexte rapidement. Est-ce que vous pouvez me décrire votre environnement actuel ?",
+    textByContext: {}
+  },
+  hard_5: {
+    label: "Pourquoi pas le salariat ?",
+    cat: "hard",
+    finish: null,
+    text: "Le freelance me permet de me concentrer sur ce que j&#x27;aime vraiment : résoudre des problèmes concrets avec un impact direct et mesurable. En mission, je suis 100% concentré sur votre problème — pas sur une politique interne, une promotion ou une fiche de poste. L&#x27;autre dimension, c&#x27;est la diversité des contextes : passer de l&#x27;aéronautique à l&#x27;énergie puis à la sécurité privée m&#x27;a apporté une richesse d&#x27;expériences que le salariat dans une seule entreprise n&#x27;aurait pas permis. C&#x27;est un choix positif et assumé — pas une insatisfaction vis-à-vis du salariat.",
+    textByContext: {}
+  },
+  hard_6: {
+    label: "Où en sont vos démarches ?",
+    cat: "hard",
+    finish: null,
+    text: "Je suis en démarche active en ce moment, avec plusieurs discussions en cours. Je cherche la bonne mission plutôt que la première venue — ce qui veut dire que je prends le temps de qualifier le contexte et les enjeux avant de m&#x27;engager. Si notre échange me confirme que votre besoin correspond à mon profil et ma méthode, je suis disponible pour avancer rapidement.",
+    textByContext: {}
+  },
+  soft_1: {
+    label: "3 adjectifs qui vous définissent ?",
+    cat: "soft",
+    finish: null,
+    text: "Je me décrirais comme structuré, analytique et pédagogue. Structuré parce que j&#x27;aime clarifier les besoins, formaliser les règles de gestion et sécuriser les projets avant de les lancer — pour moi, l&#x27;ambiguïté en amont génère toujours des problèmes en aval. Analytique parce que je prends le temps de comprendre les problématiques métier et d&#x27;identifier les causes racines avant de proposer une solution. Et pédagogue parce que je fais souvent l&#x27;interface entre des interlocuteurs métier et technique — j&#x27;aime rendre les sujets complexes accessibles à tous, qu&#x27;il s&#x27;agisse d&#x27;expliquer un modèle de données à un DAF ou une règle de gestion à un développeur.",
+    textByContext: {}
+  },
+  soft_2: {
+    label: "Changement de specs en cours de mission ?",
+    cat: "soft",
+    finish: null,
+    text: "Pour moi, le changement de specs en cours de mission n&#x27;est pas un problème en soi — c&#x27;est souvent le signe que le métier comprend progressivement ce dont il a réellement besoin, et c&#x27;est naturel dans une démarche itérative. Ma réaction est toujours structurée en trois temps. D&#x27;abord, je comprends l&#x27;origine du changement et son impact réel : est-ce un besoin nouveau, une incompréhension initiale ou un changement de contexte business ? Ensuite, j&#x27;évalue les conséquences sur les développements existants, les KPI, les règles de gestion et la planification. Enfin, je formalise les évolutions et m&#x27;assure que toutes les parties prenantes sont alignées avant d&#x27;avancer. L&#x27;objectif est d&#x27;intégrer le changement de manière maîtrisée, sans créer d&#x27;ambiguïté pour les équipes.",
+    textByContext: {}
+  },
+  soft_3: {
+    label: "Expliquer la technique au métier ?",
+    cat: "soft",
+    finish: null,
+    text: "Je pars toujours du besoin métier plutôt que de la technique. Mon principe est simple : l&#x27;interlocuteur doit comprendre la valeur et l&#x27;utilité, pas le fonctionnement interne. Par exemple, si je dois expliquer ce qu&#x27;est un Data Warehouse à un DAF, je ne vais pas parler d&#x27;architecture ou de modélisation dimensionnelle. Je vais lui dire : c&#x27;est l&#x27;endroit où l&#x27;on centralise les données de vos différents systèmes pour avoir une version fiable et commune de vos indicateurs de pilotage. Une seule version de la vérité, accessible à tous au même moment. C&#x27;est cette capacité à faire le pont entre le monde technique et le monde métier qui est au cœur de ma valeur ajoutée.",
+    textByContext: {}
+  },
+  soft_4: {
+    label: "Tensions avec l'équipe IT ?",
+    cat: "soft",
+    finish: null,
+    text: "Ma première réaction est toujours de comprendre les raisons de la résistance. Dans mon expérience, ce n&#x27;est presque jamais une opposition au changement lui-même — c&#x27;est une inquiétude légitime liée aux impacts sur la charge de travail, aux risques techniques ou aux priorités déjà planifiées. Je privilégie le dialogue et les faits : je présente les bénéfices attendus, les impacts réels sur leurs systèmes et je cherche un compromis acceptable pour tout le monde. Ma certification ITIL 4 m&#x27;aide beaucoup dans ces situations — elle me donne le vocabulaire et la compréhension des contraintes IT, ce qui crée une relation de confiance plus rapide avec les équipes techniques. Mon rôle n&#x27;est pas d&#x27;imposer une solution, mais de créer l&#x27;alignement.",
+    textByContext: {}
+  },
+  soft_5: {
+    label: "Autonome ou besoin d'un cadre ?",
+    cat: "soft",
+    finish: null,
+    text: "Je suis autonome, mais je pense qu&#x27;un cadre clair sur les objectifs et les priorités est toujours nécessaire au départ — c&#x27;est la condition pour que l&#x27;autonomie soit productive. Une fois les attentes définies, j&#x27;organise mon travail de manière indépendante et je prends mes décisions sans avoir besoin de validation à chaque étape. Chez ATR par exemple, j&#x27;animais les ateliers métier, je formalisais les règles de gestion et je préparais les supports de recette sans supervision quotidienne — tout en assurant un reporting régulier sur l&#x27;avancement pour maintenir la visibilité des parties prenantes. C&#x27;est ce que j&#x27;appelle une autonomie encadrée : liberté dans l&#x27;exécution, transparence sur l&#x27;avancement.",
+    textByContext: {}
+  },
+  soft_6: {
+    label: "Situation difficile bien gérée ?",
+    cat: "soft",
+    finish: null,
+    text: "Chez ATR, j&#x27;ai travaillé sur un projet où plusieurs directions utilisaient des KPI similaires mais avec des définitions différentes selon les équipes. Concrètement, cela créait des incompréhensions lors des réunions de pilotage et rendait les comparaisons de performance impossibles — chaque direction arrivait avec ses propres chiffres. J&#x27;ai organisé des ateliers avec les différentes parties prenantes pour comprendre les usages de chaque indicateur et identifier les sources d&#x27;écart. Ensuite, j&#x27;ai proposé une harmonisation des règles de gestion et une définition commune et documentée des KPI. Le résultat a été une vision consolidée de la performance, acceptée par toutes les directions, et une confiance retrouvée dans les reportings. C&#x27;est un exemple typique où la valeur n&#x27;est pas dans le code, mais dans la capacité à aligner les parties prenantes.",
+    textByContext: {}
+  },
+
+  // ── ENGLISH ANSWERS ──────────────────────────────────────────────────────────
+  en_pres_court: {
+    label: "Elevator pitch — 30 sec (EN)",
+    cat: "en",
+    finish: null,
+    text: "Hi, I&#x27;m Bleze TCHALLA, a freelance Business Data Analyst with 8 years of experience. I turn time-consuming reporting processes into autonomous Power BI dashboards — so your teams can make decisions in minutes, not days. Before specialising in Power BI and SQL, I spent 4 years in management accounting on the business side. That dual profile allows me to understand both what Finance and Ops teams need, and how to build it technically. I&#x27;m ITIL 4 certified, and I have references at ATR, TotalEnergies and GK Kevlar.",
+    textByContext: {}
+  },
+  en_pres_moyen: {
+    label: "Presentation — 2-3 min (EN)",
+    cat: "en",
+    finish: null,
+    text: "I&#x27;m Bleze TCHALLA, a freelance Business Data Analyst based in Toulouse, with 8 years of experience. My core expertise is transforming reporting processes that consume hours every week into autonomous Power BI dashboards, fed by SQL, that deliver the right information to the right people at the right time. What sets me apart is a rare dual profile. Before working in data, I spent 4 years on the business side — in management accounting and performance steering in a multi-entity group. That experience taught me what Finance, Operations and commercial teams actually need from a dashboard. Since 2021, I&#x27;ve been implementing these solutions in Power BI and SQL for major accounts. At ATR, data is available at 8am every morning — with zero manual action. At TotalEnergies, I reduced the production time of a monthly report from 2h30 to 15 minutes. At GK Kevlar, I secured the monthly closing process and gave management real-time visibility on performance. I&#x27;m also ITIL 4 certified, which allows me to integrate seamlessly into structured IT environments — I understand service management, change risk and continuity. What reporting processes take the most time for your teams right now?",
+    textByContext: {}
+  },
+  en_pres_long: {
+    label: "Presentation — 5-7 min (EN)",
+    cat: "en",
+    finish: null,
+    text: "Let me walk you through my background in three parts. First, my foundation. I started with 4 years on the business side, in management accounting and performance steering in a multi-entity group. I was the user of reporting tools before being the one who builds them — I lived through month-end closings, consolidations, urgent KPI requests. That experience taught me what Finance and Ops teams genuinely need from a dashboard, without them having to explain it to me. Second, since 2021 I&#x27;ve been a freelance consultant implementing those solutions on major accounts. Three main references: ATR in aerospace, where managers find fresh data at 8am every morning with zero manual action; TotalEnergies in energy, where I reduced a monthly report from 2h30 to 15 minutes — a 90% reduction; and GK Kevlar in private security, where I secured the monthly closing process and gave management real-time visibility on performance. Third, my methodology. I always start from the business need: who uses the dashboard, what decision does it need to support, at what frequency. I formalise the business rules before writing any code. I deliver in short iterations with user validation at each step. And I train end users so the solution lives after I leave. I&#x27;m also ITIL 4 certified, which places me at the intersection of business needs and IT constraints — I understand service management, change risk and continuity. In summary: a rare profile combining business Finance experience, BI technical skills and IT environment understanding — which translates into dashboards that match exactly what teams need, delivered without surprises. Would you like me to go deeper on any of these points?",
+    textByContext: {}
+  },
+  en_background: {
+    label: "Tell me about your background",
+    cat: "en",
+    finish: null,
+    text: "My career breaks down into two complementary phases. The first: 4 years on the business side, in management accounting and performance steering in a multi-entity group. I was the user of reporting tools — I lived through month-end closings, consolidations, urgent KPI requests. That experience taught me what Finance and Ops teams genuinely need from a dashboard. The second phase: since 2021, I&#x27;ve been a freelance consultant implementing those solutions in Power BI and SQL for major accounts — ATR, TotalEnergies and GK Kevlar. This background gives me a concrete advantage: when I build a solution, I don&#x27;t need three back-and-forths to understand the requirement. I&#x27;ve lived it from the other side.",
+    textByContext: {}
+  },
+  en_references: {
+    label: "Your concrete references?",
+    cat: "en",
+    finish: null,
+    text: "I have three main references. At ATR in aerospace, I set up an automated Power BI and SQL pipeline that feeds the dashboards every night — managers find their data ready at 8am every morning, with zero manual action. At TotalEnergies in energy, I automated the production of a monthly report that previously required 2h30 of manual consolidation — it now runs in 15 minutes, with zero re-keying and zero error. And at GK Kevlar in private security, I modelled the data and defined the business rules to secure the monthly closing process and give management real-time visibility on performance.",
+    textByContext: {}
+  },
+  en_differentiation: {
+    label: "What makes you different?",
+    cat: "en",
+    finish: null,
+    text: "Three things that are rarely combined. First, the dual profile: before working in data, I was on the business side — 4 years in management accounting. That changes everything: I understand what a CFO or a Controller needs without them having to explain it to me. Second, proven results on major accounts: ATR with data available at 8am daily, TotalEnergies with 2h30 reduced to 15 minutes, GK Kevlar with secured month-end closings. And third, ITIL 4 certification — rare for a pure BI profile — which allows me to integrate without friction in structured IT environments. It&#x27;s that combination of business background, technical skill and IT understanding that sets me apart.",
+    textByContext: {}
+  },
+  en_methodology: {
+    label: "Your working methodology?",
+    cat: "en",
+    finish: null,
+    text: "My approach is built on four principles. First, I always start from the business need — who uses the dashboard, what decision does it need to support, how often? A tool nobody uses is worthless, even if it&#x27;s technically perfect. Second, I formalise the business rules before writing any code. A poorly defined KPI upfront means a useless dashboard at delivery. Third, I deliver in short iterations with user validation at each step — no big surprises after three months of development. And fourth, I train the end users. The goal is their autonomy — the solution must live after I leave, not depend on my continued presence.",
+    textByContext: {}
+  },
+  en_itil: {
+    label: "What is ITIL 4?",
+    cat: "en",
+    finish: null,
+    text: "ITIL 4 is a framework for IT service management. It covers the service value chain, change management, continual improvement and service continuity. For a freelance Business Data Analyst, this certification brings real differentiating value: I understand IT constraints and processes well beyond just the data stack. When I arrive at a client, I know how IT teams operate, how to approach a deployment while minimising risk, and how to integrate into existing processes without creating friction. It&#x27;s rare for a pure BI profile, and it&#x27;s particularly valuable in structured environments like banking, insurance or large IT organisations.",
+    textByContext: {}
+  },
+  en_weaknesses: {
+    label: "Your weaknesses?",
+    cat: "en",
+    finish: null,
+    text: "I&#x27;m straightforward about two clear limitations. First, Machine Learning and Data Science are outside my area — if that&#x27;s a core requirement, I&#x27;m not the right profile. Second, Python at an advanced level — I have basic knowledge but not a development-level proficiency. These aren&#x27;t excuses, they&#x27;re clarity — I&#x27;d rather set the boundaries upfront than create expectations I can&#x27;t meet. What I do very well is everything related to BI, reporting, data modelling and performance management.",
+    textByContext: {}
+  },
+  en_strengths: {
+    label: "Your strengths / 3 adjectives?",
+    cat: "en",
+    finish: null,
+    text: "I would describe myself as structured, analytical and pedagogical. Structured because I like to clarify requirements, formalise business rules and secure projects before launching them — ambiguity upfront always creates problems downstream. Analytical because I take the time to understand the business problem and identify the root causes before proposing a solution. And pedagogical because I often act as the bridge between business and technical stakeholders — I enjoy making complex subjects accessible to everyone, whether that&#x27;s explaining a data model to a CFO or a business rule to a developer.",
+    textByContext: {}
+  },
+  en_change: {
+    label: "How do you handle changing specs?",
+    cat: "en",
+    finish: null,
+    text: "For me, a change of specs mid-mission isn&#x27;t a problem in itself — it often means the business is progressively discovering what it actually needs, which is natural in an iterative approach. My reaction is always structured in three steps. First, I understand the origin of the change and its real impact: is this a new requirement, an initial misunderstanding or a shift in business context? Then I assess the consequences on existing developments, KPIs, business rules and planning. Finally, I formalise the changes and make sure all stakeholders are aligned before moving forward. The goal is to integrate the change in a controlled way, without creating ambiguity for the teams.",
+    textByContext: {}
+  },
+  en_explain_tech: {
+    label: "Explaining technical concepts to business?",
+    cat: "en",
+    finish: null,
+    text: "I always start from the business need rather than the technical solution. My principle is simple: the person I&#x27;m talking to needs to understand the value and the purpose, not the internal mechanics. For example, if I need to explain what a Data Warehouse is to a CFO, I won&#x27;t talk about architecture or dimensional modelling. I&#x27;ll say: it&#x27;s the place where we centralise data from your different systems so that everyone has one reliable, shared version of the performance indicators. One version of the truth, accessible to everyone at the same time. That ability to bridge the technical and business worlds is at the heart of my added value.",
+    textByContext: {}
+  },
+  en_it_tensions: {
+    label: "Handling tensions with IT teams?",
+    cat: "en",
+    finish: null,
+    text: "My first reaction is always to understand the reasons behind the resistance. In my experience, it&#x27;s almost never an opposition to change itself — it&#x27;s a legitimate concern about workload impact, technical risks or already-planned priorities. I favour dialogue and facts: I present the expected benefits, the real impact on their systems and look for a compromise that works for everyone. My ITIL 4 certification helps a lot in these situations — it gives me the vocabulary and understanding of IT constraints, which builds trust with technical teams faster. My role isn&#x27;t to impose a solution, but to create alignment.",
+    textByContext: {}
+  },
+  en_autonomy: {
+    label: "Autonomous or need a framework?",
+    cat: "en",
+    finish: null,
+    text: "I&#x27;m autonomous, but I believe a clear framework on objectives and priorities is always necessary at the start — that&#x27;s what makes autonomy productive. Once expectations are defined, I organise my work independently and make decisions without needing validation at every step. At ATR for example, I ran business workshops, formalised business rules and prepared user acceptance testing documents without daily supervision — while providing regular progress updates to maintain stakeholder visibility. I call it structured autonomy: freedom in execution, transparency on progress.",
+    textByContext: {}
+  },
+  en_difficult: {
+    label: "A difficult situation you handled well?",
+    cat: "en",
+    finish: null,
+    text: "At ATR, I worked on a project where several departments were using similar KPIs but with different definitions across teams. In practice, this created confusion in steering meetings and made performance comparisons impossible — each department arrived with its own numbers. I organised workshops with the different stakeholders to understand how each indicator was being used and identify the sources of discrepancy. Then I proposed a harmonisation of the business rules and a common, documented definition of the KPIs. The result was a consolidated view of performance accepted by all departments, and restored confidence in the reporting. It&#x27;s a good example where the value isn&#x27;t in the code, but in the ability to align stakeholders.",
+    textByContext: {}
+  },
+  en_anecdote: {
+    label: "A memorable anecdote?",
+    cat: "en",
+    finish: null,
+    text: "One story that really shaped how I work happened during a mission at ATR. I had developed and tested a solution thoroughly on my local machine — everything worked perfectly. But when I arrived at the presentation meeting, nothing worked. The production environment ran on the internal network, which I hadn&#x27;t tested on. I had to postpone the meeting and personally apologise to the project sponsor. It was genuinely uncomfortable, but it was an important lesson: technical validation has to cover every real-world condition, not just the one you&#x27;re working in. Since then, I always include a full environment check in my delivery checklist. It&#x27;s one of those mistakes you only make once.",
+    textByContext: {}
+  },
+  en_hobby: {
+    label: "Hobbies / outside work?",
+    cat: "en",
+    finish: null,
+    text: "Outside of work, I&#x27;m a big football fan. I play with friends most weekends — I really enjoy those games, and I&#x27;ll admit I like being on the winning side. Which probably says something about how I approach missions too: I like delivering results. As a supporter, I follow PSG closely — good seasons and difficult ones included. It&#x27;s a passion I&#x27;ve had for a long time.",
+    textByContext: {}
+  },
+  en_freelance: {
+    label: "Why freelancing?",
+    cat: "en",
+    finish: null,
+    text: "I chose freelancing for the direct impact. On a mission, I&#x27;m 100% focused on your problem — not on internal politics, a promotion or a job description. I measure my value by what I actually deliver. The other reason is the diversity of contexts: moving from aerospace to energy to private security has given me a richness of experience that staying in one company wouldn&#x27;t have allowed. Each new environment consolidates methods that work across very different settings. It&#x27;s a positive, deliberate choice — not a dissatisfaction with permanent employment.",
+    textByContext: {}
+  },
+  en_rate: {
+    label: "Daily rate / availability?",
+    cat: "en",
+    finish: "→ What is the budget planned for this type of profile?",
+    text: "My daily rate varies depending on the mission parameters: duration, technical complexity, mode of engagement and conditions. For a standard assignment, I&#x27;m around __TJM__. I prefer we discuss the actual requirements first before fixing a final figure — that way we can find a framework that works for both sides. And from your side, what&#x27;s the budget planned for this type of profile?",
+    textByContext: {}
+  },
 };
 
+// ── CONTEXT ──────────────────────────────────────────────────────────────────
+const SECTOR_LABELS = {
+  S1:"Industrie/Aéro", S2:"Énergie", S3:"Sécurité/Services",
+  S4:"Banque/Finance", S5:"Tech/IT", S6:"Autre"
+};
+const ROLE_MAP = {
+  DAF:    /daf|cfo|financ|trésor|tresor|administratif|compta/i,
+  DSI:    /dsi|ddi|cio|cto|it |tech|système|systeme|informatique/i,
+  DRH:    /drh|rh|human|talent|recruteur|acquisition|headhunter|chasseur|consultant en recrut|chargé de recrut/i,
+  DG:     /dg |ceo|directeur général|directeur general|dg$/i,
+  OPS:    /ops|opération|operation|directeur des op|coo/i,
+};
 
-function renderAnswer(key, a) {
-  const catColors={pres:'#2563eb',exp:'#0d9488',tech:'#7c3aed',hard:'#d97706',custom:'#16a34a'};
-  const catBg={pres:'#dbeafe',exp:'#ccfbf1',tech:'#ede9fe',hard:'#fef3c7',custom:'#dcfce7'};
-  document.getElementById('tp-q-label').textContent = a.label;
-  const b = document.getElementById('tp-badge');
-  b.textContent = a.badge; b.style.background = catBg[a.cat]||'#f1f5f9'; b.style.color = catColors[a.cat]||'#64748b';
-  const panel = document.getElementById('tp-panel');
-  panel.className = 'tp-panel active-' + a.cat;
-  let html = a.points.map(p => '<div class="tp-point"><span class="tp-icon">'+p.i+'</span><span class="tp-text">'+p.t+'</span></div>').join('');
-  if (a.finish) html += '<div class="tp-finish">'+a.finish+'</div>';
-  panel.innerHTML = html;
+function getCtx() {
+  const sector = document.getElementById("sess-sector")?.value || "";
+  const roleRaw = document.getElementById("sess-role")?.value || "";
+  let roleKey = "";
+  for (const [k, rx] of Object.entries(ROLE_MAP)) {
+    if (rx.test(roleRaw)) { roleKey = k; break; }
+  }
+  return {sector, roleKey, roleRaw};
+}
+
+function getAnswerText(key) {
+  const ans = ANSWERS[key];
+  if (!ans) return null;
+  const {sector, roleKey} = getCtx();
+  const ctx = ans.textByContext || {};
+  if (roleKey && ctx[roleKey]) return {text: ctx[roleKey], adapted: roleKey};
+  if (sector && ctx[sector])  return {text: ctx[sector],  adapted: SECTOR_LABELS[sector] || sector};
+  return {text: ans.text, adapted: ""};
+}
+
+function updateCtxBadge() {
+  const {sector, roleKey, roleRaw} = getCtx();
+  const badge = document.getElementById("ctx-badge");
+  if (!sector && !roleRaw) {
+    badge.textContent = "aucun contexte";
+    badge.style.color = "var(--text3)";
+  } else {
+    const parts = [];
+    if (sector) parts.push(SECTOR_LABELS[sector] || sector);
+    if (roleRaw) parts.push(roleRaw);
+    badge.textContent = parts.join(" · ");
+    badge.style.color = "var(--teal)";
+  }
+  // Re-render current answer with new context
+  if (currentQKey) {
+    const btn = document.querySelector(".qbtn.active-q");
+    if (btn) renderCurrent(currentQKey);
+  }
+}
+
+// ── RENDER ───────────────────────────────────────────────────────────────────
+const CAT_COLORS = {pres:"#2563eb",exp:"#0d9488",tech:"#7c3aed",hard:"#d97706",soft:"#16a34a",custom:"#16a34a",en:"#1e40af"};
+const CAT_BG = {pres:"#dbeafe",exp:"#ccfbf1",tech:"#ede9fe",hard:"#fef3c7",soft:"#dcfce7",custom:"#dcfce7",en:"#dbeafe"};
+
+function renderCurrent(key) {
+  const ans = ANSWERS[key];
+  if (!ans) return;
+  const result = getAnswerText(key);
+  if (!result) return;
+
+  document.getElementById("tp-q-label").textContent = ans.label;
+  const badge = document.getElementById("tp-badge");
+  badge.textContent = ans.label;
+  badge.style.background = CAT_BG[ans.cat] || "#f1f5f9";
+  badge.style.color = CAT_COLORS[ans.cat] || "#64748b";
+
+  const panel = document.getElementById("tp-panel");
+  panel.className = "tp-panel active-" + ans.cat;
+
+  // Replace placeholders
+  let text = result.text;
+  text = text.replace("__TJM__", iData.config?.tjm || "à définir");
+  text = text.replace("__DISPO__", iData.config?.dispo || "à préciser");
+  text = text.replace("__ZONE__", iData.config?.zone || "Toulouse + remote France");
+  panel.innerHTML = text;
+
+  // Context indicator
+  const ctx = document.getElementById("tp-ctx");
+  ctx.textContent = result.adapted ? "Adapté pour : " + result.adapted : "";
+
+  // Finish
+  const finishWrap = document.getElementById("tp-finish-wrap");
+  finishWrap.innerHTML = ans.finish ? `<div class="tp-finish">${ans.finish}</div>` : "";
 }
 
 function selectQ(btn, key) {
-  try {
-    document.querySelectorAll('.qbtn').forEach(b => b.classList.remove('active-q'));
-    btn.classList.add('active-q');
-    currentQKey = key;
-    if (!ANSWERS[key]) { alert('Cle inconnue: ' + key); return; }
-    const a = JSON.parse(JSON.stringify(ANSWERS[key]));
-    if (key==='hard_1') a.points[2].t = 'Mon TJM : <em>'+CFG_TJM()+'</em>';
-    if (key==='hard_2') { a.points[0].t='Disponibilite : <em>'+CFG_DISPO()+'</em>'; a.points[1].t='Zone : <em>'+CFG_ZONE()+'</em>'; }
-    renderAnswer(key, a);
-  } catch(e) { alert('Erreur selectQ: ' + e.message + ' | stack: ' + e.stack.substring(0,200)); }
+  document.querySelectorAll(".qbtn").forEach(b => b.classList.remove("active-q"));
+  btn.classList.add("active-q");
+  currentQKey = key;
+  renderCurrent(key);
 }
 
 function generateCustom() {
-  const q = document.getElementById('custom-q').value.trim();
+  const q = document.getElementById("custom-q").value.trim();
   if (!q) return;
-  currentQKey = null;
-  document.querySelectorAll('.qbtn').forEach(b => b.classList.remove('active-q'));
+  document.querySelectorAll(".qbtn").forEach(b => b.classList.remove("active-q"));
   const qLow = q.toLowerCase();
-  let key = 'pres_1';
-  if (qLow.match(/tjm|tarif|prix|cout|budget/))           key='hard_1';
-  else if (qLow.match(/dispo|quand|disponib/))            key='hard_2';
-  else if (qLow.match(/faible|limit|manque|amelior/))     key='hard_3';
-  else if (qLow.match(/secteur|domai/))                   key='hard_4';
-  else if (qLow.match(/freelance|salar/))                 key='hard_5';
-  else if (qLow.match(/power.?bi|dashboard|tableau/))     key='tech_1';
-  else if (qLow.match(/sql|base.?donn/))                  key='tech_2';
-  else if (qLow.match(/itil|service.?it/))                key='tech_3';
-  else if (qLow.match(/ml|machine|data.?sci|python/))     key='tech_4';
-  else if (qLow.match(/methode|travail|approch|process/)) key='tech_5';
-  else if (qLow.match(/outil|stack|techno/))              key='tech_6';
-  else if (qLow.match(/different|distingue|unique/))      key='pres_4';
-  else if (qLow.match(/parcours|carriere|traject/))       key='pres_2';
-  else if (qLow.match(/reference|preuve|chiffre/))        key='exp_1';
-  else if (qLow.match(/atr/))                             key='exp_2';
-  else if (qLow.match(/total|energie/))                   key='exp_3';
-  else if (qLow.match(/kevlar|securite/))                 key='exp_4';
-  else if (qLow.match(/finance|controle|gestion/))        key='exp_5';
-  const a = JSON.parse(JSON.stringify(ANSWERS[key]));
-  a.label = '"' + q.substring(0,45) + (q.length>45?'...' :'"');
-  a.cat='custom'; a.badge='Question libre';
-  if (key==='hard_1') a.points[2].t='Mon TJM : <em>'+CFG_TJM()+'</em>';
-  if (key==='hard_2') { a.points[0].t='Disponibilite : <em>'+CFG_DISPO()+'</em>'; a.points[1].t='Zone : <em>'+CFG_ZONE()+'</em>'; }
-  renderAnswer('custom', a);
+  let key = "pres_1";
+  if (qLow.match(/tjm|tarif|prix|cout|budget/))               key = "hard_1";
+  else if (qLow.match(/dispo|quand|disponib/))                key = "hard_2";
+  else if (qLow.match(/faible|limit|manque|amelior/))         key = "hard_3";
+  else if (qLow.match(/secteur|domai/))                       key = "hard_4";
+  else if (qLow.match(/freelance|salar/))                     key = "hard_5";
+  else if (qLow.match(/démarche|situation actuelle|cherch/))  key = "hard_6";
+  else if (qLow.match(/power.?bi|dashboard|tableau|report/))  key = "tech_1";
+  else if (qLow.match(/sql|base.?donn/))                      key = "tech_2";
+  else if (qLow.match(/itil|service.?it/))                    key = "tech_3";
+  else if (qLow.match(/ml|machine|data.?sci|python/))         key = "tech_4";
+  else if (qLow.match(/méthode|methode|travail|approch/))     key = "tech_5";
+  else if (qLow.match(/outil|stack|techno/))                  key = "tech_6";
+  else if (qLow.match(/différenci|distingue|unique|valeur ajoutée/)) key = "pres_4";
+  else if (qLow.match(/parcours|carriere|traject/))           key = "pres_2";
+  else if (qLow.match(/référence|preuve|chiffre|résultat/))   key = "exp_1";
+  else if (qLow.match(/atr/))                                 key = "exp_2";
+  else if (qLow.match(/total|energie/))                       key = "exp_3";
+  else if (qLow.match(/kevlar|sécurité/))                     key = "exp_4";
+  else if (qLow.match(/finance|controle|gestion|compta/))     key = "exp_5";
+  else if (qLow.match(/adjectif|vous définir|personnalité/))  key = "soft_1";
+  else if (qLow.match(/spec|changement|evolut|adaptat/))      key = "soft_2";
+  else if (qLow.match(/technique.*métier|métier.*technique|expliqu|vulgar/)) key = "soft_3";
+  else if (qLow.match(/tension|conflict|it|resist/))          key = "soft_4";
+  else if (qLow.match(/autonom|encadr|supervis/))             key = "soft_5";
+  else if (qLow.match(/diffic|complex|challenge|obstacle/))   key = "soft_6";
+  currentQKey = key;
+  // Show with custom label
+  const ans = ANSWERS[key];
+  document.getElementById("tp-q-label").textContent = '"' + q.substring(0,50) + (q.length>50?"...":'"');
+  const badge = document.getElementById("tp-badge");
+  badge.textContent = "Question libre";
+  badge.style.background = CAT_BG.custom;
+  badge.style.color = CAT_COLORS.custom;
+  const panel = document.getElementById("tp-panel");
+  panel.className = "tp-panel active-custom";
+  const result = getAnswerText(key);
+  let text = result ? result.text : ans.text;
+  text = text.replace("__TJM__", iData.config?.tjm || "à définir");
+  text = text.replace("__DISPO__", iData.config?.dispo || "à préciser");
+  text = text.replace("__ZONE__", iData.config?.zone || "Toulouse + remote France");
+  panel.innerHTML = text;
+  const ctx = document.getElementById("tp-ctx");
+  ctx.textContent = result?.adapted ? "Adapté pour : " + result.adapted : "";
+  const finishWrap = document.getElementById("tp-finish-wrap");
+  finishWrap.innerHTML = ans?.finish ? `<div class="tp-finish">${ans.finish}</div>` : "";
 }
 
-let timerInterval = null, timerSeconds = 0;
+function generateCustomEN() {
+  const q = document.getElementById("custom-q-en").value.trim();
+  if (!q) return;
+  document.querySelectorAll(".qbtn").forEach(b => b.classList.remove("active-q"));
+  const qLow = q.toLowerCase();
+  let key = "en_background";
+  if      (qLow.match(/rate|tjm|fee|cost|budget|salary|day rate/))              key = "en_rate";
+  else if (qLow.match(/avail|when|start/))                                       key = "en_rate";
+  else if (qLow.match(/weak|limit|improv|gap|not good/))                         key = "en_weaknesses";
+  else if (qLow.match(/strength|adjective|describ|qualify|define you/))          key = "en_strengths";
+  else if (qLow.match(/different|stand out|unique|added value|set you apart/))   key = "en_differentiation";
+  else if (qLow.match(/freelanc|self.?employ|independ|why not permanent/))       key = "en_freelance";
+  else if (qLow.match(/method|approach|work|deliver|process/))                   key = "en_methodology";
+  else if (qLow.match(/power.?bi|dashboard|report|tableau/))                     key = "en_methodology";
+  else if (qLow.match(/sql|database|query/))                                     key = "en_methodology";
+  else if (qLow.match(/itil|it service|itsm/))                                   key = "en_itil";
+  else if (qLow.match(/reference|result|proof|atr|total|kevlar|example/))        key = "en_references";
+  else if (qLow.match(/background|experience|career|journey|story|tell me about yourself|introduce/)) key = "en_background";
+  else if (qLow.match(/spec|change|adapt|pivot|evolv/))                          key = "en_change";
+  else if (qLow.match(/tech.*business|business.*tech|explain|simplif|non.?tech/)) key = "en_explain_tech";
+  else if (qLow.match(/tension|conflict|it team|resist|pushback/))               key = "en_it_tensions";
+  else if (qLow.match(/autonom|independ|framework|supervis|manag/))              key = "en_autonomy";
+  else if (qLow.match(/difficult|challenge|hard|obstacle|fail|mistake|learn/))   key = "en_difficult";
+  else if (qLow.match(/anecdote|story|memorable|incident|moment/))               key = "en_anecdote";
+  else if (qLow.match(/hobby|hobbi|outside|passion|interest|weekend|personal|football|sport/)) key = "en_hobby";
 
+  currentQKey = key;
+  const ans = ANSWERS[key];
+  document.getElementById("tp-q-label").textContent = '"' + q.substring(0,50) + (q.length>50?"...":'"');
+  const badge = document.getElementById("tp-badge");
+  badge.textContent = "🇬🇧 English question";
+  badge.style.background = "#dbeafe";
+  badge.style.color = "#1e40af";
+  const panel = document.getElementById("tp-panel");
+  panel.className = "tp-panel active-en";
+  let text = ans.text;
+  text = text.replace("__TJM__", iData.config?.tjm || "to be defined");
+  text = text.replace("__DISPO__", iData.config?.dispo || "to be confirmed");
+  text = text.replace("__ZONE__", iData.config?.zone || "Toulouse + remote France");
+  panel.innerHTML = text;
+  document.getElementById("tp-ctx").textContent = "🇬🇧 English answer";
+  document.getElementById("tp-finish-wrap").innerHTML = ans?.finish ? `<div class="tp-finish">${ans.finish}</div>` : "";
+}
+
+// ── TIMER ────────────────────────────────────────────────────────────────────
+let timerInterval = null, timerSec = 0;
 function toggleTimer() {
   if (timerInterval) {
-    stopTimer();
-    document.getElementById('timer-btn').textContent = '▶ Reprendre';
+    clearInterval(timerInterval); timerInterval = null;
+    document.getElementById("timer-btn").textContent = "▶ Reprendre";
   } else {
     timerInterval = setInterval(() => {
-      timerSeconds++;
-      const m = String(Math.floor(timerSeconds/60)).padStart(2,'0');
-      const s = String(timerSeconds%60).padStart(2,'0');
-      document.getElementById('timer-display').textContent = m + ':' + s;
+      timerSec++;
+      const m = String(Math.floor(timerSec/60)).padStart(2,"0");
+      const s = String(timerSec%60).padStart(2,"0");
+      document.getElementById("timer-display").textContent = m + ":" + s;
     }, 1000);
-    document.getElementById('timer-btn').textContent = '⏸ Pause';
+    document.getElementById("timer-btn").textContent = "⏸ Pause";
   }
 }
+function stopTimer() { clearInterval(timerInterval); timerInterval = null; }
 
-function stopTimer() {
-  clearInterval(timerInterval);
-  timerInterval = null;
-}
-
-// ═══════════════════════════════════════════
-//  FOCUS MODE
-// ═══════════════════════════════════════════
+// ── FOCUS MODE ───────────────────────────────────────────────────────────────
 let focusMode = false;
 function toggleFocus() {
   focusMode = !focusMode;
-  const app = document.getElementById('app');
-  const btn = document.getElementById('focus-btn');
-  if (focusMode) {
-    app.classList.add('focus-mode');
-    btn.textContent = '✕ Quitter focus';
-    btn.style.background = 'rgba(220,38,38,.2)';
-    btn.style.color = '#fca5a5';
-  } else {
-    app.classList.remove('focus-mode');
-    btn.textContent = '⚡ Mode focus';
-    btn.style.background = '';
-    btn.style.color = '';
-  }
+  document.getElementById("focus-btn").textContent = focusMode ? "✕ Quitter focus" : "⚡ Mode focus (F2)";
+  document.getElementById("focus-btn").style.background = focusMode ? "rgba(220,38,38,.2)" : "";
+  document.getElementById("focus-btn").style.color = focusMode ? "#fca5a5" : "";
+  // In focus mode, hide sidebar cards, show only teleprompter full width
+  const grid = document.querySelector(".grid-interview");
+  if (grid) grid.style.gridTemplateColumns = focusMode ? "300px 1fr" : "";
+  const col3 = document.querySelector(".grid-interview > div:last-child");
+  if (col3) col3.style.display = focusMode ? "none" : "";
 }
 
-// ═══════════════════════════════════════════
-//  TABS
-// ═══════════════════════════════════════════
+// ── TABS ─────────────────────────────────────────────────────────────────────
 function showTab(tab, btn) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  ['entretien','profil','historique'].forEach(t => {
-    document.getElementById('section-' + t).style.display = t === tab ? '' : 'none';
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  ["entretien","profil","historique"].forEach(t => {
+    document.getElementById("section-" + t).style.display = t === tab ? "" : "none";
   });
-  if (tab === 'historique') renderHistory();
+  if (tab === "historique") renderHistory();
 }
 
-// ═══════════════════════════════════════════
-//  CONFIG
-// ═══════════════════════════════════════════
+// ── CONFIG ───────────────────────────────────────────────────────────────────
 function loadConfig() {
-  const cfg = interviewData.config || {};
-  document.getElementById('cfg-tjm').value  = cfg.tjm  || '';
-  document.getElementById('cfg-dispo').value = cfg.dispo || '';
-  document.getElementById('cfg-zone').value  = cfg.zone  || '';
-  document.getElementById('cfg-notes').value = cfg.notes || '';
-  document.getElementById('snap-tjm').textContent  = cfg.tjm  || '—';
-  document.getElementById('snap-dispo').textContent = cfg.dispo || '—';
+  const cfg = iData.config || {};
+  document.getElementById("cfg-tjm").value  = cfg.tjm  || "";
+  document.getElementById("cfg-dispo").value = cfg.dispo || "";
+  document.getElementById("cfg-zone").value  = cfg.zone  || "";
+  document.getElementById("cfg-notes").value = cfg.notes || "";
+  document.getElementById("snap-tjm").textContent  = cfg.tjm  || "—";
+  document.getElementById("snap-dispo").textContent = cfg.dispo || "—";
+  document.getElementById("snap-zone").textContent  = cfg.zone  || "—";
 }
-
 async function saveConfig() {
-  interviewData.config = {
-    tjm:   document.getElementById('cfg-tjm').value.trim(),
-    dispo: document.getElementById('cfg-dispo').value.trim(),
-    zone:  document.getElementById('cfg-zone').value.trim(),
-    notes: document.getElementById('cfg-notes').value.trim(),
+  iData.config = {
+    tjm:   document.getElementById("cfg-tjm").value.trim(),
+    dispo: document.getElementById("cfg-dispo").value.trim(),
+    zone:  document.getElementById("cfg-zone").value.trim(),
+    notes: document.getElementById("cfg-notes").value.trim(),
   };
-  await persistData();
-  document.getElementById('snap-tjm').textContent  = interviewData.config.tjm  || '—';
-  document.getElementById('snap-dispo').textContent = interviewData.config.dispo || '—';
-  const saved = document.getElementById('cfg-saved');
-  saved.textContent = '✓ Configuration sauvegardée';
-  setTimeout(() => { saved.textContent = ''; }, 2000);
+  await persist();
+  loadConfig();
+  const s = document.getElementById("cfg-saved");
+  s.textContent = "✓ Sauvegardé";
+  setTimeout(() => { s.textContent = ""; }, 2000);
 }
 
-// ═══════════════════════════════════════════
-//  SESSION SAVE
-// ═══════════════════════════════════════════
+// ── SESSION ──────────────────────────────────────────────────────────────────
 async function saveSession() {
-  const company = document.getElementById('sess-company').value.trim();
-  if (!company) { alert('Renseignez au moins le nom de l\'entreprise.'); return; }
-  const entry = {
+  const company = document.getElementById("sess-company").value.trim();
+  if (!company) { alert("Renseignez l'entreprise."); return; }
+  if (!iData.history) iData.history = [];
+  iData.history.unshift({
     id: Date.now(),
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toISOString().split("T")[0],
     company,
-    contact:   document.getElementById('sess-contact').value.trim(),
-    notes:     document.getElementById('sess-notes').value.trim(),
-    questions: '',
-    status:    'wait',
-  };
-  if (!interviewData.history) interviewData.history = [];
-  interviewData.history.unshift(entry);
-  await persistData();
-  alert('✓ Entretien enregistré dans l\'historique !');
+    contact:  document.getElementById("sess-contact")?.value?.trim() || "",
+    sector:   document.getElementById("sess-sector")?.value || "",
+    notes:    document.getElementById("sess-notes").value.trim(),
+    status:   "wait",
+  });
+  await persist();
+  alert("✓ Entretien enregistré !");
 }
 
-// ═══════════════════════════════════════════
-//  HISTORY CRUD
-// ═══════════════════════════════════════════
+// ── HISTORY ──────────────────────────────────────────────────────────────────
 function openHistoryForm(id = null) {
   histEditId = id;
-  document.getElementById('hist-form-title').textContent = id ? 'Modifier l\'entretien' : 'Enregistrer un entretien';
-  const e = id ? (interviewData.history||[]).find(x => x.id === id) : null;
-  document.getElementById('hf-company').value   = e?.company   || document.getElementById('sess-company').value || '';
-  document.getElementById('hf-date').value      = e?.date      || new Date().toISOString().split('T')[0];
-  document.getElementById('hf-contact').value   = e?.contact   || document.getElementById('sess-contact').value || '';
-  document.getElementById('hf-status').value    = e?.status    || 'wait';
-  document.getElementById('hf-questions').value = e?.questions || '';
-  document.getElementById('hf-notes').value     = e?.notes     || document.getElementById('sess-notes').value || '';
-  document.getElementById('hist-overlay').classList.add('open');
+  document.getElementById("hist-form-title").textContent = id ? "Modifier" : "Enregistrer un entretien";
+  const e2 = id ? (iData.history||[]).find(x => x.id===id) : null;
+  document.getElementById("hf-company").value = e2?.company || document.getElementById("sess-company").value || "";
+  document.getElementById("hf-date").value    = e2?.date    || new Date().toISOString().split("T")[0];
+  document.getElementById("hf-contact").value = e2?.contact || "";
+  document.getElementById("hf-status").value  = e2?.status  || "wait";
+  document.getElementById("hf-notes").value   = e2?.notes   || document.getElementById("sess-notes").value || "";
+  document.getElementById("hist-overlay").classList.add("open");
 }
-
 function closeHistForm() {
-  document.getElementById('hist-overlay').classList.remove('open');
+  document.getElementById("hist-overlay").classList.remove("open");
   histEditId = null;
 }
-
 async function saveHistory() {
-  const company = document.getElementById('hf-company').value.trim();
-  if (!company) { alert('Renseignez l\'entreprise.'); return; }
+  const company = document.getElementById("hf-company").value.trim();
+  if (!company) { alert("Renseignez l'entreprise."); return; }
   const d = {
     company,
-    date:      document.getElementById('hf-date').value,
-    contact:   document.getElementById('hf-contact').value.trim(),
-    status:    document.getElementById('hf-status').value,
-    questions: document.getElementById('hf-questions').value.trim(),
-    notes:     document.getElementById('hf-notes').value.trim(),
+    date:    document.getElementById("hf-date").value,
+    contact: document.getElementById("hf-contact").value.trim(),
+    status:  document.getElementById("hf-status").value,
+    notes:   document.getElementById("hf-notes").value.trim(),
+    sector:  "",
   };
-  if (!interviewData.history) interviewData.history = [];
+  if (!iData.history) iData.history = [];
   if (histEditId) {
-    const i = interviewData.history.findIndex(x => x.id === histEditId);
-    if (i !== -1) interviewData.history[i] = { ...interviewData.history[i], ...d };
+    const i = iData.history.findIndex(x => x.id===histEditId);
+    if (i !== -1) iData.history[i] = {...iData.history[i], ...d};
   } else {
-    interviewData.history.unshift({ id: Date.now(), ...d });
+    iData.history.unshift({id: Date.now(), ...d});
   }
   closeHistForm();
-  await persistData();
+  await persist();
   renderHistory();
 }
-
 async function deleteHistory(id) {
-  if (!confirm('Supprimer cet entretien ?')) return;
-  interviewData.history = (interviewData.history||[]).filter(x => x.id !== id);
-  await persistData();
+  if (!confirm("Supprimer cet entretien ?")) return;
+  iData.history = (iData.history||[]).filter(x => x.id !== id);
+  await persist();
   renderHistory();
 }
-
 function renderHistory() {
-  const hist = interviewData.history || [];
-  const statusMap = { wait:'b-wait', prog:'b-prog', ok:'b-ok', nok:'b-nok' };
-  const statusLabel = { wait:'En attente', prog:'En cours', ok:'Retour positif', nok:'Sans suite' };
-  document.getElementById('hist-empty').style.display = hist.length === 0 ? 'block' : 'none';
-  document.getElementById('hist-table').style.display = hist.length === 0 ? 'none' : 'table';
-  const tbody = document.getElementById('hist-tbody');
-  tbody.innerHTML = '';
-  hist.forEach(e => {
-    const dateStr = e.date ? new Date(e.date+'T12:00:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'2-digit'}) : '—';
-    const tr = document.createElement('tr');
+  const hist = iData.history || [];
+  const statusMap = {wait:"b-wait",prog:"b-prog",ok:"b-ok",nok:"b-nok"};
+  const statusLabel = {wait:"En attente",prog:"En cours",ok:"Retour positif",nok:"Sans suite"};
+  document.getElementById("hist-empty").style.display = hist.length===0 ? "block" : "none";
+  document.getElementById("hist-table").style.display = hist.length===0 ? "none" : "table";
+  const tbody = document.getElementById("hist-tbody");
+  tbody.innerHTML = "";
+  hist.forEach(e2 => {
+    const dateStr = e2.date ? new Date(e2.date+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"short",year:"2-digit"}) : "—";
+    const tr = document.createElement("tr");
     tr.innerHTML = `
       <td style="white-space:nowrap;color:var(--text2);">${dateStr}</td>
-      <td style="font-weight:500;">${esc(e.company)}</td>
-      <td style="color:var(--text2);font-size:12px;">${esc(e.contact||'—')}</td>
-      <td><span class="badge ${statusMap[e.status]||'b-wait'}">${statusLabel[e.status]||e.status}</span></td>
-      <td style="color:var(--text2);font-size:12px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${esc(e.notes)}">${esc(e.notes||'—')}</td>
+      <td style="font-weight:500;">${esc(e2.company)}</td>
+      <td style="color:var(--text2);font-size:12px;">${esc(e2.contact||"—")}</td>
+      <td style="font-size:12px;color:var(--text2);">${e2.sector ? (SECTOR_LABELS[e2.sector]||e2.sector) : "—"}</td>
+      <td><span class="badge ${statusMap[e2.status]||"b-wait"}">${statusLabel[e2.status]||e2.status}</span></td>
+      <td style="color:var(--text2);font-size:12px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(e2.notes||"—")}</td>
       <td><div style="display:flex;gap:4px;">
-        <button class="icon-btn" onclick="openHistoryForm(${e.id})" title="Modifier">✏️</button>
-        <button class="icon-btn del" onclick="deleteHistory(${e.id})" title="Supprimer">🗑</button>
+        <button class="icon-btn" onclick="openHistoryForm(${e2.id})">✏️</button>
+        <button class="icon-btn del" onclick="deleteHistory(${e2.id})">🗑</button>
       </div></td>`;
     tbody.appendChild(tr);
   });
 }
+function esc(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 
-function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-// ═══════════════════════════════════════════
-//  INIT
-// ═══════════════════════════════════════════
+// ── INIT ─────────────────────────────────────────────────────────────────────
 function initApp() {
-  document.getElementById('header-date').textContent =
-    new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  document.getElementById('hf-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById("header-date").textContent =
+    new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
   loadConfig();
 }
 
-// Keyboard shortcuts
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
-    if (document.getElementById('view-setup').classList.contains('active'))      doSetup();
-    else if (document.getElementById('view-unlock').classList.contains('active')) doUnlock();
+// Keyboard
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    if (document.getElementById("view-setup").classList.contains("active"))      doSetup();
+    else if (document.getElementById("view-unlock").classList.contains("active")) doUnlock();
   }
-  if (e.key === 'Escape') { closeHistForm(); }
-  if (e.key === 'F2') toggleFocus();
+  if (e.key === "Escape") closeHistForm();
+  if (e.key === "F2") toggleFocus();
 });
 
-// Boot
-window.addEventListener('DOMContentLoaded', () => {
-  if (isFirstVisit()) showView('view-setup');
-  else { showView('view-unlock'); setTimeout(() => document.getElementById('unlock-pwd').focus(), 100); }
+window.addEventListener("DOMContentLoaded", () => {
+  if (isFirstVisit()) showView("view-setup");
+  else { showView("view-unlock"); setTimeout(() => document.getElementById("unlock-pwd").focus(), 100); }
+});
+</script>
+</body>
+</html>ironment consolidates methods that work across very different settings. It&#x27;s a positive, deliberate choice — not a dissatisfaction with permanent employment.",
+    textByContext: {}
+  },
+  en_rate: {
+    label: "Daily rate / availability?",
+    cat: "en",
+    finish: "→ What is the budget planned for this type of profile?",
+    text: "My daily rate varies depending on the mission parameters: duration, technical complexity, mode of engagement and conditions. For a standard assignment, I&#x27;m around __TJM__. I prefer we discuss the actual requirements first before fixing a final figure — that way we can find a framework that works for both sides. And from your side, what&#x27;s the budget planned for this type of profile?",
+    textByContext: {}
+  },
+};
+
+// ── CONTEXT ──────────────────────────────────────────────────────────────────
+const SECTOR_LABELS = {
+  S1:"Industrie/Aéro", S2:"Énergie", S3:"Sécurité/Services",
+  S4:"Banque/Finance", S5:"Tech/IT", S6:"Autre"
+};
+const ROLE_MAP = {
+  DAF:    /daf|cfo|financ|trésor|tresor|administratif|compta/i,
+  DSI:    /dsi|ddi|cio|cto|it |tech|système|systeme|informatique/i,
+  DRH:    /drh|rh|human|talent|recruteur|acquisition|headhunter|chasseur|consultant en recrut|chargé de recrut/i,
+  DG:     /dg |ceo|directeur général|directeur general|dg$/i,
+  OPS:    /ops|opération|operation|directeur des op|coo/i,
+};
+
+function getCtx() {
+  const sector = document.getElementById("sess-sector")?.value || "";
+  const roleRaw = document.getElementById("sess-role")?.value || "";
+  let roleKey = "";
+  for (const [k, rx] of Object.entries(ROLE_MAP)) {
+    if (rx.test(roleRaw)) { roleKey = k; break; }
+  }
+  return {sector, roleKey, roleRaw};
+}
+
+function getAnswerText(key) {
+  const ans = ANSWERS[key];
+  if (!ans) return null;
+  const {sector, roleKey} = getCtx();
+  const ctx = ans.textByContext || {};
+  if (roleKey && ctx[roleKey]) return {text: ctx[roleKey], adapted: roleKey};
+  if (sector && ctx[sector])  return {text: ctx[sector],  adapted: SECTOR_LABELS[sector] || sector};
+  return {text: ans.text, adapted: ""};
+}
+
+function updateCtxBadge() {
+  const {sector, roleKey, roleRaw} = getCtx();
+  const badge = document.getElementById("ctx-badge");
+  if (!sector && !roleRaw) {
+    badge.textContent = "aucun contexte";
+    badge.style.color = "var(--text3)";
+  } else {
+    const parts = [];
+    if (sector) parts.push(SECTOR_LABELS[sector] || sector);
+    if (roleRaw) parts.push(roleRaw);
+    badge.textContent = parts.join(" · ");
+    badge.style.color = "var(--teal)";
+  }
+  if (currentQKey) {
+    const btn = document.querySelector(".qbtn.active-q");
+    if (btn) renderCurrent(currentQKey);
+  }
+}
+
+// ── RENDER ───────────────────────────────────────────────────────────────────
+const CAT_COLORS = {pres:"#2563eb",exp:"#0d9488",tech:"#7c3aed",hard:"#d97706",soft:"#16a34a",custom:"#16a34a",en:"#1e40af"};
+const CAT_BG = {pres:"#dbeafe",exp:"#ccfbf1",tech:"#ede9fe",hard:"#fef3c7",soft:"#dcfce7",custom:"#dcfce7",en:"#dbeafe"};
+
+function renderCurrent(key) {
+  const ans = ANSWERS[key];
+  if (!ans) return;
+  const result = getAnswerText(key);
+  if (!result) return;
+
+  document.getElementById("tp-q-label").textContent = ans.label;
+  const badge = document.getElementById("tp-badge");
+  badge.textContent = ans.label;
+  badge.style.background = CAT_BG[ans.cat] || "#f1f5f9";
+  badge.style.color = CAT_COLORS[ans.cat] || "#64748b";
+
+  const panel = document.getElementById("tp-panel");
+  panel.className = "tp-panel active-" + ans.cat;
+
+  let text = result.text;
+  text = text.replace("__TJM__", iData.config?.tjm || "à définir");
+  text = text.replace("__DISPO__", iData.config?.dispo || "à préciser");
+  text = text.replace("__ZONE__", iData.config?.zone || "Toulouse + remote France");
+  panel.innerHTML = text;
+
+  const ctx = document.getElementById("tp-ctx");
+  ctx.textContent = result.adapted ? "Adapté pour : " + result.adapted : "";
+
+  const finishWrap = document.getElementById("tp-finish-wrap");
+  finishWrap.innerHTML = ans.finish ? `<div class="tp-finish">${ans.finish}</div>` : "";
+}
+
+function selectQ(btn, key) {
+  document.querySelectorAll(".qbtn").forEach(b => b.classList.remove("active-q"));
+  btn.classList.add("active-q");
+  currentQKey = key;
+  renderCurrent(key);
+}
+
+function generateCustom() {
+  const q = document.getElementById("custom-q").value.trim();
+  if (!q) return;
+  document.querySelectorAll(".qbtn").forEach(b => b.classList.remove("active-q"));
+  const qLow = q.toLowerCase();
+  let key = "pres_1";
+  if (qLow.match(/tjm|tarif|prix|cout|budget/))               key = "hard_1";
+  else if (qLow.match(/dispo|quand|disponib/))                key = "hard_2";
+  else if (qLow.match(/faible|limit|manque|amelior/))         key = "hard_3";
+  else if (qLow.match(/secteur|domai/))                       key = "hard_4";
+  else if (qLow.match(/freelance|salar/))                     key = "hard_5";
+  else if (qLow.match(/démarche|situation actuelle|cherch/))  key = "hard_6";
+  else if (qLow.match(/power.?bi|dashboard|tableau|report/))  key = "tech_1";
+  else if (qLow.match(/sql|base.?donn/))                      key = "tech_2";
+  else if (qLow.match(/itil|service.?it/))                    key = "tech_3";
+  else if (qLow.match(/ml|machine|data.?sci|python/))         key = "tech_4";
+  else if (qLow.match(/méthode|methode|travail|approch/))     key = "tech_5";
+  else if (qLow.match(/outil|stack|techno/))                  key = "tech_6";
+  else if (qLow.match(/différenci|distingue|unique|valeur ajoutée/)) key = "pres_4";
+  else if (qLow.match(/parcours|carriere|traject/))           key = "pres_2";
+  else if (qLow.match(/référence|preuve|chiffre|résultat/))   key = "exp_1";
+  else if (qLow.match(/atr/))                                 key = "exp_2";
+  else if (qLow.match(/total|energie/))                       key = "exp_3";
+  else if (qLow.match(/kevlar|sécurité/))                     key = "exp_4";
+  else if (qLow.match(/finance|controle|gestion|compta/))     key = "exp_5";
+  else if (qLow.match(/adjectif|vous définir|personnalité/))  key = "soft_1";
+  else if (qLow.match(/spec|changement|evolut|adaptat/))      key = "soft_2";
+  else if (qLow.match(/technique.*métier|métier.*technique|expliqu|vulgar/)) key = "soft_3";
+  else if (qLow.match(/tension|conflict|it|resist/))          key = "soft_4";
+  else if (qLow.match(/autonom|encadr|supervis/))             key = "soft_5";
+  else if (qLow.match(/diffic|complex|challenge|obstacle/))   key = "soft_6";
+  currentQKey = key;
+  const ans = ANSWERS[key];
+  document.getElementById("tp-q-label").textContent = '"' + q.substring(0,50) + (q.length>50?"...":'"');
+  const badge = document.getElementById("tp-badge");
+  badge.textContent = "Question libre";
+  badge.style.background = CAT_BG.custom;
+  badge.style.color = CAT_COLORS.custom;
+  const panel = document.getElementById("tp-panel");
+  panel.className = "tp-panel active-custom";
+  const result = getAnswerText(key);
+  let text = result ? result.text : ans.text;
+  text = text.replace("__TJM__", iData.config?.tjm || "à définir");
+  text = text.replace("__DISPO__", iData.config?.dispo || "à préciser");
+  text = text.replace("__ZONE__", iData.config?.zone || "Toulouse + remote France");
+  panel.innerHTML = text;
+  const ctx = document.getElementById("tp-ctx");
+  ctx.textContent = result?.adapted ? "Adapté pour : " + result.adapted : "";
+  const finishWrap = document.getElementById("tp-finish-wrap");
+  finishWrap.innerHTML = ans?.finish ? `<div class="tp-finish">${ans.finish}</div>` : "";
+}
+
+function generateCustomEN() {
+  const q = document.getElementById("custom-q-en").value.trim();
+  if (!q) return;
+  document.querySelectorAll(".qbtn").forEach(b => b.classList.remove("active-q"));
+  const qLow = q.toLowerCase();
+  let key = "en_background";
+  if      (qLow.match(/rate|tjm|fee|cost|budget|salary|day rate|avail|when|start/))  key = "en_rate";
+  else if (qLow.match(/weak|limit|improv|gap|not good/))                              key = "en_weaknesses";
+  else if (qLow.match(/strength|adjective|describ|qualify|define you/))               key = "en_strengths";
+  else if (qLow.match(/different|stand out|unique|added value|set you apart/))        key = "en_differentiation";
+  else if (qLow.match(/freelanc|self.?employ|independ|why not permanent/))            key = "en_freelance";
+  else if (qLow.match(/method|approach|work|deliver|process|power.?bi|sql/))          key = "en_methodology";
+  else if (qLow.match(/itil|it service|itsm/))                                        key = "en_itil";
+  else if (qLow.match(/reference|result|proof|atr|total|kevlar|example/))             key = "en_references";
+  else if (qLow.match(/background|experience|career|journey|story|tell me about yourself|introduce/)) key = "en_background";
+  else if (qLow.match(/spec|change|adapt|pivot|evolv/))                               key = "en_change";
+  else if (qLow.match(/tech.*business|business.*tech|explain|simplif|non.?tech/))     key = "en_explain_tech";
+  else if (qLow.match(/tension|conflict|it team|resist|pushback/))                    key = "en_it_tensions";
+  else if (qLow.match(/autonom|independ|framework|supervis|manag/))                   key = "en_autonomy";
+  else if (qLow.match(/difficult|challenge|hard|obstacle|fail|mistake|learn/))        key = "en_difficult";
+  else if (qLow.match(/anecdote|story|memorable|incident|moment/))                    key = "en_anecdote";
+  else if (qLow.match(/hobby|hobbi|outside|passion|interest|weekend|personal|football|sport|psg/)) key = "en_hobby";
+
+  currentQKey = key;
+  const ans = ANSWERS[key];
+  document.getElementById("tp-q-label").textContent = '"' + q.substring(0,50) + (q.length>50?"...":'"');
+  const badge = document.getElementById("tp-badge");
+  badge.textContent = "🇬🇧 English question";
+  badge.style.background = "#dbeafe";
+  badge.style.color = "#1e40af";
+  const panel = document.getElementById("tp-panel");
+  panel.className = "tp-panel active-en";
+  let text = ans.text;
+  text = text.replace("__TJM__", iData.config?.tjm || "to be defined");
+  text = text.replace("__DISPO__", iData.config?.dispo || "to be confirmed");
+  text = text.replace("__ZONE__", iData.config?.zone || "Toulouse + remote France");
+  panel.innerHTML = text;
+  document.getElementById("tp-ctx").textContent = "🇬🇧 English answer";
+  document.getElementById("tp-finish-wrap").innerHTML = ans?.finish ? `<div class="tp-finish">${ans.finish}</div>` : "";
+}
+
+// ── TIMER ────────────────────────────────────────────────────────────────────
+let timerInterval = null, timerSec = 0;
+function toggleTimer() {
+  if (timerInterval) {
+    clearInterval(timerInterval); timerInterval = null;
+    document.getElementById("timer-btn").textContent = "▶ Reprendre";
+  } else {
+    timerInterval = setInterval(() => {
+      timerSec++;
+      const m = String(Math.floor(timerSec/60)).padStart(2,"0");
+      const s = String(timerSec%60).padStart(2,"0");
+      document.getElementById("timer-display").textContent = m + ":" + s;
+    }, 1000);
+    document.getElementById("timer-btn").textContent = "⏸ Pause";
+  }
+}
+function stopTimer() { clearInterval(timerInterval); timerInterval = null; }
+
+// ── FOCUS MODE ───────────────────────────────────────────────────────────────
+let focusMode = false;
+function toggleFocus() {
+  focusMode = !focusMode;
+  document.getElementById("focus-btn").textContent = focusMode ? "✕ Quitter focus" : "⚡ Mode focus (F2)";
+  document.getElementById("focus-btn").style.background = focusMode ? "rgba(220,38,38,.2)" : "";
+  document.getElementById("focus-btn").style.color = focusMode ? "#fca5a5" : "";
+  const grid = document.querySelector(".grid-interview");
+  if (grid) grid.style.gridTemplateColumns = focusMode ? "300px 1fr" : "";
+  const col3 = document.querySelector(".grid-interview > div:last-child");
+  if (col3) col3.style.display = focusMode ? "none" : "";
+}
+
+// ── TABS ─────────────────────────────────────────────────────────────────────
+function showTab(tab, btn) {
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  ["entretien","profil","historique"].forEach(t => {
+    document.getElementById("section-" + t).style.display = t === tab ? "" : "none";
+  });
+  if (tab === "historique") renderHistory();
+}
+
+// ── CONFIG ───────────────────────────────────────────────────────────────────
+function loadConfig() {
+  const cfg = iData.config || {};
+  document.getElementById("cfg-tjm").value  = cfg.tjm  || "";
+  document.getElementById("cfg-dispo").value = cfg.dispo || "";
+  document.getElementById("cfg-zone").value  = cfg.zone  || "";
+  document.getElementById("cfg-notes").value = cfg.notes || "";
+  document.getElementById("snap-tjm").textContent  = cfg.tjm  || "—";
+  document.getElementById("snap-dispo").textContent = cfg.dispo || "—";
+  document.getElementById("snap-zone").textContent  = cfg.zone  || "—";
+}
+async function saveConfig() {
+  iData.config = {
+    tjm:   document.getElementById("cfg-tjm").value.trim(),
+    dispo: document.getElementById("cfg-dispo").value.trim(),
+    zone:  document.getElementById("cfg-zone").value.trim(),
+    notes: document.getElementById("cfg-notes").value.trim(),
+  };
+  await persist();
+  loadConfig();
+  const s = document.getElementById("cfg-saved");
+  s.textContent = "✓ Sauvegardé";
+  setTimeout(() => { s.textContent = ""; }, 2000);
+}
+
+// ── SESSION ──────────────────────────────────────────────────────────────────
+async function saveSession() {
+  const company = document.getElementById("sess-company").value.trim();
+  if (!company) { alert("Renseignez l'entreprise."); return; }
+  if (!iData.history) iData.history = [];
+  iData.history.unshift({
+    id: Date.now(),
+    date: new Date().toISOString().split("T")[0],
+    company,
+    contact:  document.getElementById("sess-contact")?.value?.trim() || "",
+    sector:   document.getElementById("sess-sector")?.value || "",
+    notes:    document.getElementById("sess-notes").value.trim(),
+    status:   "wait",
+  });
+  await persist();
+  alert("✓ Entretien enregistré !");
+}
+
+// ── HISTORY ──────────────────────────────────────────────────────────────────
+function openHistoryForm(id = null) {
+  histEditId = id;
+  document.getElementById("hist-form-title").textContent = id ? "Modifier" : "Enregistrer un entretien";
+  const e2 = id ? (iData.history||[]).find(x => x.id===id) : null;
+  document.getElementById("hf-company").value = e2?.company || document.getElementById("sess-company").value || "";
+  document.getElementById("hf-date").value    = e2?.date    || new Date().toISOString().split("T")[0];
+  document.getElementById("hf-contact").value = e2?.contact || "";
+  document.getElementById("hf-status").value  = e2?.status  || "wait";
+  document.getElementById("hf-notes").value   = e2?.notes   || document.getElementById("sess-notes").value || "";
+  document.getElementById("hist-overlay").classList.add("open");
+}
+function closeHistForm() {
+  document.getElementById("hist-overlay").classList.remove("open");
+  histEditId = null;
+}
+async function saveHistory() {
+  const company = document.getElementById("hf-company").value.trim();
+  if (!company) { alert("Renseignez l'entreprise."); return; }
+  const d = {
+    company,
+    date:    document.getElementById("hf-date").value,
+    contact: document.getElementById("hf-contact").value.trim(),
+    status:  document.getElementById("hf-status").value,
+    notes:   document.getElementById("hf-notes").value.trim(),
+    sector:  "",
+  };
+  if (!iData.history) iData.history = [];
+  if (histEditId) {
+    const i = iData.history.findIndex(x => x.id===histEditId);
+    if (i !== -1) iData.history[i] = {...iData.history[i], ...d};
+  } else {
+    iData.history.unshift({id: Date.now(), ...d});
+  }
+  closeHistForm();
+  await persist();
+  renderHistory();
+}
+async function deleteHistory(id) {
+  if (!confirm("Supprimer cet entretien ?")) return;
+  iData.history = (iData.history||[]).filter(x => x.id !== id);
+  await persist();
+  renderHistory();
+}
+function renderHistory() {
+  const hist = iData.history || [];
+  const statusMap = {wait:"b-wait",prog:"b-prog",ok:"b-ok",nok:"b-nok"};
+  const statusLabel = {wait:"En attente",prog:"En cours",ok:"Retour positif",nok:"Sans suite"};
+  document.getElementById("hist-empty").style.display = hist.length===0 ? "block" : "none";
+  document.getElementById("hist-table").style.display = hist.length===0 ? "none" : "table";
+  const tbody = document.getElementById("hist-tbody");
+  tbody.innerHTML = "";
+  hist.forEach(e2 => {
+    const dateStr = e2.date ? new Date(e2.date+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"short",year:"2-digit"}) : "—";
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td style="white-space:nowrap;color:var(--text2);">${dateStr}</td>
+      <td style="font-weight:500;">${esc(e2.company)}</td>
+      <td style="color:var(--text2);font-size:12px;">${esc(e2.contact||"—")}</td>
+      <td style="font-size:12px;color:var(--text2);">${e2.sector ? (SECTOR_LABELS[e2.sector]||e2.sector) : "—"}</td>
+      <td><span class="badge ${statusMap[e2.status]||"b-wait"}">${statusLabel[e2.status]||e2.status}</span></td>
+      <td style="color:var(--text2);font-size:12px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(e2.notes||"—")}</td>
+      <td><div style="display:flex;gap:4px;">
+        <button class="icon-btn" onclick="openHistoryForm(${e2.id})">✏️</button>
+        <button class="icon-btn del" onclick="deleteHistory(${e2.id})">🗑</button>
+      </div></td>`;
+    tbody.appendChild(tr);
+  });
+}
+function esc(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+function initApp() {
+  document.getElementById("header-date").textContent =
+    new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  loadConfig();
+}
+
+// Keyboard
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    if (document.getElementById("view-setup").classList.contains("active"))      doSetup();
+    else if (document.getElementById("view-unlock").classList.contains("active")) doUnlock();
+  }
+  if (e.key === "Escape") closeHistForm();
+  if (e.key === "F2") toggleFocus();
+});
+
+window.addEventListener("DOMContentLoaded", () => {
+  if (isFirstVisit()) showView("view-setup");
+  else { showView("view-unlock"); setTimeout(() => document.getElementById("unlock-pwd").focus(), 100); }
+});
+</script>
+</body>
+</html>s("active"))      doSetup();
+    else if (document.getElementById("view-unlock").classList.contains("active")) doUnlock();
+  }
+  if (e.key === "Escape") closeHistForm();
+  if (e.key === "F2") toggleFocus();
+});
+
+window.addEventListener("DOMContentLoaded", () => {
+  if (isFirstVisit()) showView("view-setup");
+  else { showView("view-unlock"); setTimeout(() => document.getElementById("unlock-pwd").focus(), 100); }
 });
 </script>
 </body>
