@@ -6,16 +6,24 @@
   <title>Assistant Entretien — Bleze T.</title>
   <style>
     :root {
-      --bg:#f0f2f5; --card:#fff; --header:#0f172a; --accent:#2563eb; --accent-l:#dbeafe;
+      --bg:rgba(240,242,245,0.92); --card:rgba(255,255,255,0.88); --header:rgba(15,23,42,0.92);
+      --accent:#2563eb; --accent-l:#dbeafe;
       --text:#1e293b; --text2:#64748b; --text3:#94a3b8; --border:#e2e8f0;
       --green:#16a34a; --green-l:#dcfce7; --amber:#d97706; --amber-l:#fef3c7;
-      --red:#dc2626; --red-l:#fee2e2; --gray-l:#f1f5f9; --purple:#7c3aed; --purple-l:#ede9fe;
+      --red:#dc2626; --red-l:#fee2e2; --gray-l:rgba(241,245,249,0.85); --purple:#7c3aed; --purple-l:#ede9fe;
       --teal:#0d9488; --teal-l:#ccfbf1; --navy:#0a3d6b;
       --r:10px; --sh:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
     }
+    html,body{background:transparent;}
     *{box-sizing:border-box;margin:0;padding:0;}
-    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;}
-    #gate{position:fixed;inset:0;background:#0f172a;display:flex;align-items:center;justify-content:center;z-index:999;}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;}
+    /* Overlay glass mode */
+    body.glass-mode {--card:rgba(255,255,255,0.18);--header:rgba(15,23,42,0.55);--bg:rgba(240,242,245,0.15);}
+    body.glass-mode .card{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+    body.glass-mode .header{backdrop-filter:blur(12px);}
+    body.glass-mode .session-bar{backdrop-filter:blur(12px);}
+    body.glass-mode .tab-nav{background:rgba(30,41,59,0.55)!important;backdrop-filter:blur(12px);}
+    #gate{position:fixed;inset:0;background:rgba(15,23,42,0.95);display:flex;align-items:center;justify-content:center;z-index:999;}
     #gate-box{background:#1e293b;border-radius:18px;padding:44px 52px;width:100%;max-width:420px;text-align:center;}
     #gate-box h1{color:#f1f5f9;font-size:20px;font-weight:600;margin-bottom:6px;}
     #gate-box p{color:#94a3b8;font-size:13px;margin-bottom:28px;line-height:1.6;}
@@ -34,7 +42,7 @@
     .spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
     @keyframes spin{to{transform:rotate(360deg);}}
     #app{display:none;max-width:1400px;margin:0 auto;padding:20px 16px 40px;}
-    .header{background:var(--header);color:#fff;border-radius:var(--r) var(--r) 0 0;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+    .header{background:var(--header);color:#fff;border-radius:var(--r) var(--r) 0 0;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;transition:background .3s;}
     .header-left h1{font-size:17px;font-weight:600;}
     .header-left p{color:#94a3b8;font-size:12px;margin-top:2px;}
     .header-actions{display:flex;gap:8px;align-items:center;}
@@ -43,13 +51,14 @@
     .btn-primary{background:var(--accent);color:#fff;} .btn-primary:hover{background:#1d4ed8;}
     .btn-lock{background:rgba(251,191,36,.12);color:#fcd34d;} .btn-lock:hover{background:rgba(251,191,36,.22);}
     .btn-focus{background:rgba(13,148,136,.2);color:#5eead4;} .btn-focus:hover{background:rgba(13,148,136,.35);}
+    .btn-glass{background:rgba(99,102,241,.2);color:#a5b4fc;} .btn-glass.active{background:rgba(99,102,241,.5);color:#fff;}
     .btn-sm{padding:6px 12px;font-size:12px;}
-    .tab-nav{background:#1e293b;border-radius:0 0 var(--r) var(--r);padding:0 24px;display:flex;margin-bottom:18px;}
+    .tab-nav{background:#1e293b;border-radius:0 0 var(--r) var(--r);padding:0 24px;display:flex;margin-bottom:18px;transition:background .3s;}
     .tab-btn{background:none;border:none;color:#94a3b8;font-size:13px;font-weight:500;padding:11px 18px;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;}
     .tab-btn:hover{color:#cbd5e1;} .tab-btn.active{color:#fff;border-bottom-color:var(--accent);}
-    .card{background:var(--card);border-radius:var(--r);padding:18px 20px;box-shadow:var(--sh);}
+    .card{background:var(--card);border-radius:var(--r);padding:18px 20px;box-shadow:var(--sh);transition:background .3s;}
     .card-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
-    .session-bar{background:var(--card);border-radius:var(--r);padding:12px 20px;margin-bottom:14px;box-shadow:var(--sh);display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+    .session-bar{background:var(--card);border-radius:var(--r);padding:12px 20px;margin-bottom:14px;box-shadow:var(--sh);display:flex;gap:12px;align-items:center;flex-wrap:wrap;transition:background .3s;}
     .session-field{display:flex;align-items:center;gap:8px;}
     .session-field label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;}
     .session-field input,.session-field select{padding:6px 10px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:13px;font-family:inherit;width:160px;}
@@ -63,12 +72,9 @@
     .grid-interview{display:grid;grid-template-columns:340px 1fr 260px;gap:14px;}
     .qcat-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;margin-top:12px;padding-left:2px;}
     .qcat-title:first-child{margin-top:0;}
-    .qcat-title.pres{color:var(--accent);}
-    .qcat-title.exp{color:var(--teal);}
-    .qcat-title.tech{color:var(--purple);}
-    .qcat-title.hard{color:var(--amber);}
-    .qcat-title.soft{color:var(--green);}
-    .qcat-title.en{color:#1e40af;}
+    .qcat-title.pres{color:var(--accent);} .qcat-title.exp{color:var(--teal);}
+    .qcat-title.tech{color:var(--purple);} .qcat-title.hard{color:var(--amber);}
+    .qcat-title.soft{color:var(--green);} .qcat-title.en{color:#1e40af;}
     .qbtn-grid{display:flex;flex-direction:column;gap:5px;margin-bottom:2px;}
     .qbtn{padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:12px;cursor:pointer;font-weight:500;transition:all .15s;text-align:left;line-height:1.4;}
     .qbtn:hover{transform:translateX(2px);}
@@ -79,48 +85,42 @@
     .qbtn.soft:hover,.qbtn.soft.active-q{background:var(--green-l);border-color:var(--green);color:var(--green);}
     .qbtn.en:hover,.qbtn.en.active-q{background:#dbeafe;border-color:#1e40af;color:#1e40af;}
     .qbtn.active-q{font-weight:700;}
-    .tp-panel.active-en{border-color:#1e40af;background:#eff6ff;}
+    .tp-panel.active-en{border-color:#1e40af;background:rgba(239,246,255,0.85);}
     .custom-input-wrap{display:flex;gap:8px;margin-top:10px;}
     .custom-input-wrap input{flex:1;padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:13px;font-family:inherit;}
-    .custom-input-wrap input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(22,163,74,.1);}
-    .custom-input-wrap button{padding:9px 14px;border-radius:8px;border:none;background:var(--green);color:#fff;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;}
-    .custom-input-wrap button:hover{filter:brightness(0.9);}
+    .custom-input-wrap input:focus{outline:none;border-color:var(--green);}
+    .custom-input-wrap button{padding:9px 14px;border-radius:8px;border:none;background:var(--green);color:#fff;font-size:12px;font-weight:600;cursor:pointer;}
     .tp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
     .tp-q-label{font-size:14px;font-weight:700;color:var(--text);}
     .tp-badge{padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600;}
     .tp-ctx{font-size:11px;color:var(--teal);font-weight:500;margin-top:2px;}
     .tp-panel{background:var(--gray-l);border-radius:10px;padding:22px 24px;min-height:200px;border-left:4px solid var(--border);transition:border-color .2s,background .2s;font-size:15px;line-height:1.8;color:var(--text);}
-    .tp-panel.active-pres{border-color:var(--accent);background:#f0f5ff;}
-    .tp-panel.active-exp{border-color:var(--teal);background:#f0fdf9;}
-    .tp-panel.active-tech{border-color:var(--purple);background:#faf5ff;}
-    .tp-panel.active-hard{border-color:var(--amber);background:#fffbeb;}
-    .tp-panel.active-soft{border-color:var(--green);background:#f0fdf4;}
-    .tp-panel.active-custom{border-color:var(--green);background:#f0fdf4;}
+    .tp-panel.active-pres{border-color:var(--accent);background:rgba(240,245,255,0.85);}
+    .tp-panel.active-exp{border-color:var(--teal);background:rgba(240,253,249,0.85);}
+    .tp-panel.active-tech{border-color:var(--purple);background:rgba(250,245,255,0.85);}
+    .tp-panel.active-hard{border-color:var(--amber);background:rgba(255,251,235,0.85);}
+    .tp-panel.active-soft{border-color:var(--green);background:rgba(240,253,244,0.85);}
+    .tp-panel.active-custom{border-color:var(--green);background:rgba(240,253,244,0.85);}
     .tp-empty{color:var(--text3);font-size:13px;text-align:center;padding:40px 0;}
-    .tp-finish{margin-top:18px;padding:10px 16px;background:#fff;border-radius:7px;border-left:3px solid var(--amber);font-size:13px;color:#92400e;font-weight:500;font-style:italic;}
+    .tp-finish{margin-top:18px;padding:10px 16px;background:rgba(255,255,255,0.8);border-radius:7px;border-left:3px solid var(--amber);font-size:13px;color:#92400e;font-weight:500;font-style:italic;}
     .tp-nav{display:flex;gap:8px;margin-top:14px;}
     .tp-nav button{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--text2);font-size:11px;cursor:pointer;}
-    .tp-nav button:hover{border-color:var(--accent);color:var(--accent);}
     .profile-snap{font-size:12px;line-height:1.8;}
     .proof-item{padding:8px 10px;border-radius:6px;margin-bottom:6px;border-left:3px solid;}
-    .proof-item.atr{background:#eff6ff;border-color:var(--accent);}
-    .proof-item.total{background:#f0fdf4;border-color:var(--green);}
-    .proof-item.gk{background:#fef3c7;border-color:var(--amber);}
-    .proof-co{font-weight:700;font-size:11px;}
-    .proof-res{color:var(--text2);font-size:11px;}
+    .proof-item.atr{background:rgba(239,246,255,0.8);border-color:var(--accent);}
+    .proof-item.total{background:rgba(240,253,244,0.8);border-color:var(--green);}
+    .proof-item.gk{background:rgba(254,243,199,0.8);border-color:var(--amber);}
+    .proof-co{font-weight:700;font-size:11px;} .proof-res{color:var(--text2);font-size:11px;}
     .session-notes{width:100%;padding:9px 11px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:12px;font-family:inherit;resize:none;height:80px;}
-    .session-notes:focus{outline:none;border-color:var(--accent);}
     table{width:100%;border-collapse:collapse;font-size:13px;}
     thead th{text-align:left;padding:8px 12px;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--text2);border-bottom:1px solid var(--border);font-weight:600;}
     tbody td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
-    tbody tr:last-child td{border-bottom:none;}
-    tbody tr:hover{background:var(--gray-l);}
+    tbody tr:last-child td{border-bottom:none;} tbody tr:hover{background:var(--gray-l);}
     .badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:11px;font-weight:600;}
     .b-ok{background:var(--green-l);color:#166534;} .b-nok{background:var(--red-l);color:#991b1b;}
     .b-wait{background:#e0f2fe;color:#0369a1;} .b-prog{background:var(--amber-l);color:#92400e;}
     .icon-btn{background:none;border:none;cursor:pointer;padding:4px 6px;border-radius:5px;font-size:14px;color:var(--text2);}
-    .icon-btn:hover{background:var(--border);}
-    .icon-btn.del:hover{background:var(--red-l);color:var(--red);}
+    .icon-btn:hover{background:var(--border);} .icon-btn.del:hover{background:var(--red-l);color:var(--red);}
     .empty{text-align:center;padding:32px;color:var(--text3);}
     .form-group label{display:block;font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px;}
     .form-group input,.form-group textarea,.form-group select{width:100%;padding:9px 11px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:13px;font-family:inherit;}
@@ -135,15 +135,15 @@
     .btn-cancel{padding:9px 18px;border-radius:7px;border:none;background:var(--gray-l);color:var(--text2);font-size:13px;cursor:pointer;}
     .btn-save{padding:9px 22px;border-radius:7px;border:none;background:var(--accent);color:#fff;font-size:13px;font-weight:600;cursor:pointer;}
     .sec-footer{text-align:center;margin-top:28px;font-size:11px;color:var(--text3);}
-    /* OVERLAY PANEL */
-    #overlay-panel{position:fixed;bottom:20px;right:20px;z-index:9999;background:#1e293b;border-radius:14px;padding:14px 18px;box-shadow:0 4px 24px rgba(0,0,0,.35);color:#f1f5f9;font-size:12px;min-width:200px;display:none;}
-    #overlay-panel.visible{display:block;}
-    #overlay-panel label{display:block;font-size:10px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;}
-    #opacity-slider{width:100%;accent-color:#2563eb;cursor:pointer;}
-    #overlay-toggle{position:fixed;bottom:20px;right:20px;z-index:10000;background:#0f172a;border:1px solid #334155;border-radius:10px;padding:8px 14px;color:#94a3b8;font-size:12px;cursor:pointer;display:none;}
-    #overlay-toggle:hover{background:#1e293b;color:#f1f5f9;}
-    body.overlay-mode{background:transparent !important;}
-    body.overlay-mode #gate{background:rgba(15,23,42,0.85);}
+    /* GLASS PANEL */
+    #glass-panel{position:fixed;bottom:20px;right:20px;z-index:9999;background:rgba(15,23,42,0.92);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:16px 18px;color:#f1f5f9;font-size:12px;min-width:220px;display:none;backdrop-filter:blur(8px);}
+    #glass-panel.visible{display:block;}
+    #glass-panel h4{font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;}
+    #glass-panel label{display:block;font-size:11px;color:#94a3b8;margin-bottom:4px;margin-top:10px;}
+    #opacity-slider{width:100%;accent-color:#6366f1;cursor:pointer;}
+    #glass-panel .close-btn{width:100%;margin-top:12px;padding:7px;border-radius:7px;border:1px solid rgba(255,255,255,.1);background:transparent;color:#94a3b8;font-size:11px;cursor:pointer;}
+    #glass-panel .close-btn:hover{background:rgba(255,255,255,.08);color:#f1f5f9;}
+    .glass-tip{font-size:10px;color:#475569;margin-top:8px;line-height:1.5;border-top:1px solid rgba(255,255,255,.06);padding-top:8px;}
     @media(max-width:1100px){.grid-interview{grid-template-columns:280px 1fr;}}
     @media(max-width:760px){.grid-interview{grid-template-columns:1fr;}}
   </style>
@@ -161,7 +161,7 @@
       <div class="gate-field"><label>Confirmer</label><input type="password" id="setup-pwd2" placeholder="Retapez votre mot de passe"></div>
       <button class="gate-btn" id="setup-btn" onclick="doSetup()">Créer mon espace</button>
       <div class="gate-error" id="setup-err"></div>
-      <div class="gate-info"><strong>💡</strong> Même mot de passe que index.html — reconnu automatiquement.</div>
+      <div class="gate-info"><strong>💡</strong> Même mot de passe que index.html.</div>
     </div>
     <div class="gate-view" id="view-unlock">
       <h1>Assistant Entretien</h1>
@@ -194,7 +194,7 @@
     </div>
     <div class="header-actions">
       <button class="btn btn-focus btn-sm" onclick="toggleFocus()" id="focus-btn">⚡ Mode focus (F2)</button>
-      <button class="btn btn-ghost btn-sm" onclick="toggleOverlayPanel()" id="overlay-btn">🪟 Overlay</button>
+      <button class="btn btn-glass btn-sm" onclick="toggleGlassPanel()" id="glass-btn">🪟 Overlay</button>
       <button class="btn btn-ghost btn-sm" onclick="openHistoryForm()">+ Enregistrer</button>
       <button class="btn btn-lock btn-sm" onclick="lockApp()">🔒 Verrouiller</button>
     </div>
@@ -207,10 +207,7 @@
 
   <div id="section-entretien">
     <div class="session-bar">
-      <div class="session-field">
-        <label>Entreprise</label>
-        <input type="text" id="sess-company" placeholder="ex: Airbus">
-      </div>
+      <div class="session-field"><label>Entreprise</label><input type="text" id="sess-company" placeholder="ex: Airbus"></div>
       <div class="session-sep"></div>
       <div class="session-field">
         <label>Secteur</label>
@@ -225,10 +222,7 @@
         </select>
       </div>
       <div class="session-sep"></div>
-      <div class="session-field">
-        <label>Poste interlocuteur</label>
-        <input type="text" id="sess-role" placeholder="ex: DAF, DSI, Recruteur" oninput="updateCtxBadge()">
-      </div>
+      <div class="session-field"><label>Poste interlocuteur</label><input type="text" id="sess-role" placeholder="ex: DAF, DSI, Recruteur" oninput="updateCtxBadge()"></div>
       <div class="session-sep"></div>
       <div class="session-field">
         <label>Durée</label>
@@ -238,11 +232,9 @@
     </div>
 
     <div class="grid-interview">
-      <!-- COL 1 : Questions -->
       <div>
         <div class="card" style="height:100%;overflow-y:auto;max-height:82vh;">
           <div class="card-title">Questions <span id="ctx-badge" style="font-size:11px;font-weight:400;color:var(--text3);">aucun contexte</span></div>
-
           <div class="qcat-title pres">🎯 Présentation</div>
           <div class="qbtn-grid">
             <button class="qbtn pres" onclick="selectQ(this,'pres_court')">⚡ Elevator pitch — 30 sec</button>
@@ -253,7 +245,6 @@
             <button class="qbtn pres" onclick="selectQ(this,'pres_3')">Pourquoi le freelance ?</button>
             <button class="qbtn pres" onclick="selectQ(this,'pres_4')">Ce qui vous différencie ?</button>
           </div>
-
           <div class="qcat-title exp">📊 Expérience &amp; Références</div>
           <div class="qbtn-grid">
             <button class="qbtn exp" onclick="selectQ(this,'exp_1')">Vos références concrètes ?</button>
@@ -262,7 +253,6 @@
             <button class="qbtn exp" onclick="selectQ(this,'exp_4')">GK Kevlar — contexte ?</button>
             <button class="qbtn exp" onclick="selectQ(this,'exp_5')">Background Finance/Contrôle ?</button>
           </div>
-
           <div class="qcat-title tech">⚙️ Compétences techniques</div>
           <div class="qbtn-grid">
             <button class="qbtn tech" onclick="selectQ(this,'tech_1')">Niveau Power BI ?</button>
@@ -272,7 +262,6 @@
             <button class="qbtn tech" onclick="selectQ(this,'tech_5')">Votre méthode de travail ?</button>
             <button class="qbtn tech" onclick="selectQ(this,'tech_6')">Outils maîtrisés ?</button>
           </div>
-
           <div class="qcat-title hard">🎯 Questions difficiles</div>
           <div class="qbtn-grid">
             <button class="qbtn hard" onclick="selectQ(this,'hard_1')">Votre TJM ?</button>
@@ -282,7 +271,6 @@
             <button class="qbtn hard" onclick="selectQ(this,'hard_5')">Pourquoi pas le salariat ?</button>
             <button class="qbtn hard" onclick="selectQ(this,'hard_6')">Où en sont vos démarches ?</button>
           </div>
-
           <div class="qcat-title soft">🤝 Savoir-être</div>
           <div class="qbtn-grid">
             <button class="qbtn soft" onclick="selectQ(this,'soft_1')">3 adjectifs qui vous définissent ?</button>
@@ -292,13 +280,11 @@
             <button class="qbtn soft" onclick="selectQ(this,'soft_5')">Autonome ou besoin d'un cadre ?</button>
             <button class="qbtn soft" onclick="selectQ(this,'soft_6')">Situation difficile bien gérée ?</button>
           </div>
-
           <div class="qcat-title soft" style="color:var(--green);">✏️ Question libre</div>
           <div class="custom-input-wrap">
             <input type="text" id="custom-q" placeholder="Tapez la question posée..." onkeydown="if(event.key==='Enter')generateCustom()">
             <button onclick="generateCustom()">➜</button>
           </div>
-
           <div class="qcat-title en" style="margin-top:16px;">🇬🇧 English</div>
           <div class="qbtn-grid">
             <button class="qbtn en" onclick="selectQ(this,'en_pres_court')">⚡ Elevator pitch — 30 sec</button>
@@ -313,7 +299,6 @@
         </div>
       </div>
 
-      <!-- COL 2 : Teleprompter -->
       <div>
         <div class="card" style="margin-bottom:14px;">
           <div class="tp-header">
@@ -323,14 +308,8 @@
             </div>
             <span class="tp-badge" id="tp-badge" style="background:var(--gray-l);color:var(--text2);">En attente</span>
           </div>
-          <div class="tp-panel" id="tp-panel">
-            <div class="tp-empty">👈 Cliquez sur une question pour afficher la réponse</div>
-          </div>
+          <div class="tp-panel" id="tp-panel"><div class="tp-empty">👈 Cliquez sur une question pour afficher la réponse</div></div>
           <div id="tp-finish-wrap"></div>
-          <div class="tp-nav" id="tp-nav" style="display:none;">
-            <button onclick="prevAnswer()">← Précédente</button>
-            <button onclick="nextAnswer()">Suivante →</button>
-          </div>
         </div>
         <div class="card">
           <div class="card-title">Notes de session</div>
@@ -339,7 +318,6 @@
         </div>
       </div>
 
-      <!-- COL 3 : Sidebar -->
       <div>
         <div class="card" style="margin-bottom:14px;">
           <div class="card-title">Profil — rappel</div>
@@ -350,9 +328,9 @@
             <div class="proof-item total"><div class="proof-co">⚡ TotalEnergies</div><div class="proof-res">2h30 → 15 min par rapport</div></div>
             <div class="proof-item gk"><div class="proof-co">🛡 GK Kevlar</div><div class="proof-res">Clôtures fiables et dans les délais</div></div>
             <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--text2);">
-              <div>💰 TJM : <strong id="snap-tjm" style="color:var(--text);">—</strong></div>
-              <div>📅 Dispo : <strong id="snap-dispo" style="color:var(--text);">—</strong></div>
-              <div>📍 Zone : <strong id="snap-zone" style="color:var(--text);">—</strong></div>
+              <div>💰 TJM : <strong id="snap-tjm">—</strong></div>
+              <div>📅 Dispo : <strong id="snap-dispo">—</strong></div>
+              <div>📍 Zone : <strong id="snap-zone">—</strong></div>
             </div>
           </div>
         </div>
@@ -412,18 +390,21 @@
       </div>
     </div>
   </div>
-
   <div class="sec-footer">🔐 Données chiffrées · AES-256-GCM · PBKDF2 200 000 itérations · Clé jamais stockée</div>
 </div>
 
-<!-- OVERLAY PANEL -->
-<div id="overlay-panel">
-  <label>🪟 Transparence</label>
-  <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-    <input type="range" id="opacity-slider" min="20" max="100" value="100" oninput="applyOpacity(this.value)">
-    <span id="opacity-val" style="font-size:11px;color:#94a3b8;min-width:30px;">100%</span>
+<!-- GLASS OVERLAY PANEL -->
+<div id="glass-panel">
+  <h4>🪟 Mode Overlay</h4>
+  <label>Transparence des panneaux</label>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <input type="range" id="opacity-slider" min="5" max="95" value="88" oninput="applyGlass(this.value)">
+    <span id="opacity-val" style="font-size:11px;color:#94a3b8;min-width:32px;">88%</span>
   </div>
-  <button onclick="toggleOverlayPanel()" style="width:100%;padding:7px;border-radius:7px;border:1px solid #334155;background:transparent;color:#94a3b8;font-size:11px;cursor:pointer;">✕ Fermer</button>
+  <div class="glass-tip">
+    💡 Pour voir Teams en arrière-plan, ouvrez cette page dans Chrome via <strong>Ctrl+Shift+I → …</strong> ou lancez Chrome avec <code>--app=URL</code> et réglez la fenêtre au-dessus de Teams.
+  </div>
+  <button class="close-btn" onclick="toggleGlassPanel()">✕ Fermer</button>
 </div>
 
 <!-- HISTORY FORM -->
@@ -461,111 +442,63 @@ async function deriveKey(pwd,salt){
   const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pwd),{name:"PBKDF2"},false,["deriveKey"]);
   return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:200000,hash:"SHA-256"},km,{name:"AES-GCM",length:256},true,["encrypt","decrypt"]);
 }
-async function enc(key,plain){
-  const iv=crypto.getRandomValues(new Uint8Array(12));
-  const c=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,new TextEncoder().encode(plain));
-  return{iv:b64(iv),c:b64(c)};
-}
-async function dec(key,stored){
-  const p=await crypto.subtle.decrypt({name:"AES-GCM",iv:unb64(stored.iv)},key,unb64(stored.c));
-  return new TextDecoder().decode(p);
-}
+async function enc(key,plain){const iv=crypto.getRandomValues(new Uint8Array(12));const c=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,new TextEncoder().encode(plain));return{iv:b64(iv),c:b64(c)};}
+async function dec(key,stored){const p=await crypto.subtle.decrypt({name:"AES-GCM",iv:unb64(stored.iv)},key,unb64(stored.c));return new TextDecoder().decode(p);}
 function isFirstVisit(){return!localStorage.getItem(K_SALT);}
-function setLoading(id,on,lbl="Chargement..."){
-  const b=document.getElementById(id);if(!b)return;
-  b.disabled=on;b.innerHTML=on?`<span class="spin"></span> ${lbl}`:(b.dataset.label||b.textContent);
-  if(!on&&!b.dataset.label)b.dataset.label=b.textContent;
-}
+function setLoading(id,on,lbl="Chargement..."){const b=document.getElementById(id);if(!b)return;b.disabled=on;b.innerHTML=on?`<span class="spin"></span> ${lbl}`:(b.dataset.label||b.textContent);if(!on&&!b.dataset.label)b.dataset.label=b.textContent;}
 async function doSetup(){
-  const pwd=document.getElementById("setup-pwd").value;
-  const pwd2=document.getElementById("setup-pwd2").value;
+  const pwd=document.getElementById("setup-pwd").value,pwd2=document.getElementById("setup-pwd2").value;
   const err=document.getElementById("setup-err");err.textContent="";
   if(pwd.length<8){err.textContent="Mot de passe trop court (8 car. min).";return;}
   if(pwd!==pwd2){err.textContent="Les deux mots de passe ne correspondent pas.";return;}
   setLoading("setup-btn",true,"Dérivation de la clé...");
-  try{
-    const salt=crypto.getRandomValues(new Uint8Array(16));
-    cryptoKey=await deriveKey(pwd,salt);
-    localStorage.setItem(K_SALT,b64(salt));
-    localStorage.setItem(K_VERIFY,JSON.stringify(await enc(cryptoKey,"VALID")));
-    iData={config:{},history:[]};await persist();unlockApp();
-  }catch(e){err.textContent="Erreur : "+e.message;}
-  finally{setLoading("setup-btn",false);}
+  try{const salt=crypto.getRandomValues(new Uint8Array(16));cryptoKey=await deriveKey(pwd,salt);localStorage.setItem(K_SALT,b64(salt));localStorage.setItem(K_VERIFY,JSON.stringify(await enc(cryptoKey,"VALID")));iData={config:{},history:[]};await persist();await saveSession_key();unlockApp();}
+  catch(e){err.textContent="Erreur : "+e.message;}finally{setLoading("setup-btn",false);}
 }
 async function doUnlock(){
-  const pwd=document.getElementById("unlock-pwd").value;
-  const err=document.getElementById("unlock-err");err.textContent="";
+  const pwd=document.getElementById("unlock-pwd").value,err=document.getElementById("unlock-err");err.textContent="";
   if(!pwd){err.textContent="Veuillez saisir votre mot de passe.";return;}
   setLoading("unlock-btn",true,"Vérification...");
   try{
-    const salt=unb64(localStorage.getItem(K_SALT));
-    const key=await deriveKey(pwd,salt);
+    const salt=unb64(localStorage.getItem(K_SALT)),key=await deriveKey(pwd,salt);
     try{const v=await dec(key,JSON.parse(localStorage.getItem(K_VERIFY)));if(v!=="VALID")throw new Error();}
     catch(_){err.textContent="Mot de passe incorrect.";return;}
     cryptoKey=key;
     const raw=localStorage.getItem(K_DATA);
     if(raw){try{iData=JSON.parse(await dec(cryptoKey,JSON.parse(raw)));}catch(_){iData={config:{},history:[]};}}
     else{iData={config:{},history:[]};}
-    // Save key to sessionStorage for auto-restore on refresh
-    const exported=await crypto.subtle.exportKey("raw",cryptoKey);
-    sessionStorage.setItem("btp_sk",b64(exported));
-    document.getElementById("unlock-pwd").value="";unlockApp();
-  }catch(e){err.textContent="Erreur : "+e.message;}
-  finally{setLoading("unlock-btn",false);}
+    document.getElementById("unlock-pwd").value="";
+    await saveSession_key();unlockApp();
+  }catch(e){err.textContent="Erreur : "+e.message;}finally{setLoading("unlock-btn",false);}
+}
+async function saveSession_key(){
+  try{const exported=await crypto.subtle.exportKey("raw",cryptoKey);sessionStorage.setItem("btp_sk",b64(exported));}catch(_){}
 }
 async function doChangePassword(){
-  const oldP=document.getElementById("chg-old").value;
-  const newP=document.getElementById("chg-new").value;
-  const newP2=document.getElementById("chg-new2").value;
+  const oldP=document.getElementById("chg-old").value,newP=document.getElementById("chg-new").value,newP2=document.getElementById("chg-new2").value;
   const err=document.getElementById("chg-err");err.textContent="";
   if(!oldP){err.textContent="Saisissez votre ancien mot de passe.";return;}
   if(newP.length<8){err.textContent="Nouveau mot de passe trop court.";return;}
   if(newP!==newP2){err.textContent="Les mots de passe ne correspondent pas.";return;}
   setLoading("chg-btn",true,"Re-chiffrement...");
   try{
-    const oldSalt=unb64(localStorage.getItem(K_SALT));
-    const oldKey=await deriveKey(oldP,oldSalt);
+    const oldSalt=unb64(localStorage.getItem(K_SALT)),oldKey=await deriveKey(oldP,oldSalt);
     try{const v=await dec(oldKey,JSON.parse(localStorage.getItem(K_VERIFY)));if(v!=="VALID")throw new Error();}
     catch(_){err.textContent="Ancien mot de passe incorrect.";return;}
-    let existing={config:{},history:[]};
-    const raw=localStorage.getItem(K_DATA);
+    let existing={config:{},history:[]};const raw=localStorage.getItem(K_DATA);
     if(raw){try{existing=JSON.parse(await dec(oldKey,JSON.parse(raw)));}catch(_){}}
-    const newSalt=crypto.getRandomValues(new Uint8Array(16));
-    const newKey=await deriveKey(newP,newSalt);
-    cryptoKey=newKey;iData=existing;
-    localStorage.setItem(K_SALT,b64(newSalt));
-    localStorage.setItem(K_VERIFY,JSON.stringify(await enc(newKey,"VALID")));
-    await persist();
-    ["chg-old","chg-new","chg-new2"].forEach(id=>document.getElementById(id).value="");
+    const newSalt=crypto.getRandomValues(new Uint8Array(16)),newKey=await deriveKey(newP,newSalt);
+    cryptoKey=newKey;iData=existing;localStorage.setItem(K_SALT,b64(newSalt));localStorage.setItem(K_VERIFY,JSON.stringify(await enc(newKey,"VALID")));
+    await persist();["chg-old","chg-new","chg-new2"].forEach(id=>document.getElementById(id).value="");
     err.style.color="#4ade80";err.textContent="✓ Mot de passe changé avec succès.";
     setTimeout(()=>{err.textContent="";err.style.color="";showView("view-unlock");},2000);
-  }catch(e){err.textContent="Erreur : "+e.message;}
-  finally{setLoading("chg-btn",false);}
+  }catch(e){err.textContent="Erreur : "+e.message;}finally{setLoading("chg-btn",false);}
 }
-function lockApp(){
-  cryptoKey=null;iData={config:{},history:[]};stopTimer();
-  sessionStorage.removeItem("btp_sk");
-  document.getElementById("app").style.display="none";
-  document.getElementById("gate").style.display="flex";
-  document.getElementById("unlock-pwd").value="";showView("view-unlock");
-}
-function showView(id){
-  document.querySelectorAll(".gate-view").forEach(v=>v.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-}
-function unlockApp(){
-  document.getElementById("gate").style.display="none";
-  document.getElementById("app").style.display="block";
-  initApp();
-}
-let iData={config:{},history:[]};
-let histEditId=null;
-let currentQKey=null;
-async function persist(){
-  if(!cryptoKey)return;
-  const e2=await enc(cryptoKey,JSON.stringify(iData));
-  localStorage.setItem(K_DATA,JSON.stringify(e2));
-}
+function lockApp(){cryptoKey=null;iData={config:{},history:[]};stopTimer();sessionStorage.removeItem("btp_sk");document.getElementById("app").style.display="none";document.getElementById("gate").style.display="flex";document.getElementById("unlock-pwd").value="";showView("view-unlock");}
+function showView(id){document.querySelectorAll(".gate-view").forEach(v=>v.classList.remove("active"));document.getElementById(id).classList.add("active");}
+function unlockApp(){document.getElementById("gate").style.display="none";document.getElementById("app").style.display="block";initApp();}
+let iData={config:{},history:[]},histEditId=null,currentQKey=null;
+async function persist(){if(!cryptoKey)return;const e2=await enc(cryptoKey,JSON.stringify(iData));localStorage.setItem(K_DATA,JSON.stringify(e2));}
 
 const ANSWERS = {
   pres_court: {
@@ -834,285 +767,96 @@ const ANSWERS = {
     textByContext: {}
   }
 };
-
 const SECTOR_LABELS={S1:"Industrie/Aéro",S2:"Énergie",S3:"Sécurité/Services",S4:"Banque/Finance",S5:"Tech/IT",S6:"Autre"};
-const ROLE_MAP={DAF:/daf|cfo|financ|trésor|tresor|administratif|compta/i,DSI:/dsi|ddi|cio|cto|it |tech|système|systeme|informatique/i,DRH:/drh|rh|human|talent|recruteur|acquisition|headhunter|chasseur/i,DG:/dg |ceo|directeur général|directeur general|dg$/i,OPS:/ops|opération|operation|directeur des op|coo/i};
-function getCtx(){
-  const sector=document.getElementById("sess-sector")?.value||"";
-  const roleRaw=document.getElementById("sess-role")?.value||"";
-  let roleKey="";
-  for(const[k,rx]of Object.entries(ROLE_MAP)){if(rx.test(roleRaw)){roleKey=k;break;}}
-  return{sector,roleKey,roleRaw};
-}
-function getAnswerText(key){
-  const ans=ANSWERS[key];if(!ans)return null;
-  const{sector,roleKey}=getCtx();const ctx=ans.textByContext||{};
-  if(roleKey&&ctx[roleKey])return{text:ctx[roleKey],adapted:roleKey};
-  if(sector&&ctx[sector])return{text:ctx[sector],adapted:SECTOR_LABELS[sector]||sector};
-  return{text:ans.text,adapted:""};
-}
-function updateCtxBadge(){
-  const{sector,roleKey,roleRaw}=getCtx();
-  const badge=document.getElementById("ctx-badge");
-  if(!sector&&!roleRaw){badge.textContent="aucun contexte";badge.style.color="var(--text3)";}
-  else{const parts=[];if(sector)parts.push(SECTOR_LABELS[sector]||sector);if(roleRaw)parts.push(roleRaw);badge.textContent=parts.join(" · ");badge.style.color="var(--teal)";}
-  if(currentQKey){const btn=document.querySelector(".qbtn.active-q");if(btn)renderCurrent(currentQKey);}
-}
+const ROLE_MAP={DAF:/daf|cfo|financ|trésor|tresor|administratif|compta/i,DSI:/dsi|ddi|cio|cto|it |tech|système|systeme|informatique/i,DRH:/drh|rh|human|talent|recruteur|acquisition|headhunter/i,DG:/dg |ceo|directeur général|directeur general|dg$/i,OPS:/ops|opération|operation|directeur des op|coo/i};
+function getCtx(){const sector=document.getElementById("sess-sector")?.value||"";const roleRaw=document.getElementById("sess-role")?.value||"";let roleKey="";for(const[k,rx]of Object.entries(ROLE_MAP)){if(rx.test(roleRaw)){roleKey=k;break;}}return{sector,roleKey,roleRaw};}
+function getAnswerText(key){const ans=ANSWERS[key];if(!ans)return null;const{sector,roleKey}=getCtx();const ctx=ans.textByContext||{};if(roleKey&&ctx[roleKey])return{text:ctx[roleKey],adapted:roleKey};if(sector&&ctx[sector])return{text:ctx[sector],adapted:SECTOR_LABELS[sector]||sector};return{text:ans.text,adapted:""};}
+function updateCtxBadge(){const{sector,roleKey,roleRaw}=getCtx();const badge=document.getElementById("ctx-badge");if(!sector&&!roleRaw){badge.textContent="aucun contexte";badge.style.color="var(--text3)";}else{const parts=[];if(sector)parts.push(SECTOR_LABELS[sector]||sector);if(roleRaw)parts.push(roleRaw);badge.textContent=parts.join(" · ");badge.style.color="var(--teal)";}if(currentQKey){const btn=document.querySelector(".qbtn.active-q");if(btn)renderCurrent(currentQKey);}}
 const CAT_COLORS={pres:"#2563eb",exp:"#0d9488",tech:"#7c3aed",hard:"#d97706",soft:"#16a34a",custom:"#16a34a",en:"#1e40af"};
-const CAT_BG={pres:"#dbeafe",exp:"#ccfbf1",tech:"#ede9fe",hard:"#fef3c7",soft:"#dcfce7",custom:"#dcfce7",en:"#dbeafe"};
+const CAT_BG={pres:"rgba(219,234,254,0.85)",exp:"rgba(204,251,241,0.85)",tech:"rgba(237,233,254,0.85)",hard:"rgba(254,243,199,0.85)",soft:"rgba(220,252,231,0.85)",custom:"rgba(220,252,231,0.85)",en:"rgba(219,234,254,0.85)"};
 function renderCurrent(key){
-  const ans=ANSWERS[key];if(!ans)return;
-  const result=getAnswerText(key);if(!result)return;
+  const ans=ANSWERS[key];if(!ans)return;const result=getAnswerText(key);if(!result)return;
   document.getElementById("tp-q-label").textContent=ans.label;
-  const badge=document.getElementById("tp-badge");
-  badge.textContent=ans.label;badge.style.background=CAT_BG[ans.cat]||"#f1f5f9";badge.style.color=CAT_COLORS[ans.cat]||"#64748b";
+  const badge=document.getElementById("tp-badge");badge.textContent=ans.label;badge.style.background=CAT_BG[ans.cat]||"rgba(241,245,249,0.85)";badge.style.color=CAT_COLORS[ans.cat]||"#64748b";
   const panel=document.getElementById("tp-panel");panel.className="tp-panel active-"+ans.cat;
-  let text=result.text;
-  text=text.replace("__TJM__",iData.config?.tjm||"à définir");
-  text=text.replace("__DISPO__",iData.config?.dispo||"à préciser");
-  text=text.replace("__ZONE__",iData.config?.zone||"Toulouse + remote France");
-  panel.innerHTML=text;
-  document.getElementById("tp-ctx").textContent=result.adapted?"Adapté pour : "+result.adapted:"";
+  let text=result.text;text=text.replace("__TJM__",iData.config?.tjm||"à définir");text=text.replace("__DISPO__",iData.config?.dispo||"à préciser");text=text.replace("__ZONE__",iData.config?.zone||"Toulouse + remote France");
+  panel.innerHTML=text;document.getElementById("tp-ctx").textContent=result.adapted?"Adapté pour : "+result.adapted:"";
   document.getElementById("tp-finish-wrap").innerHTML=ans.finish?`<div class="tp-finish">${ans.finish}</div>`:"";
 }
-function selectQ(btn,key){
-  document.querySelectorAll(".qbtn").forEach(b=>b.classList.remove("active-q"));
-  btn.classList.add("active-q");currentQKey=key;renderCurrent(key);
-}
+function selectQ(btn,key){document.querySelectorAll(".qbtn").forEach(b=>b.classList.remove("active-q"));btn.classList.add("active-q");currentQKey=key;renderCurrent(key);}
 function generateCustom(){
   const q=document.getElementById("custom-q").value.trim();if(!q)return;
   document.querySelectorAll(".qbtn").forEach(b=>b.classList.remove("active-q"));
   const qLow=q.toLowerCase();let key="pres_1";
-  if(qLow.match(/tjm|tarif|prix|cout|budget/))key="hard_1";
-  else if(qLow.match(/dispo|quand|disponib/))key="hard_2";
-  else if(qLow.match(/faible|limit|manque|amelior/))key="hard_3";
-  else if(qLow.match(/secteur|domai/))key="hard_4";
-  else if(qLow.match(/freelance|salar/))key="hard_5";
-  else if(qLow.match(/démarche|situation actuelle|cherch/))key="hard_6";
-  else if(qLow.match(/power.?bi|dashboard|tableau|report/))key="tech_1";
-  else if(qLow.match(/sql|base.?donn/))key="tech_2";
-  else if(qLow.match(/itil|service.?it/))key="tech_3";
-  else if(qLow.match(/ml|machine|data.?sci|python/))key="tech_4";
-  else if(qLow.match(/méthode|methode|travail|approch/))key="tech_5";
-  else if(qLow.match(/outil|stack|techno/))key="tech_6";
-  else if(qLow.match(/différenci|distingue|unique|valeur ajoutée/))key="pres_4";
-  else if(qLow.match(/parcours|carriere|traject/))key="pres_2";
-  else if(qLow.match(/référence|preuve|chiffre|résultat/))key="exp_1";
-  else if(qLow.match(/atr/))key="exp_2";
-  else if(qLow.match(/total|energie/))key="exp_3";
-  else if(qLow.match(/kevlar|sécurité/))key="exp_4";
-  else if(qLow.match(/finance|controle|gestion|compta/))key="exp_5";
-  else if(qLow.match(/adjectif|vous définir|personnalité/))key="soft_1";
-  else if(qLow.match(/spec|changement|evolut|adaptat/))key="soft_2";
-  else if(qLow.match(/technique.*métier|métier.*technique|expliqu|vulgar/))key="soft_3";
-  else if(qLow.match(/tension|conflict|it|resist/))key="soft_4";
-  else if(qLow.match(/autonom|encadr|supervis/))key="soft_5";
-  else if(qLow.match(/diffic|complex|challenge|obstacle/))key="soft_6";
+  if(qLow.match(/tjm|tarif|prix|cout|budget/))key="hard_1";else if(qLow.match(/dispo|quand|disponib/))key="hard_2";else if(qLow.match(/faible|limit|manque|amelior/))key="hard_3";else if(qLow.match(/secteur|domai/))key="hard_4";else if(qLow.match(/freelance|salar/))key="hard_5";else if(qLow.match(/démarche|situation actuelle|cherch/))key="hard_6";else if(qLow.match(/power.?bi|dashboard|tableau|report/))key="tech_1";else if(qLow.match(/sql|base.?donn/))key="tech_2";else if(qLow.match(/itil|service.?it/))key="tech_3";else if(qLow.match(/ml|machine|data.?sci|python/))key="tech_4";else if(qLow.match(/méthode|methode|travail|approch/))key="tech_5";else if(qLow.match(/outil|stack|techno/))key="tech_6";else if(qLow.match(/différenci|distingue|unique|valeur ajoutée/))key="pres_4";else if(qLow.match(/parcours|carriere|traject/))key="pres_2";else if(qLow.match(/référence|preuve|chiffre|résultat/))key="exp_1";else if(qLow.match(/atr/))key="exp_2";else if(qLow.match(/total|energie/))key="exp_3";else if(qLow.match(/kevlar|sécurité/))key="exp_4";else if(qLow.match(/finance|controle|gestion|compta/))key="exp_5";else if(qLow.match(/adjectif|vous définir|personnalité/))key="soft_1";else if(qLow.match(/spec|changement|evolut|adaptat/))key="soft_2";else if(qLow.match(/technique.*métier|métier.*technique|expliqu|vulgar/))key="soft_3";else if(qLow.match(/tension|conflict|it|resist/))key="soft_4";else if(qLow.match(/autonom|encadr|supervis/))key="soft_5";else if(qLow.match(/diffic|complex|challenge|obstacle/))key="soft_6";
   currentQKey=key;const ans=ANSWERS[key];
   document.getElementById("tp-q-label").textContent='"'+q.substring(0,50)+(q.length>50?'..."':'"');
   const badge=document.getElementById("tp-badge");badge.textContent="Question libre";badge.style.background=CAT_BG.custom;badge.style.color=CAT_COLORS.custom;
   const panel=document.getElementById("tp-panel");panel.className="tp-panel active-custom";
-  const result=getAnswerText(key);let text=result?result.text:ans.text;
-  text=text.replace("__TJM__",iData.config?.tjm||"à définir");text=text.replace("__DISPO__",iData.config?.dispo||"à préciser");text=text.replace("__ZONE__",iData.config?.zone||"Toulouse + remote France");
-  panel.innerHTML=text;
-  document.getElementById("tp-ctx").textContent=result?.adapted?"Adapté pour : "+result.adapted:"";
-  document.getElementById("tp-finish-wrap").innerHTML=ans?.finish?`<div class="tp-finish">${ans.finish}</div>`:"";
+  const result=getAnswerText(key);let text=result?result.text:ans.text;text=text.replace("__TJM__",iData.config?.tjm||"à définir");text=text.replace("__DISPO__",iData.config?.dispo||"à préciser");text=text.replace("__ZONE__",iData.config?.zone||"Toulouse + remote France");
+  panel.innerHTML=text;document.getElementById("tp-ctx").textContent=result?.adapted?"Adapté pour : "+result.adapted:"";document.getElementById("tp-finish-wrap").innerHTML=ans?.finish?`<div class="tp-finish">${ans.finish}</div>`:"";
 }
 function generateCustomEN(){
   const q=document.getElementById("custom-q-en").value.trim();if(!q)return;
   document.querySelectorAll(".qbtn").forEach(b=>b.classList.remove("active-q"));
   const qLow=q.toLowerCase();let key="en_background";
-  if(qLow.match(/rate|tjm|fee|cost|budget|salary|day rate|avail|when|start/))key="en_rate";
-  else if(qLow.match(/weak|limit|improv|gap|not good/))key="en_weaknesses";
-  else if(qLow.match(/strength|adjective|describ|qualify|define you/))key="en_strengths";
-  else if(qLow.match(/different|stand out|unique|added value|set you apart/))key="en_differentiation";
-  else if(qLow.match(/freelanc|self.?employ|independ|why not permanent/))key="en_freelance";
-  else if(qLow.match(/method|approach|work|deliver|process|power.?bi|sql/))key="en_methodology";
-  else if(qLow.match(/itil|it service|itsm/))key="en_itil";
-  else if(qLow.match(/reference|result|proof|atr|total|kevlar|example/))key="en_references";
-  else if(qLow.match(/background|experience|career|journey|story|tell me about yourself|introduce/))key="en_background";
-  else if(qLow.match(/spec|change|adapt|pivot|evolv/))key="en_change";
-  else if(qLow.match(/tech.*business|business.*tech|explain|simplif|non.?tech/))key="en_explain_tech";
-  else if(qLow.match(/tension|conflict|it team|resist|pushback/))key="en_it_tensions";
-  else if(qLow.match(/autonom|independ|framework|supervis|manag/))key="en_autonomy";
-  else if(qLow.match(/difficult|challenge|hard|obstacle|fail|mistake|learn/))key="en_difficult";
-  else if(qLow.match(/anecdote|story|memorable|incident|moment/))key="en_anecdote";
-  else if(qLow.match(/hobby|hobbi|outside|passion|interest|weekend|personal|football|sport|psg/))key="en_hobby";
+  if(qLow.match(/rate|tjm|fee|cost|budget|salary|day rate|avail|when|start/))key="en_rate";else if(qLow.match(/weak|limit|improv|gap|not good/))key="en_weaknesses";else if(qLow.match(/strength|adjective|describ|qualify|define you/))key="en_strengths";else if(qLow.match(/different|stand out|unique|added value|set you apart/))key="en_differentiation";else if(qLow.match(/freelanc|self.?employ|independ|why not permanent/))key="en_freelance";else if(qLow.match(/method|approach|work|deliver|process|power.?bi|sql/))key="en_methodology";else if(qLow.match(/itil|it service|itsm/))key="en_itil";else if(qLow.match(/reference|result|proof|atr|total|kevlar|example/))key="en_references";else if(qLow.match(/background|experience|career|journey|story|tell me about yourself|introduce/))key="en_background";else if(qLow.match(/spec|change|adapt|pivot|evolv/))key="en_change";else if(qLow.match(/tech.*business|business.*tech|explain|simplif|non.?tech/))key="en_explain_tech";else if(qLow.match(/tension|conflict|it team|resist|pushback/))key="en_it_tensions";else if(qLow.match(/autonom|independ|framework|supervis|manag/))key="en_autonomy";else if(qLow.match(/difficult|challenge|hard|obstacle|fail|mistake|learn/))key="en_difficult";else if(qLow.match(/anecdote|story|memorable|incident|moment/))key="en_anecdote";else if(qLow.match(/hobby|hobbi|outside|passion|interest|weekend|personal|football|sport|psg/))key="en_hobby";
   currentQKey=key;const ans=ANSWERS[key];
   document.getElementById("tp-q-label").textContent='"'+q.substring(0,50)+(q.length>50?'..."':'"');
   const badge=document.getElementById("tp-badge");badge.textContent="🇬🇧 English question";badge.style.background="#dbeafe";badge.style.color="#1e40af";
   const panel=document.getElementById("tp-panel");panel.className="tp-panel active-en";
-  let text=ans.text;
-  text=text.replace("__TJM__",iData.config?.tjm||"to be defined");text=text.replace("__DISPO__",iData.config?.dispo||"to be confirmed");text=text.replace("__ZONE__",iData.config?.zone||"Toulouse + remote France");
-  panel.innerHTML=text;
-  document.getElementById("tp-ctx").textContent="🇬🇧 English answer";
-  document.getElementById("tp-finish-wrap").innerHTML=ans?.finish?`<div class="tp-finish">${ans.finish}</div>`:"";
+  let text=ans.text;text=text.replace("__TJM__",iData.config?.tjm||"to be defined");text=text.replace("__DISPO__",iData.config?.dispo||"to be confirmed");text=text.replace("__ZONE__",iData.config?.zone||"Toulouse + remote France");
+  panel.innerHTML=text;document.getElementById("tp-ctx").textContent="🇬🇧 English answer";document.getElementById("tp-finish-wrap").innerHTML=ans?.finish?`<div class="tp-finish">${ans.finish}</div>`:"";
 }
-let timerInterval=null,timerSec=0;
-function toggleTimer(){
-  if(timerInterval){clearInterval(timerInterval);timerInterval=null;document.getElementById("timer-btn").textContent="▶ Reprendre";}
-  else{timerInterval=setInterval(()=>{timerSec++;const m=String(Math.floor(timerSec/60)).padStart(2,"0");const s=String(timerSec%60).padStart(2,"0");document.getElementById("timer-display").textContent=m+":"+s;},1000);document.getElementById("timer-btn").textContent="⏸ Pause";}
+/* GLASS OVERLAY */
+let glassActive=false;
+function toggleGlassPanel(){
+  const panel=document.getElementById("glass-panel");panel.classList.toggle("visible");
+  const btn=document.getElementById("glass-btn");
+  if(panel.classList.contains("visible")&&!glassActive){activateGlass();}
 }
-function stopTimer(){clearInterval(timerInterval);timerInterval=null;}
-function toggleOverlayPanel(){
-  const panel=document.getElementById("overlay-panel");
-  panel.classList.toggle("visible");
+function activateGlass(){
+  glassActive=true;document.body.classList.add("glass-mode");
+  document.getElementById("glass-btn").classList.add("active");
+  const slider=document.getElementById("opacity-slider");applyGlass(slider.value);
 }
-function applyOpacity(val){
+function applyGlass(val){
   document.getElementById("opacity-val").textContent=val+"%";
-  document.getElementById("app").style.opacity=val/100;
-  // Keep overlay panel always fully visible
-  document.getElementById("overlay-panel").style.opacity=1;
+  const alpha=val/100;
+  // Update CSS variable for card transparency
+  document.documentElement.style.setProperty("--card",`rgba(255,255,255,${alpha})`);
+  document.documentElement.style.setProperty("--header",`rgba(15,23,42,${Math.min(alpha+0.2,0.95)})`);
+  document.documentElement.style.setProperty("--bg",`rgba(240,242,245,${Math.max(alpha-0.1,0.05)})`);
 }
+/* TIMER */
+let timerInterval=null,timerSec=0;
+function toggleTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null;document.getElementById("timer-btn").textContent="▶ Reprendre";}else{timerInterval=setInterval(()=>{timerSec++;const m=String(Math.floor(timerSec/60)).padStart(2,"0");const s=String(timerSec%60).padStart(2,"0");document.getElementById("timer-display").textContent=m+":"+s;},1000);document.getElementById("timer-btn").textContent="⏸ Pause";}}
+function stopTimer(){clearInterval(timerInterval);timerInterval=null;}
+/* FOCUS */
 let focusMode=false;
-function toggleFocus(){
-  focusMode=!focusMode;
-  document.getElementById("focus-btn").textContent=focusMode?"✕ Quitter focus":"⚡ Mode focus (F2)";
-  document.getElementById("focus-btn").style.background=focusMode?"rgba(220,38,38,.2)":"";
-  document.getElementById("focus-btn").style.color=focusMode?"#fca5a5":"";
-  const grid=document.querySelector(".grid-interview");if(grid)grid.style.gridTemplateColumns=focusMode?"300px 1fr":"";
-  const col3=document.querySelector(".grid-interview > div:last-child");if(col3)col3.style.display=focusMode?"none":"";
-}
-function showTab(tab,btn){
-  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");
-  ["entretien","profil","historique"].forEach(t=>{document.getElementById("section-"+t).style.display=t===tab?"":"none";});
-  if(tab==="historique")renderHistory();
-}
-function loadConfig(){
-  const cfg=iData.config||{};
-  document.getElementById("cfg-tjm").value=cfg.tjm||"";document.getElementById("cfg-dispo").value=cfg.dispo||"";
-  document.getElementById("cfg-zone").value=cfg.zone||"";document.getElementById("cfg-notes").value=cfg.notes||"";
-  document.getElementById("snap-tjm").textContent=cfg.tjm||"—";document.getElementById("snap-dispo").textContent=cfg.dispo||"—";document.getElementById("snap-zone").textContent=cfg.zone||"—";
-}
-async function saveConfig(){
-  iData.config={tjm:document.getElementById("cfg-tjm").value.trim(),dispo:document.getElementById("cfg-dispo").value.trim(),zone:document.getElementById("cfg-zone").value.trim(),notes:document.getElementById("cfg-notes").value.trim()};
-  await persist();loadConfig();const s=document.getElementById("cfg-saved");s.textContent="✓ Sauvegardé";setTimeout(()=>{s.textContent="";},2000);
-}
-async function saveSession(){
-  const company=document.getElementById("sess-company").value.trim();
-  if(!company){alert("Renseignez l'entreprise.");return;}
-  if(!iData.history)iData.history=[];
-  iData.history.unshift({id:Date.now(),date:new Date().toISOString().split("T")[0],company,contact:document.getElementById("sess-contact")?.value?.trim()||"",sector:document.getElementById("sess-sector")?.value||"",notes:document.getElementById("sess-notes").value.trim(),status:"wait"});
-  await persist();alert("✓ Entretien enregistré !");
-}
-function openHistoryForm(id=null){
-  histEditId=id;document.getElementById("hist-form-title").textContent=id?"Modifier":"Enregistrer un entretien";
-  const e2=id?(iData.history||[]).find(x=>x.id===id):null;
-  document.getElementById("hf-company").value=e2?.company||document.getElementById("sess-company").value||"";
-  document.getElementById("hf-date").value=e2?.date||new Date().toISOString().split("T")[0];
-  document.getElementById("hf-contact").value=e2?.contact||"";document.getElementById("hf-status").value=e2?.status||"wait";
-  document.getElementById("hf-notes").value=e2?.notes||document.getElementById("sess-notes").value||"";
-  document.getElementById("hist-overlay").classList.add("open");
-}
+function toggleFocus(){focusMode=!focusMode;document.getElementById("focus-btn").textContent=focusMode?"✕ Quitter focus":"⚡ Mode focus (F2)";document.getElementById("focus-btn").style.background=focusMode?"rgba(220,38,38,.2)":"";document.getElementById("focus-btn").style.color=focusMode?"#fca5a5":"";const grid=document.querySelector(".grid-interview");if(grid)grid.style.gridTemplateColumns=focusMode?"300px 1fr":"";const col3=document.querySelector(".grid-interview > div:last-child");if(col3)col3.style.display=focusMode?"none":"";}
+/* TABS */
+function showTab(tab,btn){document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");["entretien","profil","historique"].forEach(t=>{document.getElementById("section-"+t).style.display=t===tab?"":"none";});if(tab==="historique")renderHistory();}
+/* CONFIG */
+function loadConfig(){const cfg=iData.config||{};document.getElementById("cfg-tjm").value=cfg.tjm||"";document.getElementById("cfg-dispo").value=cfg.dispo||"";document.getElementById("cfg-zone").value=cfg.zone||"";document.getElementById("cfg-notes").value=cfg.notes||"";document.getElementById("snap-tjm").textContent=cfg.tjm||"—";document.getElementById("snap-dispo").textContent=cfg.dispo||"—";document.getElementById("snap-zone").textContent=cfg.zone||"—";}
+async function saveConfig(){iData.config={tjm:document.getElementById("cfg-tjm").value.trim(),dispo:document.getElementById("cfg-dispo").value.trim(),zone:document.getElementById("cfg-zone").value.trim(),notes:document.getElementById("cfg-notes").value.trim()};await persist();loadConfig();const s=document.getElementById("cfg-saved");s.textContent="✓ Sauvegardé";setTimeout(()=>{s.textContent="";},2000);}
+/* SESSION */
+async function saveSession(){const company=document.getElementById("sess-company").value.trim();if(!company){alert("Renseignez l'entreprise.");return;}if(!iData.history)iData.history=[];iData.history.unshift({id:Date.now(),date:new Date().toISOString().split("T")[0],company,contact:document.getElementById("sess-contact")?.value?.trim()||"",sector:document.getElementById("sess-sector")?.value||"",notes:document.getElementById("sess-notes").value.trim(),status:"wait"});await persist();alert("✓ Entretien enregistré !");}
+/* HISTORY */
+function openHistoryForm(id=null){histEditId=id;document.getElementById("hist-form-title").textContent=id?"Modifier":"Enregistrer un entretien";const e2=id?(iData.history||[]).find(x=>x.id===id):null;document.getElementById("hf-company").value=e2?.company||document.getElementById("sess-company").value||"";document.getElementById("hf-date").value=e2?.date||new Date().toISOString().split("T")[0];document.getElementById("hf-contact").value=e2?.contact||"";document.getElementById("hf-status").value=e2?.status||"wait";document.getElementById("hf-notes").value=e2?.notes||document.getElementById("sess-notes").value||"";document.getElementById("hist-overlay").classList.add("open");}
 function closeHistForm(){document.getElementById("hist-overlay").classList.remove("open");histEditId=null;}
-async function saveHistory(){
-  const company=document.getElementById("hf-company").value.trim();if(!company){alert("Renseignez l'entreprise.");return;}
-  const d={company,date:document.getElementById("hf-date").value,contact:document.getElementById("hf-contact").value.trim(),status:document.getElementById("hf-status").value,notes:document.getElementById("hf-notes").value.trim(),sector:""};
-  if(!iData.history)iData.history=[];
-  if(histEditId){const i=iData.history.findIndex(x=>x.id===histEditId);if(i!==-1)iData.history[i]={...iData.history[i],...d};}
-  else{iData.history.unshift({id:Date.now(),...d});}
-  closeHistForm();await persist();renderHistory();
-}
-async function deleteHistory(id){
-  if(!confirm("Supprimer cet entretien ?"))return;
-  iData.history=(iData.history||[]).filter(x=>x.id!==id);await persist();renderHistory();
-}
-function renderHistory(){
-  const hist=iData.history||[];
-  const statusMap={wait:"b-wait",prog:"b-prog",ok:"b-ok",nok:"b-nok"};
-  const statusLabel={wait:"En attente",prog:"En cours",ok:"Retour positif",nok:"Sans suite"};
-  document.getElementById("hist-empty").style.display=hist.length===0?"block":"none";
-  document.getElementById("hist-table").style.display=hist.length===0?"none":"table";
-  const tbody=document.getElementById("hist-tbody");tbody.innerHTML="";
-  hist.forEach(e2=>{
-    const dateStr=e2.date?new Date(e2.date+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"short",year:"2-digit"}):"—";
-    const tr=document.createElement("tr");
-    tr.innerHTML=`<td style="white-space:nowrap;color:var(--text2);">${dateStr}</td><td style="font-weight:500;">${esc(e2.company)}</td><td style="color:var(--text2);font-size:12px;">${esc(e2.contact||"—")}</td><td style="font-size:12px;color:var(--text2);">${e2.sector?(SECTOR_LABELS[e2.sector]||e2.sector):"—"}</td><td><span class="badge ${statusMap[e2.status]||"b-wait"}">${statusLabel[e2.status]||e2.status}</span></td><td style="color:var(--text2);font-size:12px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(e2.notes||"—")}</td><td><div style="display:flex;gap:4px;"><button class="icon-btn" onclick="openHistoryForm(${e2.id})">✏️</button><button class="icon-btn del" onclick="deleteHistory(${e2.id})">🗑</button></div></td>`;
-    tbody.appendChild(tr);
-  });
-}
+async function saveHistory(){const company=document.getElementById("hf-company").value.trim();if(!company){alert("Renseignez l'entreprise.");return;}const d={company,date:document.getElementById("hf-date").value,contact:document.getElementById("hf-contact").value.trim(),status:document.getElementById("hf-status").value,notes:document.getElementById("hf-notes").value.trim(),sector:""};if(!iData.history)iData.history=[];if(histEditId){const i=iData.history.findIndex(x=>x.id===histEditId);if(i!==-1)iData.history[i]={...iData.history[i],...d};}else{iData.history.unshift({id:Date.now(),...d});}closeHistForm();await persist();renderHistory();}
+async function deleteHistory(id){if(!confirm("Supprimer cet entretien ?"))return;iData.history=(iData.history||[]).filter(x=>x.id!==id);await persist();renderHistory();}
+function renderHistory(){const hist=iData.history||[];const statusMap={wait:"b-wait",prog:"b-prog",ok:"b-ok",nok:"b-nok"};const statusLabel={wait:"En attente",prog:"En cours",ok:"Retour positif",nok:"Sans suite"};document.getElementById("hist-empty").style.display=hist.length===0?"block":"none";document.getElementById("hist-table").style.display=hist.length===0?"none":"table";const tbody=document.getElementById("hist-tbody");tbody.innerHTML="";hist.forEach(e2=>{const dateStr=e2.date?new Date(e2.date+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"short",year:"2-digit"}):"—";const tr=document.createElement("tr");tr.innerHTML=`<td style="white-space:nowrap;color:var(--text2);">${dateStr}</td><td style="font-weight:500;">${esc(e2.company)}</td><td style="color:var(--text2);font-size:12px;">${esc(e2.contact||"—")}</td><td style="font-size:12px;color:var(--text2);">${e2.sector?(SECTOR_LABELS[e2.sector]||e2.sector):"—"}</td><td><span class="badge ${statusMap[e2.status]||"b-wait"}">${statusLabel[e2.status]||e2.status}</span></td><td style="color:var(--text2);font-size:12px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(e2.notes||"—")}</td><td><div style="display:flex;gap:4px;"><button class="icon-btn" onclick="openHistoryForm(${e2.id})">✏️</button><button class="icon-btn del" onclick="deleteHistory(${e2.id})">🗑</button></div></td>`;tbody.appendChild(tr);});}
 function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
-function initApp(){
-  document.getElementById("header-date").textContent=new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-  loadConfig();
-}
-document.addEventListener("keydown",e=>{
-  if(e.key==="Enter"){
-    if(document.getElementById("view-setup").classList.contains("active"))doSetup();
-    else if(document.getElementById("view-unlock").classList.contains("active"))doUnlock();
-  }
-  if(e.key==="Escape")closeHistForm();
-  if(e.key==="F2")toggleFocus();
-});
-window.addEventListener("DOMContentLoaded",async()=>{
-  if(isFirstVisit()){showView("view-setup");return;}
-  // Try auto-restore from sessionStorage (survives refresh, not tab close)
-  const sk=sessionStorage.getItem("btp_sk");
-  if(sk){
-    try{
-      const rawKey=unb64(sk);
-      const key=await crypto.subtle.importKey("raw",rawKey,{name:"AES-GCM",length:256},true,["encrypt","decrypt"]);
-      const v=await dec(key,JSON.parse(localStorage.getItem(K_VERIFY)));
-      if(v==="VALID"){
-        cryptoKey=key;
-        const raw=localStorage.getItem(K_DATA);
-        if(raw){try{iData=JSON.parse(await dec(cryptoKey,JSON.parse(raw)));}catch(_){iData={config:{},history:[]};}}
-        else{iData={config:{},history:[]};}
-        unlockApp();return;
-      }
-    }catch(_){}
-  }
-  showView("view-unlock");setTimeout(()=>document.getElementById("unlock-pwd").focus(),100);
-});
-</script>
-</body>
-</html>l={wait:"En attente",prog:"En cours",ok:"Retour positif",nok:"Sans suite"};
-  document.getElementById("hist-empty").style.display=hist.length===0?"block":"none";
-  document.getElementById("hist-table").style.display=hist.length===0?"none":"table";
-  const tbody=document.getElementById("hist-tbody");tbody.innerHTML="";
-  hist.forEach(e2=>{
-    const dateStr=e2.date?new Date(e2.date+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"short",year:"2-digit"}):"—";
-    const tr=document.createElement("tr");
-    tr.innerHTML=`<td style="white-space:nowrap;color:var(--text2);">${dateStr}</td><td style="font-weight:500;">${esc(e2.company)}</td><td style="color:var(--text2);font-size:12px;">${esc(e2.contact||"—")}</td><td style="font-size:12px;color:var(--text2);">${e2.sector?(SECTOR_LABELS[e2.sector]||e2.sector):"—"}</td><td><span class="badge ${statusMap[e2.status]||"b-wait"}">${statusLabel[e2.status]||e2.status}</span></td><td style="color:var(--text2);font-size:12px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(e2.notes||"—")}</td><td><div style="display:flex;gap:4px;"><button class="icon-btn" onclick="openHistoryForm(${e2.id})">✏️</button><button class="icon-btn del" onclick="deleteHistory(${e2.id})">🗑</button></div></td>`;
-    tbody.appendChild(tr);
-  });
-}
-function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
-function initApp(){
-  document.getElementById("header-date").textContent=new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-  loadConfig();
-}
-document.addEventListener("keydown",e=>{
-  if(e.key==="Enter"){
-    if(document.getElementById("view-setup").classList.contains("active"))doSetup();
-    else if(document.getElementById("view-unlock").classList.contains("active"))doUnlock();
-  }
-  if(e.key==="Escape")closeHistForm();
-  if(e.key==="F2")toggleFocus();
-});
+/* INIT */
+function initApp(){document.getElementById("header-date").textContent=new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"});loadConfig();}
+document.addEventListener("keydown",e=>{if(e.key==="Enter"){if(document.getElementById("view-setup").classList.contains("active"))doSetup();else if(document.getElementById("view-unlock").classList.contains("active"))doUnlock();}if(e.key==="Escape")closeHistForm();if(e.key==="F2")toggleFocus();});
 window.addEventListener("DOMContentLoaded",async()=>{
   if(isFirstVisit()){showView("view-setup");return;}
   const sk=sessionStorage.getItem("btp_sk");
-  if(sk){
-    try{
-      const rawKey=unb64(sk);
-      const key=await crypto.subtle.importKey("raw",rawKey,{name:"AES-GCM",length:256},true,["encrypt","decrypt"]);
-      const v=await dec(key,JSON.parse(localStorage.getItem(K_VERIFY)));
-      if(v==="VALID"){
-        cryptoKey=key;
-        const raw=localStorage.getItem(K_DATA);
-        if(raw){try{iData=JSON.parse(await dec(cryptoKey,JSON.parse(raw)));}catch(_){iData={config:{},history:[]};}}
-        else{iData={config:{},history:[]};}
-        unlockApp();return;
-      }
-    }catch(_){}
-  }
+  if(sk){try{const rawKey=unb64(sk);const key=await crypto.subtle.importKey("raw",rawKey,{name:"AES-GCM",length:256},true,["encrypt","decrypt"]);const v=await dec(key,JSON.parse(localStorage.getItem(K_VERIFY)));if(v==="VALID"){cryptoKey=key;const raw=localStorage.getItem(K_DATA);if(raw){try{iData=JSON.parse(await dec(cryptoKey,JSON.parse(raw)));}catch(_){iData={config:{},history:[]};}}else{iData={config:{},history:[]};}unlockApp();return;}}catch(_){}}
   showView("view-unlock");setTimeout(()=>document.getElementById("unlock-pwd").focus(),100);
-});
-</script>
-</body>
-</html>
-nt.getElementById("unlock-pwd").focus(),100);
 });
 </script>
 </body>
